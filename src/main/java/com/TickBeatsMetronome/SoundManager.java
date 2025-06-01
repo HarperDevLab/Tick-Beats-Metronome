@@ -11,14 +11,14 @@ import javax.inject.Singleton;
 @Singleton
 public class SoundManager {
 
-    private final AdvancedMetronomeConfig config;
+    private final TickBeatsMetronomeConfig config;
 
     // This manages and plays  audio clips
     private final AudioClipManager audioClipManager = new AudioClipManager();
 
 
     @Inject
-    public SoundManager( AdvancedMetronomeConfig config)
+    public SoundManager( TickBeatsMetronomeConfig config)
     {
         this.config = config;
     }

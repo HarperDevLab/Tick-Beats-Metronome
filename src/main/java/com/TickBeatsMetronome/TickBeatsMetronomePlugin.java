@@ -18,20 +18,20 @@ import net.runelite.client.ui.overlay.OverlayManager;
 
 @Slf4j
 @PluginDescriptor(
-        name = "Tick Beats Advanced Metronome",
+        name = "Tick Beats Metronome",
         description = "Metronome with advanced audio and visual configurations",
-        tags = {"tick", "beat", "visual", "helper", "metronome", "sound"}
+        tags = {"tick", "beat", "visual", "helper", "metronome", "sound","audio","skilling","skill"}
 )
 //suppressing unused warning in IDE at class level as there are a lot of them with RL Plugins
 @SuppressWarnings("unused") //comment this line out if you want to see unused warnings
-public class AdvancedMetronomePlugin extends Plugin {
+public class TickBeatsMetronomePlugin extends Plugin {
 
     //Needed for Guice Dependency Injection
     @Inject
     private Client client;
 
     @Inject
-    private AdvancedMetronomeConfig config;
+    private TickBeatsMetronomeConfig config;
 
     @Inject
     private VisualOverlay overlay;
@@ -160,9 +160,9 @@ public class AdvancedMetronomePlugin extends Plugin {
      * Required by RuneLite to provide config interface.
      */
     @Provides
-    AdvancedMetronomeConfig provideConfig(ConfigManager configManager)
+    TickBeatsMetronomeConfig provideConfig(ConfigManager configManager)
     {
-        return configManager.getConfig(AdvancedMetronomeConfig.class);
+        return configManager.getConfig(TickBeatsMetronomeConfig.class);
     }
 
 

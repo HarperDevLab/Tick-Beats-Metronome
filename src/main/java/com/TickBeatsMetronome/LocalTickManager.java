@@ -113,8 +113,8 @@ public class LocalTickManager
 
         }
 
-        log.info("GameTick: {}, LocalTick: {}, Tick Difference: {}, Adjusted Interval: {}, Time Difference: {}",
-                gameTickCount, localTickCount, tickDifference, nextTickInterval, timeDifference);
+        //log.info("GameTick: {}, LocalTick: {}, Tick Difference: {}, Adjusted Interval: {}, Time Difference: {}",
+        //        gameTickCount, localTickCount, tickDifference, nextTickInterval, timeDifference);
     }
 
     /*

@@ -18,11 +18,11 @@ import java.awt.*;
 public class VisualOverlay extends Overlay
 {
     private final Client client;
-    private final AdvancedMetronomePlugin plugin;
-    private final AdvancedMetronomeConfig config;
+    private final TickBeatsMetronomePlugin plugin;
+    private final TickBeatsMetronomeConfig config;
 
     @Inject
-    public VisualOverlay(Client client, AdvancedMetronomePlugin plugin, AdvancedMetronomeConfig config)
+    public VisualOverlay(Client client, TickBeatsMetronomePlugin plugin, TickBeatsMetronomeConfig config)
     {
         this.client = client;
         this.plugin = plugin;

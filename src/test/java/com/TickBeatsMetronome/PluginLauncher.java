@@ -7,7 +7,7 @@ public class PluginLauncher
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(AdvancedMetronomePlugin.class);
+		ExternalPluginManager.loadBuiltin(TickBeatsMetronomePlugin.class);
 		RuneLite.main(args);
 	}
 }

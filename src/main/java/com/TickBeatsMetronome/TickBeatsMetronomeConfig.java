@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 @ConfigGroup("advancedMetronome")
-public interface AdvancedMetronomeConfig extends Config
+public interface TickBeatsMetronomeConfig extends Config
 {
 	////////////////////////////////////////////////
 	/////////////////  Settings  ///////////////////

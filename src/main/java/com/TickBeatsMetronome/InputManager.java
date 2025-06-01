@@ -11,15 +11,15 @@ import java.awt.event.KeyEvent;
 @Singleton
 public class InputManager implements net.runelite.client.input.KeyListener
 {
-    private final AdvancedMetronomePlugin plugin;
-    private final AdvancedMetronomeConfig config;
+    private final TickBeatsMetronomePlugin plugin;
+    private final TickBeatsMetronomeConfig config;
 
     //stores if the reset tick key is currently held down
     public boolean resetKeyIsHeld = false;
 
 
     @Inject
-    public InputManager(AdvancedMetronomePlugin plugin, AdvancedMetronomeConfig config)
+    public InputManager(TickBeatsMetronomePlugin plugin, TickBeatsMetronomeConfig config)
     {
         this.plugin = plugin;
         this.config = config;
