@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.inject.Inject;
 import javax.sound.sampled.*;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,55 +48,64 @@ public class AudioClipManager
     }
 
     /**
-     * Loads a sound file from resources into memory for future playback.
-     * @param name A human-friendly key name (e.g., "tick-snare")
-     * @param resourcePath The full resource path to the .wav file
+     * Loads a .wav sound file from the plugin's resources directory and stores it in memory
+     * for quick playback later. This version should correctly both in development (file system)
+     * and when the plugin is deployed as a JAR via RuneLite's plugin hub.
+     *
+     * @param name          A name used as a key in the sound map
+     * @param resourcePath  The resource path to the sound file (e.g. "/com/TickBeatsMetronome/tick-hihat.wav")
      */
     private void load(String name, String resourcePath)
     {
-        // Normalize the name for consistent internal access
-        name = name.toLowerCase().replace('_', '-');
+        // Normalize the name by converting it to lowercase and replacing underscores with dashes
+        // This ensures consistency regardless of how it's referenced elsewhere in the code
+        String normalizedName = name.toLowerCase().replace('_', '-');
 
-        try
+        // Try-with-resources ensures the stream is closed automatically, even if exceptions occur
+        try (var stream = getClass().getResourceAsStream(resourcePath))
         {
-            // Attempt to load the .wav file from the resources directory
-            URL url = getClass().getResource(resourcePath);
-            if (url == null)
+            // If the resource is missing or the path is incorrect, warn and skip loading
+            if (stream == null)
             {
-                log.warn("Could not find sound: {}", resourcePath);
+                log.warn("Could not find sound resource: {}", resourcePath);
                 return;
             }
 
-            // Read the audio stream from the file
-            AudioInputStream originalIn = AudioSystem.getAudioInputStream(url);
+            // Read the raw audio stream from the embedded resource
+            AudioInputStream originalIn = AudioSystem.getAudioInputStream(stream);
+
+            // Get the format of the input audio file (may not yet be PCM_SIGNED)
             AudioFormat format = originalIn.getFormat();
 
-            // Ensure the format is compatible with Java's Clip (PCM_SIGNED is required)
+            // If the audio isn't already in a compatible signed PCM format, convert it
             if (format.getEncoding() != AudioFormat.Encoding.PCM_SIGNED)
             {
+                // Create a new AudioFormat with PCM_SIGNED encoding and appropriate settings
                 format = new AudioFormat(
-                        AudioFormat.Encoding.PCM_SIGNED, // Force PCM
-                        format.getSampleRate(),          // Keep sample rate (e.g. 44100)
-                        16,                              // Force 16-bit audio
-                        format.getChannels(),            // Mono or stereo
-                        format.getChannels() * 2,        // Frame size in bytes
-                        format.getSampleRate(),          // Frame rate = sample rate
-                        false                            // Little-endian
+                        AudioFormat.Encoding.PCM_SIGNED,     // Convert to signed PCM
+                        format.getSampleRate(),              // Use the same sample rate
+                        16,                                  // Force 16-bit samples
+                        format.getChannels(),                // Keep mono/stereo channel count
+                        format.getChannels() * 2,            // Frame size (2 bytes per channel)
+                        format.getSampleRate(),              // Frame rate = sample rate
+                        false                                // Little-endian
                 );
 
-                // Convert the stream to the new format
+                // Apply the format conversion to the stream
                 originalIn = AudioSystem.getAudioInputStream(format, originalIn);
             }
 
-            // Load the entire audio stream into memory
+            // Read the full audio data into memory as a byte array
             byte[] data = originalIn.readAllBytes();
 
-            // Store it in our map for fast reuse
-            sounds.put(name, new SoundData(format, data));
+            // Store the sound data and its format in the sounds map under the normalized name
+            sounds.put(normalizedName, new SoundData(format, data));
 
-            log.info("Loaded sound: {}", name);
-            log.info("from resource path: {}", resourcePath);
+            // Logging for verification
+            log.info("Loaded sound: {}", normalizedName);
+            log.info("From resource path: {}", resourcePath);
         }
+        // Catch unsupported or corrupted audio formats and log the error
         catch (UnsupportedAudioFileException | IOException e)
         {
             log.error("Unsupported or unreadable sound file: {}", resourcePath, e);
