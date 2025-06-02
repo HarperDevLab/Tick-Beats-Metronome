@@ -23,7 +23,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
         tags = {"tick", "beat", "visual", "helper", "metronome", "sound","audio","skilling","skill"}
 )
 //suppressing unused warning in IDE at class level as there are a lot of them with RL Plugins
-@SuppressWarnings("unused") //comment this line out if you want to see unused warnings
+@SuppressWarnings("unused") //comment or remove this line out if you want to see unused warnings
 public class TickBeatsMetronomePlugin extends Plugin {
 
     //Needed for Guice Dependency Injection
@@ -128,6 +128,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
     }
 
+    /*
+     * Fires on every local tick which is setup in LocalTickManager
+     */
     private void onLocalTick()
     {
         if(config.enableTickSmoothing()){
@@ -156,9 +159,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
 
 
-    /**
-     * Required by RuneLite to provide config interface.
-     */
+    // I believe this is Required by RuneLite to provide config interface.
     @Provides
     TickBeatsMetronomeConfig provideConfig(ConfigManager configManager)
     {

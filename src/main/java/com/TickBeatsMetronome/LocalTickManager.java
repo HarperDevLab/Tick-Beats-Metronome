@@ -18,7 +18,7 @@ public class LocalTickManager
 {
     // Base values
     private static final long BASE_TICK_INTERVAL_MS = 600; // Standard tick duration
-    private static final long MAX_ADJUSTMENT_MS = 5;      // Maximum per-tick interval correction
+    private static final long MAX_ADJUSTMENT_MS = 3;      // Maximum per-tick interval correction in milliseconds
 
     // Tick counters
     private int gameTickCount = 0;   // Increments each time onGameTick fires
@@ -62,8 +62,21 @@ public class LocalTickManager
         //so the tick counts don't count up infinitely
         if(gameTickCount >= 100){
             //subtract less than the above amount as we don't want local tick count to hit 0 and trigger start()
-            gameTickCount = gameTickCount - 98;
-            localTickCount = localTickCount - 98;
+            //we also don't want it to trigger the more aggressive tick correction that's used on the first few game ticks
+            gameTickCount = gameTickCount - 80;
+            localTickCount = localTickCount - 80;
+        }
+
+
+        //it appears logging in or world hopping can cause an offset of a few hundred ms
+        //This is used to allow for a more aggressive tick correction at the start to speed up syncing to game ticks
+        long maxAdjustment;
+        if(gameTickCount < 10){
+            //used to make tick correction less aggressive with each tick
+            int multiplier = 10 - gameTickCount;
+            maxAdjustment = 10 * multiplier;
+        }else{
+            maxAdjustment = MAX_ADJUSTMENT_MS;
         }
 
         // if for some reason ticks get way out of sync make them equal to each other
@@ -89,11 +102,11 @@ public class LocalTickManager
             //if the time difference between local and game ticks is less than our max adjustment
             //adjust by that much to make things slightly more accurate
             //else subtract our max adjustment from 600ms to get the next tick interval
-            if(Math.abs(timeDifference) < MAX_ADJUSTMENT_MS)
+            if(Math.abs(timeDifference) < maxAdjustment)
             {
                 nextTickInterval = BASE_TICK_INTERVAL_MS - Math.abs(timeDifference);
             }else{
-                nextTickInterval = BASE_TICK_INTERVAL_MS - MAX_ADJUSTMENT_MS;
+                nextTickInterval = BASE_TICK_INTERVAL_MS - maxAdjustment;
             }
 
 
@@ -104,17 +117,20 @@ public class LocalTickManager
             timeDifference = lastGameTickTime - lastLocalTickTime;
 
             //if the time difference is less than our max adjustment, adjust by that much to make things slightly more accurate
-            if(timeDifference < MAX_ADJUSTMENT_MS)
+            if(timeDifference < maxAdjustment)
             {
                 nextTickInterval = BASE_TICK_INTERVAL_MS + timeDifference;
             }else{
-                nextTickInterval = BASE_TICK_INTERVAL_MS + MAX_ADJUSTMENT_MS;
+                nextTickInterval = BASE_TICK_INTERVAL_MS + maxAdjustment;
             }
 
         }
 
-        //log.info("GameTick: {}, LocalTick: {}, Tick Difference: {}, Adjusted Interval: {}, Time Difference: {}",
-        //        gameTickCount, localTickCount, tickDifference, nextTickInterval, timeDifference);
+        /*
+        log.info("GameTick: {}, LocalTick: {}, Tick Difference: {}, Adjusted Interval: {}, Time Difference: {}",
+                gameTickCount, localTickCount, tickDifference, nextTickInterval, timeDifference);
+
+         */
     }
 
     /*

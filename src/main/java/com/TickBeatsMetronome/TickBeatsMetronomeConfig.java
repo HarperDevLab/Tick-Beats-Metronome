@@ -1,6 +1,5 @@
 package com.TickBeatsMetronome;
 
-
 import net.runelite.client.config.*;
 
 import java.awt.*;
@@ -19,8 +18,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			description = "Toggles tick sounds",
 			position = 1
 	)
-	default boolean enableAudioMetronome() {return true;}
-
+	default boolean enableAudioMetronome() { return true; }
 
 	@ConfigItem(
 			keyName = "enableVisualMetronome",
@@ -28,7 +26,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			description = "Toggles the tick number above the player",
 			position = 2
 	)
-	default boolean enableVisualMetronome(){return true;}
+	default boolean enableVisualMetronome() { return true; }
 
 	@ConfigItem(
 			keyName = "enableTickSmoothing",
@@ -36,7 +34,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			description = "More consistent but less accurate ticks",
 			position = 3
 	)
-	default boolean enableTickSmoothing(){return false;}
+	default boolean enableTickSmoothing() { return false; }
 
 	@Range(min = 1, max = 2)
 	@ConfigItem(
@@ -45,62 +43,53 @@ public interface TickBeatsMetronomeConfig extends Config
 			description = "Which beats are enabled for rotating through",
 			position = 4
 	)
-	default int enabledBeats(){return 2;}
+	default int enabledBeats() { return 2; }
 
 	@Range(min = 1, max = 8)
 	@ConfigItem(
 			keyName = "tickCount",
 			name = "Tick Count",
 			description = "Number of ticks in the metronome loop (1 to 8)",
-			position = 4
+			position = 5
 	)
-	default int tickCount(){return 4;}
+	default int tickCount() { return 4; }
 
 	@Range(max = 8)
 	@ConfigItem(
 			keyName = "startTick",
 			name = "Start Tick",
 			description = "The tick the metronome starts on (0 to 8)",
-			position = 4
+			position = 6
 	)
-	default int startTick(){return 0;}
+	default int startTick() { return 0; }
 
-
-	// Configurable font size for the tick number
 	@ConfigItem(
 			keyName = "fontSize",
 			name = "Font Size",
 			description = "Size of the tick number displayed",
-			position = 5
+			position = 7
 	)
-	default int fontSize()
-	{
-		return 40;
-	}
+	default int fontSize() { return 40; }
 
-	// Configurable font Color
 	@ConfigItem(
 			keyName = "fontColor",
 			name = "Font Color",
 			description = "Color of the tick number displayed",
-			position = 5
+			position = 8
 	)
 	default Color fontColor() { return Color.YELLOW; }
 
-
-	// Configurable Height Offset tick number
 	@ConfigItem(
 			keyName = "textOffset",
 			name = "Text Offset",
 			description = "Size of the tick number displayed",
-			position = 5
+			position = 9
 	)
-	default int textOffset(){ return 200; }
+	default int textOffset() { return 200; }
 
 	////////////////////////////////////////////////
 	//////////////  Hotkey Settings  ///////////////
 	////////////////////////////////////////////////
-
 
 	@ConfigSection(
 			name = "Hotkey Settings",
@@ -109,8 +98,6 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	String hotkeys = "hotkeys";
 
-
-	////////// Reset //////////
 	@ConfigItem(
 			name = "Reset to Start Tick",
 			keyName = "resetHotkey",
@@ -118,14 +105,8 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 11
 	)
-	default Keybind resetHotkey()
-	{
-		//return Keybind.NOT_SET;
-		return Keybind.SHIFT;
-	}
+	default Keybind resetHotkey() { return Keybind.SHIFT; }
 
-
-	////////// Next Beat //////////
 	@ConfigItem(
 			name = "Next Beat",
 			keyName = "nextBeatHotkey",
@@ -133,12 +114,8 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 12
 	)
-	default Keybind nextBeatHotkey()
-	{
-		return new Keybind(KeyEvent.VK_RIGHT, 0);
-	}
+	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_RIGHT, 0); }
 
-	////////// Previous Beat //////////
 	@ConfigItem(
 			name = "Previous Beat",
 			keyName = "previousBeatHotkey",
@@ -146,13 +123,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 13
 	)
-	default Keybind previousBeatHotkey()
-	{
-		return new Keybind(KeyEvent.VK_LEFT, 0);
-	}
-
-
-
+	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_LEFT, 0); }
 
 	@ConfigItem(
 			name = "Next Tick",
@@ -161,10 +132,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 14
 	)
-	default Keybind nextTickHotkey()
-	{
-		return new Keybind(KeyEvent.VK_DOWN, 0);
-	}
+	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_DOWN, 0); }
 
 	@ConfigItem(
 			name = "Previous Tick",
@@ -173,14 +141,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 15
 	)
-	default Keybind previousTickHotkey()
-	{
-		return new Keybind(KeyEvent.VK_UP, 0);
-	}
-
-
-
-
+	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_UP, 0); }
 
 	////////////////////////////////////////////////
 	//////////////////  Beat 1  ////////////////////
@@ -193,13 +154,12 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	String Beat1 = "Beat1";
 
-
 	@ConfigItem(
 			keyName = "tick1Sound",
 			name = "Tick 1 Sound",
 			description = "Sound to play on Tick 1",
 			section = Beat1,
-			position = 2
+			position = 21
 	)
 	default TickSoundOption tick1Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -208,7 +168,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 2 Sound",
 			description = "Sound to play on Tick 2",
 			section = Beat1,
-			position = 10
+			position = 22
 	)
 	default TickSoundOption tick2Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -217,7 +177,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 3 Sound",
 			description = "Sound to play on Tick 3",
 			section = Beat1,
-			position = 10
+			position = 23
 	)
 	default TickSoundOption tick3Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -226,7 +186,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 4 Sound",
 			description = "Sound to play on Tick 4",
 			section = Beat1,
-			position = 10
+			position = 24
 	)
 	default TickSoundOption tick4Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -235,7 +195,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 5 Sound",
 			description = "Sound to play on Tick 5",
 			section = Beat1,
-			position = 10
+			position = 25
 	)
 	default TickSoundOption tick5Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -244,7 +204,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 6 Sound",
 			description = "Sound to play on Tick 6",
 			section = Beat1,
-			position = 10
+			position = 26
 	)
 	default TickSoundOption tick6Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -253,7 +213,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 7 Sound",
 			description = "Sound to play on Tick 7",
 			section = Beat1,
-			position = 10
+			position = 27
 	)
 	default TickSoundOption tick7Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -262,10 +222,9 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Tick 8 Sound",
 			description = "Sound to play on Tick 8",
 			section = Beat1,
-			position = 10
+			position = 28
 	)
 	default TickSoundOption tick8Sound() { return TickSoundOption.TICK_HIHAT; }
-
 
 	////////////////////////////////////////////////
 	//////////////////  Beat 2  ////////////////////
@@ -278,13 +237,12 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	String Beat2 = "Beat2";
 
-
 	@ConfigItem(
 			keyName = "beat2Tick1Sound",
 			name = "Beat 2 Tick 1 Sound",
 			description = "Sound to play on Beat 2 Tick 1",
 			section = Beat2,
-			position = 2
+			position = 31
 	)
 	default TickSoundOption beat2Tick1Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -293,7 +251,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 2 Sound",
 			description = "Sound to play on Beat 2 Tick 2",
 			section = Beat2,
-			position = 3
+			position = 32
 	)
 	default TickSoundOption beat2Tick2Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -302,7 +260,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 3 Sound",
 			description = "Sound to play on Beat 2 Tick 3",
 			section = Beat2,
-			position = 4
+			position = 33
 	)
 	default TickSoundOption beat2Tick3Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -311,7 +269,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 4 Sound",
 			description = "Sound to play on Beat 2 Tick 4",
 			section = Beat2,
-			position = 5
+			position = 34
 	)
 	default TickSoundOption beat2Tick4Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -320,7 +278,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 5 Sound",
 			description = "Sound to play on Beat 2 Tick 5",
 			section = Beat2,
-			position = 6
+			position = 35
 	)
 	default TickSoundOption beat2Tick5Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -329,7 +287,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 6 Sound",
 			description = "Sound to play on Beat 2 Tick 6",
 			section = Beat2,
-			position = 7
+			position = 36
 	)
 	default TickSoundOption beat2Tick6Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -338,7 +296,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 7 Sound",
 			description = "Sound to play on Beat 2 Tick 7",
 			section = Beat2,
-			position = 8
+			position = 37
 	)
 	default TickSoundOption beat2Tick7Sound() { return TickSoundOption.TICK_HIHAT; }
 
@@ -347,25 +305,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Beat 2 Tick 8 Sound",
 			description = "Sound to play on Beat 2 Tick 8",
 			section = Beat2,
-			position = 9
+			position = 38
 	)
 	default TickSoundOption beat2Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
-
-
-	////////////////////////////////////////////////
-	/////////////////  Advanced  ///////////////////
-	////////////////////////////////////////////////
-
-	/*
-	@ConfigSection(
-			name = "Advanced Settings",
-			description = "Advanced",
-			position = 40
-	)
-	String advancedSettings = "advancedSettings";
-	*/
-
-
-
-
 }
