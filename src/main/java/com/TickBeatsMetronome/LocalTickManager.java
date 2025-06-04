@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.eventbus.Subscribe;
 
+import javax.inject.Singleton;
 import java.util.concurrent.*;
 
 /**
@@ -14,6 +15,7 @@ import java.util.concurrent.*;
  * for when a metronome that sounds good and consistent is more important than perfect game ticks that include server lag
  */
 @Slf4j
+@Singleton
 public class LocalTickManager
 {
     // Base values
@@ -73,7 +75,7 @@ public class LocalTickManager
         long maxAdjustment;
         if(gameTickCount < 10){
             //used to make tick correction less aggressive with each tick
-            int multiplier = 10 - gameTickCount;
+            long multiplier = 10 - gameTickCount;
             maxAdjustment = 10 * multiplier;
         }else{
             maxAdjustment = MAX_ADJUSTMENT_MS;
