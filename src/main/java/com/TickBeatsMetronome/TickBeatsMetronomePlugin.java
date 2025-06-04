@@ -24,6 +24,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 //suppressing unused warning in IDE at class level as there are a lot of them with RL Plugins
 @SuppressWarnings("unused") //comment or remove this line out if you want to see unused warnings
+//extends Plugin makes this a singleton so @Singleton isn't used here
 public class TickBeatsMetronomePlugin extends Plugin {
 
     //Needed for Guice Dependency Injection
@@ -48,11 +49,18 @@ public class TickBeatsMetronomePlugin extends Plugin {
     @Inject
     private SoundManager soundManager;
 
+    @Inject
+    private AudioClipManager audioClipManager;
+
+    @Inject
+    private UserSoundManager userSoundManager;
 
     @Inject
     private EventBus eventBus;
 
     private LocalTickManager localTickManager;
+
+
 
 
     //Holds the tick count//
@@ -77,10 +85,11 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // Create the LocalTickManager and pass in your tick callback
         localTickManager = new LocalTickManager(this::onLocalTick);
 
-        // Register it so it gets onGameTick events
+        // Register LocalTickManager so it gets onGameTick events
         eventBus.register(localTickManager);
 
-
+        //userSoundManager.loadUserSounds();
+        audioClipManager.loadAllAudioFiles();
 
     }
 

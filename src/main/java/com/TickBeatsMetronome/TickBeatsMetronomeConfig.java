@@ -5,6 +5,7 @@ import net.runelite.client.config.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+//ConfigGroup internally makes this @Singleton, so it's not required
 @ConfigGroup("advancedMetronome")
 public interface TickBeatsMetronomeConfig extends Config
 {

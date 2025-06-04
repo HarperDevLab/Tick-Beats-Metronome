@@ -11,17 +11,12 @@ import javax.inject.Singleton;
 @Singleton
 public class SoundManager {
 
-    private final TickBeatsMetronomeConfig config;
-
     // This manages and plays  audio clips
-    private final AudioClipManager audioClipManager = new AudioClipManager();
-
+    @Inject
+    AudioClipManager audioClipManager;
 
     @Inject
-    public SoundManager( TickBeatsMetronomeConfig config)
-    {
-        this.config = config;
-    }
+    TickBeatsMetronomeConfig config;
 
 
     /**
@@ -59,7 +54,7 @@ public class SoundManager {
 
         if (option != TickSoundOption.OFF)
         {
-            audioClipManager.play(option.name());
+            audioClipManager.play(option.getFileName());
         }
     }
 
@@ -85,7 +80,7 @@ public class SoundManager {
 
         if (option != TickSoundOption.OFF)
         {
-            audioClipManager.play(option.name());
+            audioClipManager.play(option.getFileName());
         }
     }
 

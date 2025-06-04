@@ -3,21 +3,21 @@ package com.TickBeatsMetronome;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.sound.sampled.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@Singleton
 public class AudioClipManager
 {
 
     @Inject
-    public AudioClipManager()
-    {
-        loadAllAudioFiles();
-    }
+    private UserSoundManager userSoundManager;
 
     /**
      * Inner class to hold raw sound data and format.
@@ -35,16 +35,42 @@ public class AudioClipManager
         }
     }
 
+
     // Stores sound clips by name
     private final Map<String, SoundData> sounds = new HashMap<>();
 
-
+    //UserSoundManager userSoundManager
     public void loadAllAudioFiles(){
+
         // Load all the audio files listed in the TickSoundOption enum into memory
         for (TickSoundOption sound : TickSoundOption.values())
         {
-            load(sound.name(), "/com/TickBeatsMetronome/" + sound.getFileName());
+            // Skip user-defined entries (those that don't exist as embedded resources)
+            if (sound.name().startsWith("USER_"))
+            {
+                continue;
+            }
+
+            String fileName = sound.getFileName();
+            String resourcePath = "/com/TickBeatsMetronome/" + fileName;
+
+            load(fileName, resourcePath);
         }
+
+        userSoundManager.loadUserSounds();
+
+        // loop thought our sound files
+        int i = 0;
+        for (File file : userSoundManager.getUserSoundFiles()) {
+            i++;
+            //This fileId will be used as a key for user sound files in the "Sounds" Hash Map
+            //that way User Sound 1 is accessed with "1" and so on
+            String fileId = String.valueOf(i);
+            loadFromFile(fileId, file);
+
+        }
+
+
     }
 
     /**
@@ -52,14 +78,14 @@ public class AudioClipManager
      * for quick playback later. This version should correctly both in development (file system)
      * and when the plugin is deployed as a JAR via RuneLite's plugin hub.
      *
-     * @param name          A name used as a key in the sound map
+     * @param fileName      The File Name used as a key in the sound map
      * @param resourcePath  The resource path to the sound file (e.g. "/com/TickBeatsMetronome/tick-hihat.wav")
      */
-    private void load(String name, String resourcePath)
+    private void load(String fileName, String resourcePath)
     {
-        // Normalize the name by converting it to lowercase and replacing underscores with dashes
+        // Normalize the name by converting it to lowercase
         // This ensures consistency regardless of how it's referenced elsewhere in the code
-        String normalizedName = name.toLowerCase().replace('_', '-');
+        String normalizedName = fileName.toLowerCase();
 
         // Try-with-resources ensures the stream is closed automatically, even if exceptions occur
         try (var stream = getClass().getResourceAsStream(resourcePath))
@@ -112,21 +138,70 @@ public class AudioClipManager
         }
     }
 
+
+    /**
+     * Loads a .wav sound file from the file system (used for user-provided sounds).
+     * The fileId is used to reference user sounds, the first user file (Which has been sorted Alphabetically) will be 1
+     * the second 2 and so on
+     *
+     * @param fileId      The fileId will be used for a key for accessing user sounds in the "Sounds"  Hash Map
+     * @param file        A File pointing to a .wav file on disk
+     */
+    public void loadFromFile(String fileId, File file)
+    {
+
+        try (AudioInputStream originalIn = AudioSystem.getAudioInputStream(file))
+        {
+            AudioFormat format = originalIn.getFormat();
+
+            if (format.getEncoding() != AudioFormat.Encoding.PCM_SIGNED)
+            {
+                format = new AudioFormat(
+                        AudioFormat.Encoding.PCM_SIGNED,
+                        format.getSampleRate(),
+                        16,
+                        format.getChannels(),
+                        format.getChannels() * 2,
+                        format.getSampleRate(),
+                        false
+                );
+
+                try (AudioInputStream convertedIn = AudioSystem.getAudioInputStream(format, originalIn))
+                {
+                    byte[] data = convertedIn.readAllBytes();
+                    sounds.put(fileId, new SoundData(format, data));
+                }
+            }
+            else
+            {
+                byte[] data = originalIn.readAllBytes();
+                sounds.put(fileId, new SoundData(format, data));
+            }
+
+            log.info("Loaded user sound: {}", fileId);
+        }
+        catch (UnsupportedAudioFileException | IOException e)
+        {
+            log.error("Failed to load user sound '{}': {}", fileId, e.getMessage());
+        }
+    }
+
     /**
      * Plays the sound by creating a new Clip instance.
      * This allows the same sound to be played multiple times in quick succession or simultaneously.
-     * @param name The key used in `load()`, case- and underscore-insensitive
+     * @param fileName The key used in `load()`, case- and underscore-insensitive
      */
-    public void play(String name)
+    public void play(String fileName)
     {
         // Normalize the name the same way we did in load()
-        String normalizedName = name.toLowerCase().replace('_', '-');
+        // note: the normalizedName for UserSounds will just be the sounds Id as a string, ex "1"
+        String normalizedName = fileName.toLowerCase();
 
         // Retrieve the sound data
         SoundData data = sounds.get(normalizedName);
         if (data == null)
         {
-            // Could optionally log, but this is silent to avoid spam on missing config
+            log.info("no sound data found for: {}", normalizedName);
             return;
         }
 

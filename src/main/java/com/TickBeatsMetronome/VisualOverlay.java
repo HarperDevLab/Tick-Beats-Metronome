@@ -17,17 +17,18 @@ import java.awt.*;
 @Singleton
 public class VisualOverlay extends Overlay
 {
-    private final Client client;
-    private final TickBeatsMetronomePlugin plugin;
-    private final TickBeatsMetronomeConfig config;
+    @Inject
+    Client client;
 
     @Inject
-    public VisualOverlay(Client client, TickBeatsMetronomePlugin plugin, TickBeatsMetronomeConfig config)
-    {
-        this.client = client;
-        this.plugin = plugin;
-        this.config = config;
+    TickBeatsMetronomePlugin plugin;
 
+    @Inject
+    TickBeatsMetronomeConfig config;
+
+    @Inject
+    public VisualOverlay()
+    {
         // Set the overlay to move with the game world (e.g., above the player)
         setPosition(OverlayPosition.DYNAMIC);
         // Draw this above the main game scene (so it shows over your player)

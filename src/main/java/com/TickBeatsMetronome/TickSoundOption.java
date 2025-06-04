@@ -31,19 +31,44 @@ public enum TickSoundOption
     CLAP_TAPE("clap-tape.wav"),
     CLAP_SNARE_SMASHER("clap-snare-smasher.wav"),
     CLAP_SNARE_TAPE("clap-snare-tape.wav"),
-    CLAP_SNARE_VINYL("clap-snare-vinyl.wav");
+    CLAP_SNARE_VINYL("clap-snare-vinyl.wav"),
+
+    //User Sounds
+    //The sound files are given id's based on their Alphabetical order, that's what we'll use to access them
+    USER_SOUND_1("1"),
+    USER_SOUND_2("2"),
+    USER_SOUND_3("3"),
+    USER_SOUND_4("4"),
+    USER_SOUND_5("5"),
+    USER_SOUND_6("6"),
+    USER_SOUND_7("7"),
+    USER_SOUND_8("8"),
+    USER_SOUND_9("9"),
+    USER_SOUND_10("10"),
+    USER_SOUND_11("11"),
+    USER_SOUND_12("12"),
+    USER_SOUND_13("13"),
+    USER_SOUND_14("14"),
+    USER_SOUND_15("15"),
+    USER_SOUND_16("16"),
+    USER_SOUND_17("17"),
+    USER_SOUND_18("18"),
+    USER_SOUND_19("19"),
+    USER_SOUND_20("20"),
+    ;
 
 
-    private final String fileName;
 
-    TickSoundOption(String fileName)
+    private final String resourceName;
+
+    TickSoundOption(String resourceName)
     {
-        this.fileName = fileName;
+        this.resourceName = resourceName;
     }
 
     public String getFileName()
     {
-        return fileName;
+        return resourceName;
     }
 
     @Override
