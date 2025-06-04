@@ -27,6 +27,16 @@ should happen, you can run it along with the regular RuneLite metronome plugin t
 to keep things fresh!
 
 
+- **NEW User Sound Support!**: Add up to 20 of your own sound effects to the metronome. Add any sounds you
+like as .wav files to .runelite\tick-beats\sounds (this folder should be created when you start the plugin)
+
+The User Sounds will be accessible by selecting "user sound 1" - "user sound 20" in the sound options dropdown.
+The plugin pulls all .wav files from the folder and sorts them alphabetically so naming conventions aren't 
+as rigid. So you can name your files "01kick.wav" "02snare.wav" or "AKick.wav" "BSnare.wav" if you want 
+"user sound 1" to be your kick sound file and "user sound 2" to be your snare sound file. Or don't 
+worry at all about naming conventions, toss all your .wav sounds (up to 20) in the folder and play with the different 
+"user sound" options until you find the sound you're looking for!
+
 
 ---
 ## Credit
