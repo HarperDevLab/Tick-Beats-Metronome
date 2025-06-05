@@ -50,9 +50,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private SoundManager soundManager;
 
     @Inject
-    private AudioClipManager audioClipManager;
-
-    @Inject
     private UserSoundManager userSoundManager;
 
     @Inject
@@ -88,8 +85,8 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // Register LocalTickManager so it gets onGameTick events
         eventBus.register(localTickManager);
 
-        //userSoundManager.loadUserSounds();
-        audioClipManager.loadAllAudioFiles();
+        //load the user sound files
+        userSoundManager.loadUserSounds();
 
     }
 

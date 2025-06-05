@@ -1,19 +1,27 @@
 package com.TickBeatsMetronome;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
+import java.util.Map;
+
+import net.runelite.client.audio.AudioPlayer;
 
 
 /*
  * This Class is used to determine which sounds are played
- * The actual audio clips themselves are handled in the AudioClipManager
  */
+@Slf4j
 @Singleton
 public class SoundManager {
 
-    // This manages and plays  audio clips
     @Inject
-    AudioClipManager audioClipManager;
+    private AudioPlayer audioPlayer;
+
+    @Inject
+    UserSoundManager userSoundManager;
 
     @Inject
     TickBeatsMetronomeConfig config;
@@ -54,7 +62,7 @@ public class SoundManager {
 
         if (option != TickSoundOption.OFF)
         {
-            audioClipManager.play(option.getFileName());
+            play(option.getFileName());
         }
     }
 
@@ -80,7 +88,50 @@ public class SoundManager {
 
         if (option != TickSoundOption.OFF)
         {
-            audioClipManager.play(option.getFileName());
+            play(option.getFileName());
+        }
+    }
+
+
+
+
+    /**
+     * Plays a sound using its key (from TickSoundOption or user file ID).
+     *
+     * @param key TickSoundOption name or user file ID (e.g., "tick-hihat.wav" or "1")
+     */
+    public void play(String key)
+    {
+        //get the key and normalize it to lowercase for better matching
+        //I've changed things a bit since implementing, I'm not certain this is still necessary
+        String normalizedKey = key.toLowerCase();
+
+        Map<String, File> userSoundMap = userSoundManager.getUserSoundMap();
+
+        // Check UserSoundFiles Map to make sure our key doesn't match a user added sound first
+        File userFile = userSoundMap.get(normalizedKey);
+        if (userFile != null)
+        {
+            try
+            {
+                audioPlayer.play(userFile, 1.0f);
+            }
+            catch (Exception e)
+            {
+                log.info("Failed to play user sound '{}': {}", normalizedKey, e.getMessage());
+            }
+            return;
+        }
+
+        // Otherwise, try to play a built-in resource
+        String resourcePath = "/com/TickBeatsMetronome/" + normalizedKey;
+        try
+        {
+            audioPlayer.play(getClass(), resourcePath, 1.0f);
+        }
+        catch (Exception e)
+        {
+            log.error("Failed to play built-in sound '{}': {}", normalizedKey, e.getMessage());
         }
     }
 

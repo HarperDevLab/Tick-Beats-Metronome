@@ -10,10 +10,9 @@ import java.util.*;
 /**
  * Handles finding and managing user-supplied sound files from the
  * RuneLite plugin configuration directory.
- * This class creates a list audio files which can be accessed via getUserSoundFiles()
- * The actual loading of the files into memory happens in AudioClipManager
- * Expected location of sound files, it should create this folder on startup:
+ * This class creates a map of audio files which can be accessed via getUserSoundMap()
  *   ~/.runelite/tick-beats/sounds/*
+ * Is the expected location of sound files, it should create this folder on startup:
  * All user-supplied files must be `.wav` format.
  */
 @Slf4j
@@ -23,9 +22,11 @@ public class UserSoundManager
     // Path to the directory where users can drop .wav files
     private static final File SOUND_DIRECTORY = new File(RuneLite.RUNELITE_DIR, "tick-beats/sounds");
 
-    // list of sound files
-    private List<File> userSoundFiles = new ArrayList<>();
+    // Stores user sound files keyed by their ID ("1", "2", etc.)
+    private final Map<String, File> userSoundMap = new HashMap<>();
 
+    // list of sound files
+    private List<File> userFiles = new ArrayList<>();
 
 
 
@@ -36,7 +37,8 @@ public class UserSoundManager
     public void loadUserSounds()
     {
         // Clear any previously loaded sounds (safe for reloads)
-        userSoundFiles.clear();
+        userFiles.clear();
+        userSoundMap.clear();
 
         // Ensure directory exists
         if (!SOUND_DIRECTORY.exists())
@@ -62,24 +64,36 @@ public class UserSoundManager
             // Only accept regular files that end in .wav (case-insensitive)
             if (file.isFile() && file.getName().toLowerCase().endsWith(".wav"))
             {
-                userSoundFiles.add(file);
+                userFiles.add(file);
                 log.info("Discovered user sound file: {}", file.getName());
             }
         }
 
-        log.info("Total user sound files loaded: {}", userSoundFiles.size());
-    }
+        //sort the files by filename
+        userFiles.sort(Comparator.comparing(File::getName));
 
+        log.info("Total user sound files loaded: {}", userFiles.size());
+
+        //create the userSoundMap attaching an id to each sound file for access
+        int i = 0;
+        for (File file : userFiles)
+        {
+            i++;
+            String fileId = String.valueOf(i);
+            userSoundMap.put(fileId, file);
+            log.info("Registered user sound [{}]: {}", fileId, file.getName());
+        }
+    }
 
 
 
     /**
      * Returns a collection of all user sound files.
-     * Used for loading them into AudioClipManager.
      */
-    public List<File> getUserSoundFiles()
+
+    public Map<String, File> getUserSoundMap()
     {
-        userSoundFiles.sort(Comparator.comparing(File::getName));
-        return userSoundFiles;
+        return userSoundMap;
     }
+
 }
