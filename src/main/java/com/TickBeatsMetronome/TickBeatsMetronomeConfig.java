@@ -64,29 +64,106 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int startTick() { return 0; }
 
+	////////////////////////////////////////////////
+	///////////////  Text Settings  ////////////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Text Settings",
+			description = "Configure text appearance and colors",
+			position = 7
+	)
+	String textSettings = "textSettings";
+
 	@ConfigItem(
 			keyName = "fontSize",
 			name = "Font Size",
 			description = "Size of the tick number displayed",
-			position = 7
+			section = textSettings,
+			position = 8
 	)
 	default int fontSize() { return 40; }
 
 	@ConfigItem(
-			keyName = "fontColor",
-			name = "Font Color",
-			description = "Color of the tick number displayed",
-			position = 8
-	)
-	default Color fontColor() { return Color.YELLOW; }
-
-	@ConfigItem(
-			keyName = "textOffset",
-			name = "Text Offset",
-			description = "Size of the tick number displayed",
+			keyName = "textVerticalOffset",
+			name = "Text Vertical Offset",
+			description = "Vertical offset of the text from player",
+			section = textSettings,
 			position = 9
 	)
-	default int textOffset() { return 200; }
+	default int textVerticalOffset() { return 200; }
+
+	@ConfigItem(
+			keyName = "tick1Color",
+			name = "Tick 1 Color",
+			description = "Color for tick number 1",
+			section = textSettings,
+			position = 10
+	)
+	default Color tick1Color() { return Color.RED; }
+
+	@ConfigItem(
+			keyName = "tick2Color",
+			name = "Tick 2 Color",
+			description = "Color for tick number 2",
+			section = textSettings,
+			position = 11
+	)
+	default Color tick2Color() { return Color.BLUE; }
+
+	@ConfigItem(
+			keyName = "tick3Color",
+			name = "Tick 3 Color",
+			description = "Color for tick number 3",
+			section = textSettings,
+			position = 12
+	)
+	default Color tick3Color() { return Color.GREEN; }
+
+	@ConfigItem(
+			keyName = "tick4Color",
+			name = "Tick 4 Color",
+			description = "Color for tick number 4",
+			section = textSettings,
+			position = 13
+	)
+	default Color tick4Color() { return Color.YELLOW; }
+
+	@ConfigItem(
+			keyName = "tick5Color",
+			name = "Tick 5 Color",
+			description = "Color for tick number 5",
+			section = textSettings,
+			position = 14
+	)
+	default Color tick5Color() { return Color.ORANGE; }
+
+	@ConfigItem(
+			keyName = "tick6Color",
+			name = "Tick 6 Color",
+			description = "Color for tick number 6",
+			section = textSettings,
+			position = 15
+	)
+	default Color tick6Color() { return Color.PINK; }
+
+	@ConfigItem(
+			keyName = "tick7Color",
+			name = "Tick 7 Color",
+			description = "Color for tick number 7",
+			section = textSettings,
+			position = 16
+	)
+	default Color tick7Color() { return Color.MAGENTA; }
+
+	@ConfigItem(
+			keyName = "tick8Color",
+			name = "Tick 8 Color",
+			description = "Color for tick number 8",
+			section = textSettings,
+			position = 17
+	)
+	default Color tick8Color() { return Color.CYAN; }
 
 	////////////////////////////////////////////////
 	//////////////  Hotkey Settings  ///////////////

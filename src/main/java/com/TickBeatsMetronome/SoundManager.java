@@ -45,24 +45,24 @@ public class SoundManager {
      */
     private void playBeat1(int tickCount)
     {
-        TickSoundOption option;
+        TickSoundOption soundOption;
 
         switch (tickCount)
         {
-            case 1: option = config.tick1Sound(); break;
-            case 2: option = config.tick2Sound(); break;
-            case 3: option = config.tick3Sound(); break;
-            case 4: option = config.tick4Sound(); break;
-            case 5: option = config.tick5Sound(); break;
-            case 6: option = config.tick6Sound(); break;
-            case 7: option = config.tick7Sound(); break;
-            case 8: option = config.tick8Sound(); break;
-            default: option = TickSoundOption.OFF; break;
+            case 1: soundOption = config.tick1Sound(); break;
+            case 2: soundOption = config.tick2Sound(); break;
+            case 3: soundOption = config.tick3Sound(); break;
+            case 4: soundOption = config.tick4Sound(); break;
+            case 5: soundOption = config.tick5Sound(); break;
+            case 6: soundOption = config.tick6Sound(); break;
+            case 7: soundOption = config.tick7Sound(); break;
+            case 8: soundOption = config.tick8Sound(); break;
+            default: soundOption = TickSoundOption.OFF; break;
         }
 
-        if (option != TickSoundOption.OFF)
+        if (soundOption != TickSoundOption.OFF)
         {
-            play(option.getFileName());
+            play(soundOption.getFileName());
         }
     }
 
@@ -71,24 +71,24 @@ public class SoundManager {
      */
     private void playBeat2(int tickCount)
     {
-        TickSoundOption option;
+        TickSoundOption soundOption;
 
         switch (tickCount)
         {
-            case 1: option = config.beat2Tick1Sound(); break;
-            case 2: option = config.beat2Tick2Sound(); break;
-            case 3: option = config.beat2Tick3Sound(); break;
-            case 4: option = config.beat2Tick4Sound(); break;
-            case 5: option = config.beat2Tick5Sound(); break;
-            case 6: option = config.beat2Tick6Sound(); break;
-            case 7: option = config.beat2Tick7Sound(); break;
-            case 8: option = config.beat2Tick8Sound(); break;
-            default: option = TickSoundOption.OFF; break;
+            case 1: soundOption = config.beat2Tick1Sound(); break;
+            case 2: soundOption = config.beat2Tick2Sound(); break;
+            case 3: soundOption = config.beat2Tick3Sound(); break;
+            case 4: soundOption = config.beat2Tick4Sound(); break;
+            case 5: soundOption = config.beat2Tick5Sound(); break;
+            case 6: soundOption = config.beat2Tick6Sound(); break;
+            case 7: soundOption = config.beat2Tick7Sound(); break;
+            case 8: soundOption = config.beat2Tick8Sound(); break;
+            default: soundOption = TickSoundOption.OFF; break;
         }
 
-        if (option != TickSoundOption.OFF)
+        if (soundOption != TickSoundOption.OFF)
         {
-            play(option.getFileName());
+            play(soundOption.getFileName());
         }
     }
 
@@ -98,13 +98,15 @@ public class SoundManager {
     /**
      * Plays a sound using its key (from TickSoundOption or user file ID).
      *
-     * @param key TickSoundOption name or user file ID (e.g., "tick-hihat.wav" or "1")
+     * @param fileIdentifier TickSoundOption name or user file ID (e.g., "tick-hihat.wav" or "1") found in TickSoundOptions
      */
-    public void play(String key)
+    public void play(String fileIdentifier)
     {
+
+
         //get the key and normalize it to lowercase for better matching
         //I've changed things a bit since implementing, I'm not certain this is still necessary
-        String normalizedKey = key.toLowerCase();
+        String normalizedKey = fileIdentifier.toLowerCase();
 
         Map<String, File> userSoundMap = userSoundManager.getUserSoundMap();
 

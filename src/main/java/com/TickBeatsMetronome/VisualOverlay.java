@@ -55,8 +55,8 @@ public class VisualOverlay extends Overlay
         // Get the current tick number
         String tickText = String.valueOf(plugin.tickCount);
 
-        // Determine where to draw the text (above your character)
-        int zOffset = config.textOffset();
+        // Determine where to draw the text
+        int zOffset = config.textVerticalOffset(); // Get absolute value for the initial calculation
         Point textLocation = player.getCanvasTextLocation(graphics, tickText, zOffset);
         if (textLocation == null)
         {
@@ -74,6 +74,8 @@ public class VisualOverlay extends Overlay
         //place the text on the screen
         int x = textLocation.getX() - (textWidth / 2);
         int y = textLocation.getY();
+        
+
 
         // Draw black outline around text (offset by 1 pixel in each direction)
         graphics.setColor(Color.BLACK);
@@ -82,8 +84,39 @@ public class VisualOverlay extends Overlay
         graphics.drawString(tickText, x, y + 1);
         graphics.drawString(tickText, x, y - 1);
 
-        // Draw actual text in user-selected font color
-        graphics.setColor(config.fontColor());
+        // Get the appropriate color based on the current tick count
+        Color tickColor;
+        switch (plugin.tickCount) {
+            case 1:
+                tickColor = config.tick1Color();
+                break;
+            case 2:
+                tickColor = config.tick2Color();
+                break;
+            case 3:
+                tickColor = config.tick3Color();
+                break;
+            case 4:
+                tickColor = config.tick4Color();
+                break;
+            case 5:
+                tickColor = config.tick5Color();
+                break;
+            case 6:
+                tickColor = config.tick6Color();
+                break;
+            case 7:
+                tickColor = config.tick7Color();
+                break;
+            case 8:
+                tickColor = config.tick8Color();
+                break;
+            default:
+                tickColor = Color.YELLOW; // Fallback color for any unexpected values
+        }
+
+        // Draw actual text in tick-specific color
+        graphics.setColor(tickColor);
         graphics.drawString(tickText, x, y);
 
         return null; // No fixed size needed — it's dynamically placed
