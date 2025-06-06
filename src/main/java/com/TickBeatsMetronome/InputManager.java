@@ -87,7 +87,13 @@ public class InputManager implements net.runelite.client.input.KeyListener
      */
     public void adjustTick(int delta)
     {
-        int maxTicks = config.tickCount();
+        // Get max ticks based on current beat
+        int maxTicks;
+        switch (plugin.beatNumber) {
+            case 1: maxTicks = config.beat1TickCount(); break;
+            case 2: maxTicks = config.beat2TickCount(); break;
+            default: maxTicks = config.beat1TickCount(); break;
+        }
         plugin.tickCount = ((plugin.tickCount - 1 + delta + maxTicks) % maxTicks) + 1;
     }
 

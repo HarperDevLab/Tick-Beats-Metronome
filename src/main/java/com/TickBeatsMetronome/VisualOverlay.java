@@ -41,7 +41,7 @@ public class VisualOverlay extends Overlay
     {
 
         //if the visual metronome is turned off, don't draw it to the screen
-        if (!config.enableVisualMetronome()){
+        if (!config.enableTextMetronome()){
             return null;
         }
 
@@ -84,36 +84,21 @@ public class VisualOverlay extends Overlay
         graphics.drawString(tickText, x, y + 1);
         graphics.drawString(tickText, x, y - 1);
 
+
         // Get the appropriate color based on the current tick count
         Color tickColor;
         switch (plugin.tickCount) {
-            case 1:
-                tickColor = config.tick1Color();
-                break;
-            case 2:
-                tickColor = config.tick2Color();
-                break;
-            case 3:
-                tickColor = config.tick3Color();
-                break;
-            case 4:
-                tickColor = config.tick4Color();
-                break;
-            case 5:
-                tickColor = config.tick5Color();
-                break;
-            case 6:
-                tickColor = config.tick6Color();
-                break;
-            case 7:
-                tickColor = config.tick7Color();
-                break;
-            case 8:
-                tickColor = config.tick8Color();
-                break;
-            default:
-                tickColor = Color.YELLOW; // Fallback color for any unexpected values
+            case 1: tickColor = config.tick1Color(); break;
+            case 2: tickColor = config.tick2Color(); break;
+            case 3: tickColor = config.tick3Color(); break;
+            case 4: tickColor = config.tick4Color(); break;
+            case 5: tickColor = config.tick5Color(); break;
+            case 6: tickColor = config.tick6Color(); break;
+            case 7: tickColor = config.tick7Color(); break;
+            case 8: tickColor = config.tick8Color(); break;
+            default: tickColor = Color.YELLOW; break; // Fallback color for any unexpected values
         }
+        
 
         // Draw actual text in tick-specific color
         graphics.setColor(tickColor);

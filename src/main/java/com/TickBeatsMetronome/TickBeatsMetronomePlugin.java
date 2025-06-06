@@ -144,6 +144,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
         }
     }
 
+    
     private void onTick(){
         //if the reset key is being held, don't do anything on the game tick
         if(inputManager.resetKeyIsHeld)
@@ -151,8 +152,13 @@ public class TickBeatsMetronomePlugin extends Plugin {
             return;
         }
 
-        // Get the max tick count from the user config
-        int maxTicks = config.tickCount();
+        // Get the max tick count based on current beat
+        int maxTicks;
+        switch (beatNumber) {
+            case 1: maxTicks = config.beat1TickCount(); break;
+            case 2: maxTicks = config.beat2TickCount(); break;
+            default: maxTicks = config.beat1TickCount(); break;
+        }
 
         // Increment the tick counter and wrap back to 1 if over max
         tickCount = (tickCount % maxTicks) + 1;

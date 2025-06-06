@@ -22,12 +22,12 @@ public interface TickBeatsMetronomeConfig extends Config
 	default boolean enableAudioMetronome() { return true; }
 
 	@ConfigItem(
-			keyName = "enableVisualMetronome",
-			name = "Enable Visual Metronome",
+			keyName = "enableTextMetronome",
+			name = "Enable Text Metronome",
 			description = "Toggles the tick number above the player",
 			position = 2
 	)
-	default boolean enableVisualMetronome() { return true; }
+	default boolean enableTextMetronome() { return true; }
 
 	@ConfigItem(
 			keyName = "enableTickSmoothing",
@@ -46,21 +46,12 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int enabledBeats() { return 2; }
 
-	@Range(min = 1, max = 8)
-	@ConfigItem(
-			keyName = "tickCount",
-			name = "Tick Count",
-			description = "Number of ticks in the metronome loop (1 to 8)",
-			position = 5
-	)
-	default int tickCount() { return 4; }
-
 	@Range(max = 8)
 	@ConfigItem(
 			keyName = "startTick",
 			name = "Start Tick",
 			description = "The tick the metronome starts on (0 to 8)",
-			position = 6
+			position = 5
 	)
 	default int startTick() { return 0; }
 
@@ -232,6 +223,16 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	String Beat1 = "Beat1";
 
+	@Range(min = 1, max = 8)
+	@ConfigItem(
+			keyName = "beat1TickCount",
+			name = "Beat 1 Tick Count",
+			description = "Number of ticks in Beat 1's loop (1 to 8)",
+			section = Beat1,
+			position = 20
+	)
+	default int beat1TickCount() { return 4; }
+
 	@ConfigItem(
 			keyName = "tick1Sound",
 			name = "Tick 1 Sound",
@@ -315,9 +316,19 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	String Beat2 = "Beat2";
 
+	@Range(min = 1, max = 8)
+	@ConfigItem(
+			keyName = "beat2TickCount",
+			name = "Beat 2 Tick Count",
+			description = "Number of ticks in Beat 2's loop (1 to 8)",
+			section = Beat2,
+			position = 30
+	)
+	default int beat2TickCount() { return 4; }
+
 	@ConfigItem(
 			keyName = "beat2Tick1Sound",
-			name = "Beat 2 Tick 1 Sound",
+			name = "Beat 2 Tick 1 Soudnd",
 			description = "Sound to play on Beat 2 Tick 1",
 			section = Beat2,
 			position = 31
