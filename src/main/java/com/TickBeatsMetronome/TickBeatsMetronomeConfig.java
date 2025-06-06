@@ -397,4 +397,176 @@ public interface TickBeatsMetronomeConfig extends Config
 			position = 38
 	)
 	default TickSoundOption beat2Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	////////////////////////////////////////////////
+	///////////////  Overlay Settings  //////////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Color Overlay",
+			description = "Configure the full screen color overlay",
+			position = 40
+	)
+	String overlaySettings = "overlaySettings";
+
+	@ConfigItem(
+			keyName = "enableColorOverlay",
+			name = "Enable Color Overlay",
+			description = "Toggles the full screen color overlay that changes with ticks",
+			section = overlaySettings,
+			position = 1
+	)
+	default boolean enableColorOverlay() { return false; }
+
+	@ConfigItem(
+			keyName = "overlayTick1Color",
+			name = "Overlay Tick 1 Color",
+			description = "Overlay color for tick 1",
+			section = overlaySettings,
+			position = 2
+	)
+	default Color overlayTick1Color() { return Color.RED; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick1Opacity",
+			name = "Overlay Tick 1 Opacity",
+			description = "How transparent tick 1's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 3
+	)
+	default int overlayTick1Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick2Color",
+			name = "Overlay Tick 2 Color",
+			description = "Overlay color for tick 2",
+			section = overlaySettings,
+			position = 4
+	)
+	default Color overlayTick2Color() { return Color.BLUE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick2Opacity",
+			name = "Overlay Tick 2 Opacity",
+			description = "How transparent tick 2's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 5
+	)
+	default int overlayTick2Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick3Color",
+			name = "Overlay Tick 3 Color",
+			description = "Overlay color for tick 3",
+			section = overlaySettings,
+			position = 6
+	)
+	default Color overlayTick3Color() { return Color.GREEN; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick3Opacity",
+			name = "Overlay Tick 3 Opacity",
+			description = "How transparent tick 3's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 7
+	)
+	default int overlayTick3Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick4Color",
+			name = "Overlay Tick 4 Color",
+			description = "Overlay color for tick 4",
+			section = overlaySettings,
+			position = 8
+	)
+	default Color overlayTick4Color() { return Color.YELLOW; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick4Opacity",
+			name = "Overlay Tick 4 Opacity",
+			description = "How transparent tick 4's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 9
+	)
+	default int overlayTick4Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick5Color",
+			name = "Overlay Tick 5 Color",
+			description = "Overlay color for tick 5",
+			section = overlaySettings,
+			position = 10
+	)
+	default Color overlayTick5Color() { return Color.ORANGE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick5Opacity",
+			name = "Overlay Tick 5 Opacity",
+			description = "How transparent tick 5's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 11
+	)
+	default int overlayTick5Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick6Color",
+			name = "Overlay Tick 6 Color",
+			description = "Overlay color for tick 6",
+			section = overlaySettings,
+			position = 12
+	)
+	default Color overlayTick6Color() { return Color.PINK; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick6Opacity",
+			name = "Overlay Tick 6 Opacity",
+			description = "How transparent tick 6's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 13
+	)
+	default int overlayTick6Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick7Color",
+			name = "Overlay Tick 7 Color",
+			description = "Overlay color for tick 7",
+			section = overlaySettings,
+			position = 14
+	)
+	default Color overlayTick7Color() { return Color.MAGENTA; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick7Opacity",
+			name = "Overlay Tick 7 Opacity",
+			description = "How transparent tick 7's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 15
+	)
+	default int overlayTick7Opacity() { return 20; }
+
+	@ConfigItem(
+			keyName = "overlayTick8Color",
+			name = "Overlay Tick 8 Color",
+			description = "Overlay color for tick 8",
+			section = overlaySettings,
+			position = 16
+	)
+	default Color overlayTick8Color() { return Color.CYAN; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "overlayTick8Opacity",
+			name = "Overlay Tick 8 Opacity",
+			description = "How transparent tick 8's color is (0 = invisible, 100 = solid)",
+			section = overlaySettings,
+			position = 17
+	)
+	default int overlayTick8Opacity() { return 20; }
 }

@@ -38,6 +38,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private VisualOverlay overlay;
 
     @Inject
+    private ColorOverlay colorOverlay;
+
+    @Inject
     private OverlayManager overlayManager;
 
     @Inject
@@ -73,8 +76,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
         tickCount = config.startTick();
 
-        // Attach the tick overlay
+        // Attach the overlays
         overlayManager.add(overlay);
+        overlayManager.add(colorOverlay);
 
         // Register the key input listener
         keyManager.registerKeyListener(inputManager);
@@ -95,6 +99,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     {
         log.info("Tick Beats Advanced Metronome Plugin stopped");
         overlayManager.remove(overlay);
+        overlayManager.remove(colorOverlay);
         keyManager.unregisterKeyListener(inputManager);
 
         // Shutdown local tick loop and unregister events
