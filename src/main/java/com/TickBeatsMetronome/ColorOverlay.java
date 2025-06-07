@@ -31,46 +31,34 @@ public class ColorOverlay extends Overlay {
             return null;
         }
 
-        // Get the appropriate color and opacity based on the current tick count
+        // Get the appropriate color and opacity based on the current beat and tick count
         Color tickColor;
         float opacity;
-        switch (plugin.tickCount) {
-            case 1: 
-                tickColor = config.overlayTick1Color(); 
-                opacity = config.overlayTick1Opacity() / 100f;
-                break;
-            case 2: 
-                tickColor = config.overlayTick2Color(); 
-                opacity = config.overlayTick2Opacity() / 100f;
-                break;
-            case 3: 
-                tickColor = config.overlayTick3Color(); 
-                opacity = config.overlayTick3Opacity() / 100f;
-                break;
-            case 4: 
-                tickColor = config.overlayTick4Color(); 
-                opacity = config.overlayTick4Opacity() / 100f;
-                break;
-            case 5: 
-                tickColor = config.overlayTick5Color(); 
-                opacity = config.overlayTick5Opacity() / 100f;
-                break;
-            case 6: 
-                tickColor = config.overlayTick6Color(); 
-                opacity = config.overlayTick6Opacity() / 100f;
-                break;
-            case 7: 
-                tickColor = config.overlayTick7Color(); 
-                opacity = config.overlayTick7Opacity() / 100f;
-                break;
-            case 8: 
-                tickColor = config.overlayTick8Color(); 
-                opacity = config.overlayTick8Opacity() / 100f;
-                break;
-            default: 
-                tickColor = Color.YELLOW; 
-                opacity = 0.2f;
-                break;
+        
+        if (plugin.beatNumber == 1) {
+            switch (plugin.tickCount) {
+                case 1: tickColor = config.beat1Tick1Color(); opacity = config.beat1Tick1Opacity() / 100f; break;
+                case 2: tickColor = config.beat1Tick2Color(); opacity = config.beat1Tick2Opacity() / 100f; break;
+                case 3: tickColor = config.beat1Tick3Color(); opacity = config.beat1Tick3Opacity() / 100f; break;
+                case 4: tickColor = config.beat1Tick4Color(); opacity = config.beat1Tick4Opacity() / 100f; break;
+                case 5: tickColor = config.beat1Tick5Color(); opacity = config.beat1Tick5Opacity() / 100f; break;
+                case 6: tickColor = config.beat1Tick6Color(); opacity = config.beat1Tick6Opacity() / 100f; break;
+                case 7: tickColor = config.beat1Tick7Color(); opacity = config.beat1Tick7Opacity() / 100f; break;
+                case 8: tickColor = config.beat1Tick8Color(); opacity = config.beat1Tick8Opacity() / 100f; break;
+                default: tickColor = Color.YELLOW; opacity = 0.2f; break;
+            }
+        } else {
+            switch (plugin.tickCount) {
+                case 1: tickColor = config.beat2Tick1Color(); opacity = config.beat2Tick1Opacity() / 100f; break;
+                case 2: tickColor = config.beat2Tick2Color(); opacity = config.beat2Tick2Opacity() / 100f; break;
+                case 3: tickColor = config.beat2Tick3Color(); opacity = config.beat2Tick3Opacity() / 100f; break;
+                case 4: tickColor = config.beat2Tick4Color(); opacity = config.beat2Tick4Opacity() / 100f; break;
+                case 5: tickColor = config.beat2Tick5Color(); opacity = config.beat2Tick5Opacity() / 100f; break;
+                case 6: tickColor = config.beat2Tick6Color(); opacity = config.beat2Tick6Opacity() / 100f; break;
+                case 7: tickColor = config.beat2Tick7Color(); opacity = config.beat2Tick7Opacity() / 100f; break;
+                case 8: tickColor = config.beat2Tick8Color(); opacity = config.beat2Tick8Opacity() / 100f; break;
+                default: tickColor = Color.YELLOW; opacity = 0.2f; break;
+            }
         }
 
         // Create a new color with the configured opacity

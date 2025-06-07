@@ -84,24 +84,36 @@ public class VisualOverlay extends Overlay
         graphics.drawString(tickText, x, y + 1);
         graphics.drawString(tickText, x, y - 1);
 
-
-        // Get the appropriate color based on the current tick count
-        Color tickColor;
-        switch (plugin.tickCount) {
-            case 1: tickColor = config.tick1Color(); break;
-            case 2: tickColor = config.tick2Color(); break;
-            case 3: tickColor = config.tick3Color(); break;
-            case 4: tickColor = config.tick4Color(); break;
-            case 5: tickColor = config.tick5Color(); break;
-            case 6: tickColor = config.tick6Color(); break;
-            case 7: tickColor = config.tick7Color(); break;
-            case 8: tickColor = config.tick8Color(); break;
-            default: tickColor = Color.YELLOW; break; // Fallback color for any unexpected values
+        // Get the appropriate color based on current beat and tick
+        Color textColor;
+        if (plugin.beatNumber == 1) {
+            switch (plugin.tickCount) {
+                case 1: textColor = config.beat1Tick1Color(); break;
+                case 2: textColor = config.beat1Tick2Color(); break;
+                case 3: textColor = config.beat1Tick3Color(); break;
+                case 4: textColor = config.beat1Tick4Color(); break;
+                case 5: textColor = config.beat1Tick5Color(); break;
+                case 6: textColor = config.beat1Tick6Color(); break;
+                case 7: textColor = config.beat1Tick7Color(); break;
+                case 8: textColor = config.beat1Tick8Color(); break;
+                default: textColor = Color.YELLOW; break;
+            }
+        } else {
+            switch (plugin.tickCount) {
+                case 1: textColor = config.beat2Tick1Color(); break;
+                case 2: textColor = config.beat2Tick2Color(); break;
+                case 3: textColor = config.beat2Tick3Color(); break;
+                case 4: textColor = config.beat2Tick4Color(); break;
+                case 5: textColor = config.beat2Tick5Color(); break;
+                case 6: textColor = config.beat2Tick6Color(); break;
+                case 7: textColor = config.beat2Tick7Color(); break;
+                case 8: textColor = config.beat2Tick8Color(); break;
+                default: textColor = Color.YELLOW; break;
+            }
         }
-        
 
         // Draw actual text in tick-specific color
-        graphics.setColor(tickColor);
+        graphics.setColor(textColor);
         graphics.drawString(tickText, x, y);
 
         return null; // No fixed size needed — it's dynamically placed

@@ -49,14 +49,14 @@ public class SoundManager {
 
         switch (tickCount)
         {
-            case 1: soundOption = config.tick1Sound(); break;
-            case 2: soundOption = config.tick2Sound(); break;
-            case 3: soundOption = config.tick3Sound(); break;
-            case 4: soundOption = config.tick4Sound(); break;
-            case 5: soundOption = config.tick5Sound(); break;
-            case 6: soundOption = config.tick6Sound(); break;
-            case 7: soundOption = config.tick7Sound(); break;
-            case 8: soundOption = config.tick8Sound(); break;
+            case 1: soundOption = config.beat1Tick1Sound(); break;
+            case 2: soundOption = config.beat1Tick2Sound(); break;
+            case 3: soundOption = config.beat1Tick3Sound(); break;
+            case 4: soundOption = config.beat1Tick4Sound(); break;
+            case 5: soundOption = config.beat1Tick5Sound(); break;
+            case 6: soundOption = config.beat1Tick6Sound(); break;
+            case 7: soundOption = config.beat1Tick7Sound(); break;
+            case 8: soundOption = config.beat1Tick8Sound(); break;
             default: soundOption = TickSoundOption.OFF; break;
         }
 
