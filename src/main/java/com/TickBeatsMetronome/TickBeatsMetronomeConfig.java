@@ -64,43 +64,13 @@ public interface TickBeatsMetronomeConfig extends Config
 	default int startTick() { return 0; }
 
 	////////////////////////////////////////////////
-	///////////////  Text Settings  ////////////////
-	////////////////////////////////////////////////
-
-	@ConfigSection(
-			name = "Text Settings",
-			description = "Configure text appearance and colors",
-			position = 7
-	)
-	String textSettings = "textSettings";
-
-	@ConfigItem(
-			keyName = "fontSize",
-			name = "Font Size",
-			description = "Size of the tick number displayed",
-			section = textSettings,
-			position = 8
-	)
-	default int fontSize() { return 40; }
-
-	@ConfigItem(
-			keyName = "textVerticalOffset",
-			name = "Text Vertical Offset",
-			description = "Vertical offset of the text from player",
-			section = textSettings,
-			position = 9
-	)
-	default int textVerticalOffset() { return 200; }
-
-
-	////////////////////////////////////////////////
 	//////////////  Hotkey Settings  ///////////////
 	////////////////////////////////////////////////
 
 	@ConfigSection(
 			name = "Hotkey Settings",
 			description = "Hotkey Settings",
-			position = 10
+			position = 7
 	)
 	String hotkeys = "hotkeys";
 
@@ -109,7 +79,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "resetHotkey",
 			description = "The keybind to manually reset the metronome tick",
 			section = hotkeys,
-			position = 11
+			position = 8
 	)
 	default Keybind resetHotkey() { return Keybind.SHIFT; }
 
@@ -118,7 +88,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "nextBeatHotkey",
 			description = "Keybind to go to the next beat",
 			section = hotkeys,
-			position = 12
+			position = 9
 	)
 	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_RIGHT, 0); }
 
@@ -127,7 +97,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "previousBeatHotkey",
 			description = "Keybind to go to the previous beat",
 			section = hotkeys,
-			position = 13
+			position = 10
 	)
 	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_LEFT, 0); }
 
@@ -136,7 +106,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "nextTickHotkey",
 			description = "Keybind to manually advance the metronome a tick",
 			section = hotkeys,
-			position = 14
+			position = 11
 	)
 	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_DOWN, 0); }
 
@@ -145,9 +115,38 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "previousTickHotkey",
 			description = "Keybind to manually go back a tick",
 			section = hotkeys,
-			position = 15
+			position = 12
 	)
 	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_UP, 0); }
+
+	////////////////////////////////////////////////
+	///////////////  Text Settings  ////////////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Text Settings",
+			description = "Configure text appearance and colors",
+			position = 13
+	)
+	String textSettings = "textSettings";
+
+	@ConfigItem(
+			keyName = "fontSize",
+			name = "Font Size",
+			description = "Size of the tick number displayed",
+			section = textSettings,
+			position = 14
+	)
+	default int fontSize() { return 40; }
+
+	@ConfigItem(
+			keyName = "textVerticalOffset",
+			name = "Text Vertical Offset",
+			description = "Vertical offset of the text from player",
+			section = textSettings,
+			position = 15
+	)
+	default int textVerticalOffset() { return 200; }
 
 	////////////////////////////////////////////////
 	//////////////////  Beat 1  ////////////////////

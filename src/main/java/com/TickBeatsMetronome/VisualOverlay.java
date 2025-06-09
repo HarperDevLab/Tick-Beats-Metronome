@@ -36,7 +36,7 @@ public class VisualOverlay extends Overlay
     }
 
     @Override
-    //note render runs every time the screen is redrawn so works on every game tick without needing to be in onGameTick loop
+    //note render runs every time the screen is redrawn
     public Dimension render(Graphics2D graphics)
     {
 

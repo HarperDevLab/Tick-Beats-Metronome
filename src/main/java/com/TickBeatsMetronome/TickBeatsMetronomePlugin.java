@@ -20,7 +20,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
         name = "Tick Beats Metronome",
         description = "Metronome with advanced audio and visual configurations",
-        tags = {"tick", "beat", "visual", "helper", "metronome", "sound","audio","skilling","skill"}
+        tags = {"tick", "beat", "visual", "helper", "metronome", "sound","audio","skilling","skill","cycle"}
 )
 //suppressing unused warning in IDE at class level as there are a lot of them with RL Plugins
 @SuppressWarnings("unused") //comment or remove this line out if you want to see unused warnings
@@ -164,6 +164,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
             case 2: maxTicks = config.beat2TickCount(); break;
             default: maxTicks = config.beat1TickCount(); break;
         }
+
 
         // Increment the tick counter and wrap back to 1 if over max
         tickCount = (tickCount % maxTicks) + 1;

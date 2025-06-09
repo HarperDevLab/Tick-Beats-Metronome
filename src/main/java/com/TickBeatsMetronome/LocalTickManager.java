@@ -61,12 +61,11 @@ public class LocalTickManager
             start();
         }
 
-        //so the tick counts don't count up infinitely
-        if(gameTickCount >= 100){
-            //subtract less than the above amount as we don't want local tick count to hit 0 and trigger start()
-            //we also don't want it to trigger the more aggressive tick correction that's used on the first few game ticks
-            gameTickCount = gameTickCount - 80;
-            localTickCount = localTickCount - 80;
+        //so the tick counts don't count up infinitely, not really needed though
+        int gameTickMax = 2000000000;
+        if(gameTickCount >= gameTickMax){
+            gameTickCount = gameTickCount - gameTickMax;
+            localTickCount = localTickCount - gameTickMax;
         }
 
 
@@ -98,7 +97,7 @@ public class LocalTickManager
             long nextLocalTickTime = lastLocalTickTime + nextTickInterval;
 
             //get the time difference of how far off the local tick is from this game tick
-            // returning a negative so negative in log means game tick is earlier positive means local tick is earlier
+            //returning a negative, so negative time difference means game tick is earlier positive means local tick is earlier
             timeDifference = lastGameTickTime - nextLocalTickTime;
 
             //if the time difference between local and game ticks is less than our max adjustment
@@ -114,8 +113,7 @@ public class LocalTickManager
 
         }else{
             //if game tick is after local tick
-            //use the actual tick counts to see how far apart they are
-
+            //use the tick counts to see how far apart they are
             timeDifference = lastGameTickTime - lastLocalTickTime;
 
             //if the time difference is less than our max adjustment, adjust by that much to make things slightly more accurate
@@ -152,20 +150,20 @@ public class LocalTickManager
         scheduleNextTick();
     }
 
-    /**
+    /*
      * Schedules the next local tick.
      * Each tick reschedules itself with a slightly adjusted interval.
      */
     private void scheduleNextTick()
     {
         tickLoop = executor.schedule(() -> {
-            onTickCallback.run();                 // Run local metronome logic
-            lastLocalTickTime = System.currentTimeMillis();
+            onTickCallback.run();                 // Run local metronome
+            lastLocalTickTime = System.currentTimeMillis(); //save the current time
             localTickCount++;                     // Count this local tick
 
             scheduleNextTick();                   // Schedule the next one
 
-        }, nextTickInterval, TimeUnit.MILLISECONDS);
+        }, nextTickInterval, TimeUnit.MILLISECONDS); //schedule the next local tick according to our tick interval
     }
 
     /*
@@ -185,7 +183,7 @@ public class LocalTickManager
         nextTickInterval = BASE_TICK_INTERVAL_MS;
     }
 
-    /**
+    /*
      * Cleanly stops any active tick loop.
      */
     private void stopTickLoop()
