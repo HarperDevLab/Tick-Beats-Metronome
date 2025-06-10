@@ -162,6 +162,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
         switch (beatNumber) {
             case 1: maxTicks = config.beat1TickCount(); break;
             case 2: maxTicks = config.beat2TickCount(); break;
+            case 3: maxTicks = config.beat3TickCount(); break;
             default: maxTicks = config.beat1TickCount(); break;
         }
 

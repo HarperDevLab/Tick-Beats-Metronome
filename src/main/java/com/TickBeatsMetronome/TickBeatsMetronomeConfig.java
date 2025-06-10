@@ -45,7 +45,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default boolean enableTickSmoothing() { return false; }
 
-	@Range(min = 1, max = 2)
+	@Range(min = 1, max = 3)
 	@ConfigItem(
 			keyName = "enabledBeats",
 			name = "Enabled Beats",
@@ -54,11 +54,11 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int enabledBeats() { return 2; }
 
-	@Range(max = 8)
+	@Range(max = 10)
 	@ConfigItem(
 			keyName = "startTick",
 			name = "Start Tick",
-			description = "The tick the metronome starts on (0 to 8)",
+			description = "The tick the metronome starts on (0 to 10)",
 			position = 6
 	)
 	default int startTick() { return 0; }
@@ -79,7 +79,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "resetHotkey",
 			description = "The keybind to manually reset the metronome tick",
 			section = hotkeys,
-			position = 8
+			position = 1
 	)
 	default Keybind resetHotkey() { return Keybind.SHIFT; }
 
@@ -88,7 +88,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "nextBeatHotkey",
 			description = "Keybind to go to the next beat",
 			section = hotkeys,
-			position = 9
+			position = 2
 	)
 	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_RIGHT, 0); }
 
@@ -97,7 +97,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "previousBeatHotkey",
 			description = "Keybind to go to the previous beat",
 			section = hotkeys,
-			position = 10
+			position = 3
 	)
 	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_LEFT, 0); }
 
@@ -106,7 +106,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "nextTickHotkey",
 			description = "Keybind to manually advance the metronome a tick",
 			section = hotkeys,
-			position = 11
+			position = 4
 	)
 	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_DOWN, 0); }
 
@@ -115,7 +115,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "previousTickHotkey",
 			description = "Keybind to manually go back a tick",
 			section = hotkeys,
-			position = 12
+			position = 5
 	)
 	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_UP, 0); }
 
@@ -126,7 +126,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Text Settings",
 			description = "Configure text appearance and colors",
-			position = 13
+			position = 8
 	)
 	String textSettings = "textSettings";
 
@@ -135,7 +135,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Font Size",
 			description = "Size of the tick number displayed",
 			section = textSettings,
-			position = 14
+			position = 1
 	)
 	default int fontSize() { return 40; }
 
@@ -144,7 +144,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			name = "Text Vertical Offset",
 			description = "Vertical offset of the text from player",
 			section = textSettings,
-			position = 15
+			position = 2
 	)
 	default int textVerticalOffset() { return 200; }
 
@@ -155,17 +155,17 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1",
 			description = "The Default Beat",
-			position = 20
+			position = 9
 	)
 	String Beat1 = "Beat1";
 
-	@Range(min = 1, max = 8)
+	@Range(min = 1, max = 10)
 	@ConfigItem(
 			keyName = "beat1TickCount",
 			name = "Beat 1 Tick Count",
-			description = "Number of ticks in Beat 1's loop (1 to 8)",
+			description = "Number of ticks in Beat 1's loop (1 to 10)",
 			section = Beat1,
-			position = 20
+			position = 1
 	)
 	default int beat1TickCount() { return 4; }
 
@@ -176,7 +176,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1 Sound Options",
 			description = "Configure sounds for Beat 1",
-			position = 21,
+			position = 10,
 			closedByDefault = true
 	)
 	String beat1Sounds = "beat1Sounds";
@@ -253,6 +253,24 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default TickSoundOption beat1Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
 
+	@ConfigItem(
+			keyName = "beat1Tick9Sound",
+			name = "Tick 9 Sound",
+			description = "Sound to play on Beat 1 Tick 9",
+			section = beat1Sounds,
+			position = 9
+	)
+	default TickSoundOption beat1Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat1Tick10Sound",
+			name = "Tick 10 Sound",
+			description = "Sound to play on Beat 1 Tick 10",
+			section = beat1Sounds,
+			position = 10
+	)
+	default TickSoundOption beat1Tick10Sound() { return TickSoundOption.TICK_HIHAT; }
+
 	////////////////////////////////////////////////
 	////////////  Beat 1 Visual Options  ///////////
 	////////////////////////////////////////////////
@@ -260,7 +278,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1 Visual Options",
 			description = "Configure colors and opacity for Beat 1",
-			position = 22,
+			position = 11,
 			closedByDefault = true
 	)
 	String beat1Visuals = "beat1Visuals";
@@ -417,6 +435,44 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int beat1Tick8Opacity() { return 10; }
 
+	@ConfigItem(
+			keyName = "beat1Tick9Color",
+			name = "Tick 9 Color",
+			description = "Color for Beat 1 Tick 9 (applies to both text and overlay)",
+			section = beat1Visuals,
+			position = 17
+	)
+	default Color beat1Tick9Color() { return Color.LIGHT_GRAY; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat1Tick9Opacity",
+			name = "Tick 9 Opacity",
+			description = "How transparent tick 9's overlay is (0 = invisible, 100 = solid)",
+			section = beat1Visuals,
+			position = 18
+	)
+	default int beat1Tick9Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat1Tick10Color",
+			name = "Tick 10 Color",
+			description = "Color for Beat 1 Tick 10 (applies to both text and overlay)",
+			section = beat1Visuals,
+			position = 19
+	)
+	default Color beat1Tick10Color() { return Color.WHITE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat1Tick10Opacity",
+			name = "Tick 10 Opacity",
+			description = "How transparent tick 10's overlay is (0 = invisible, 100 = solid)",
+			section = beat1Visuals,
+			position = 20
+	)
+	default int beat1Tick10Opacity() { return 10; }
+
 	////////////////////////////////////////////////
 	//////////////////  Beat 2  ////////////////////
 	////////////////////////////////////////////////
@@ -424,15 +480,15 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 (Activate With Next Beat Hotkey)",
 			description = "Another beat to use, activate with next beat hotkey",
-			position = 30
+			position = 12
 	)
 	String Beat2 = "Beat2";
 
-	@Range(min = 1, max = 8)
+	@Range(min = 1, max = 10)
 	@ConfigItem(
 			keyName = "beat2TickCount",
 			name = "Beat 2 Tick Count",
-			description = "Number of ticks in Beat 2's loop (1 to 8)",
+			description = "Number of ticks in Beat 2's loop (1 to 10)",
 			section = Beat2,
 			position = 30
 	)
@@ -445,7 +501,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 Sound Options",
 			description = "Configure sounds for Beat 2",
-			position = 31,
+			position = 13,
 			closedByDefault = true
 	)
 	String beat2Sounds = "beat2Sounds";
@@ -522,6 +578,24 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default TickSoundOption beat2Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
 
+	@ConfigItem(
+			keyName = "beat2Tick9Sound",
+			name = "Tick 9 Sound",
+			description = "Sound to play on Beat 2 Tick 9",
+			section = beat2Sounds,
+			position = 9
+	)
+	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat2Tick10Sound",
+			name = "Tick 10 Sound",
+			description = "Sound to play on Beat 2 Tick 10",
+			section = beat2Sounds,
+			position = 10
+	)
+	default TickSoundOption beat2Tick10Sound() { return TickSoundOption.TICK_HIHAT; }
+
 	////////////////////////////////////////////////
 	////////////  Beat 2 Visual Options  ///////////
 	////////////////////////////////////////////////
@@ -529,7 +603,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 Visual Options",
 			description = "Configure colors and opacity for Beat 2",
-			position = 32,
+			position = 14,
 			closedByDefault = true
 	)
 	String beat2Visuals = "beat2Visuals";
@@ -685,4 +759,367 @@ public interface TickBeatsMetronomeConfig extends Config
 			position = 16
 	)
 	default int beat2Tick8Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat2Tick9Color",
+			name = "Tick 9 Color",
+			description = "Color for Beat 2 Tick 9 (applies to both text and overlay)",
+			section = beat2Visuals,
+			position = 17
+	)
+	default Color beat2Tick9Color() { return Color.LIGHT_GRAY; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat2Tick9Opacity",
+			name = "Tick 9 Opacity",
+			description = "How transparent tick 9's overlay is (0 = invisible, 100 = solid)",
+			section = beat2Visuals,
+			position = 18
+	)
+	default int beat2Tick9Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat2Tick10Color",
+			name = "Tick 10 Color",
+			description = "Color for Beat 2 Tick 10 (applies to both text and overlay)",
+			section = beat2Visuals,
+			position = 19
+	)
+	default Color beat2Tick10Color() { return Color.WHITE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat2Tick10Opacity",
+			name = "Tick 10 Opacity",
+			description = "How transparent tick 10's overlay is (0 = invisible, 100 = solid)",
+			section = beat2Visuals,
+			position = 20
+	)
+	default int beat2Tick10Opacity() { return 10; }
+
+	////////////////////////////////////////////////
+	//////////////////  Beat 3  ////////////////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Beat 3 (Activate With Next Beat Hotkey)",
+			description = "Another beat to use, activate with next beat hotkey",
+			position = 15
+	)
+	String Beat3 = "Beat3";
+
+	@Range(min = 1, max = 10)
+	@ConfigItem(
+			keyName = "beat3TickCount",
+			name = "Beat 3 Tick Count",
+			description = "Number of ticks in Beat 3's loop (1 to 10)",
+			section = Beat3,
+			position = 1
+	)
+	default int beat3TickCount() { return 4; }
+
+	////////////////////////////////////////////////
+	//////////////  Beat 3 Sounds  /////////////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Beat 3 Sound Options",
+			description = "Configure sounds for Beat 3",
+			position = 16,
+			closedByDefault = true
+	)
+	String beat3Sounds = "beat3Sounds";
+
+	@ConfigItem(
+			keyName = "beat3Tick1Sound",
+			name = "Tick 1 Sound",
+			description = "Sound to play on Beat 3 Tick 1",
+			section = beat3Sounds,
+			position = 1
+	)
+	default TickSoundOption beat3Tick1Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick2Sound",
+			name = "Tick 2 Sound",
+			description = "Sound to play on Beat 3 Tick 2",
+			section = beat3Sounds,
+			position = 2
+	)
+	default TickSoundOption beat3Tick2Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick3Sound",
+			name = "Tick 3 Sound",
+			description = "Sound to play on Beat 3 Tick 3",
+			section = beat3Sounds,
+			position = 3
+	)
+	default TickSoundOption beat3Tick3Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick4Sound",
+			name = "Tick 4 Sound",
+			description = "Sound to play on Beat 3 Tick 4",
+			section = beat3Sounds,
+			position = 4
+	)
+	default TickSoundOption beat3Tick4Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick5Sound",
+			name = "Tick 5 Sound",
+			description = "Sound to play on Beat 3 Tick 5",
+			section = beat3Sounds,
+			position = 5
+	)
+	default TickSoundOption beat3Tick5Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick6Sound",
+			name = "Tick 6 Sound",
+			description = "Sound to play on Beat 3 Tick 6",
+			section = beat3Sounds,
+			position = 6
+	)
+	default TickSoundOption beat3Tick6Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick7Sound",
+			name = "Tick 7 Sound",
+			description = "Sound to play on Beat 3 Tick 7",
+			section = beat3Sounds,
+			position = 7
+	)
+	default TickSoundOption beat3Tick7Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick8Sound",
+			name = "Tick 8 Sound",
+			description = "Sound to play on Beat 3 Tick 8",
+			section = beat3Sounds,
+			position = 8
+	)
+	default TickSoundOption beat3Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick9Sound",
+			name = "Tick 9 Sound",
+			description = "Sound to play on Beat 3 Tick 9",
+			section = beat3Sounds,
+			position = 9
+	)
+	default TickSoundOption beat3Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	@ConfigItem(
+			keyName = "beat3Tick10Sound",
+			name = "Tick 10 Sound",
+			description = "Sound to play on Beat 3 Tick 10",
+			section = beat3Sounds,
+			position = 10
+	)
+	default TickSoundOption beat3Tick10Sound() { return TickSoundOption.TICK_HIHAT; }
+
+	////////////////////////////////////////////////
+	////////////  Beat 3 Visual Options  ///////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Beat 3 Visual Options",
+			description = "Configure colors and opacity for Beat 3",
+			position = 17,
+			closedByDefault = true
+	)
+	String beat3Visuals = "beat3Visuals";
+
+	@ConfigItem(
+			keyName = "beat3Tick1Color",
+			name = "Tick 1 Color",
+			description = "Color for Beat 3 Tick 1 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 1
+	)
+	default Color beat3Tick1Color() { return Color.RED; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick1Opacity",
+			name = "Tick 1 Opacity",
+			description = "How transparent tick 1's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 2
+	)
+	default int beat3Tick1Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick2Color",
+			name = "Tick 2 Color",
+			description = "Color for Beat 3 Tick 2 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 3
+	)
+	default Color beat3Tick2Color() { return Color.BLUE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick2Opacity",
+			name = "Tick 2 Opacity",
+			description = "How transparent tick 2's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 4
+	)
+	default int beat3Tick2Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick3Color",
+			name = "Tick 3 Color",
+			description = "Color for Beat 3 Tick 3 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 5
+	)
+	default Color beat3Tick3Color() { return Color.GREEN; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick3Opacity",
+			name = "Tick 3 Opacity",
+			description = "How transparent tick 3's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 6
+	)
+	default int beat3Tick3Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick4Color",
+			name = "Tick 4 Color",
+			description = "Color for Beat 3 Tick 4 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 7
+	)
+	default Color beat3Tick4Color() { return Color.YELLOW; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick4Opacity",
+			name = "Tick 4 Opacity",
+			description = "How transparent tick 4's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 8
+	)
+	default int beat3Tick4Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick5Color",
+			name = "Tick 5 Color",
+			description = "Color for Beat 3 Tick 5 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 9
+	)
+	default Color beat3Tick5Color() { return Color.ORANGE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick5Opacity",
+			name = "Tick 5 Opacity",
+			description = "How transparent tick 5's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 10
+	)
+	default int beat3Tick5Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick6Color",
+			name = "Tick 6 Color",
+			description = "Color for Beat 3 Tick 6 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 11
+	)
+	default Color beat3Tick6Color() { return Color.PINK; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick6Opacity",
+			name = "Tick 6 Opacity",
+			description = "How transparent tick 6's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 12
+	)
+	default int beat3Tick6Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick7Color",
+			name = "Tick 7 Color",
+			description = "Color for Beat 3 Tick 7 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 13
+	)
+	default Color beat3Tick7Color() { return Color.MAGENTA; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick7Opacity",
+			name = "Tick 7 Opacity",
+			description = "How transparent tick 7's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 14
+	)
+	default int beat3Tick7Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick8Color",
+			name = "Tick 8 Color",
+			description = "Color for Beat 3 Tick 8 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 15
+	)
+	default Color beat3Tick8Color() { return Color.CYAN; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick8Opacity",
+			name = "Tick 8 Opacity",
+			description = "How transparent tick 8's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 16
+	)
+	default int beat3Tick8Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick9Color",
+			name = "Tick 9 Color",
+			description = "Color for Beat 3 Tick 9 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 17
+	)
+	default Color beat3Tick9Color() { return Color.LIGHT_GRAY; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick9Opacity",
+			name = "Tick 9 Opacity",
+			description = "How transparent tick 9's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 18
+	)
+	default int beat3Tick9Opacity() { return 10; }
+
+	@ConfigItem(
+			keyName = "beat3Tick10Color",
+			name = "Tick 10 Color",
+			description = "Color for Beat 3 Tick 10 (applies to both text and overlay)",
+			section = beat3Visuals,
+			position = 19
+	)
+	default Color beat3Tick10Color() { return Color.WHITE; }
+
+	@Range(min = 0, max = 100)
+	@ConfigItem(
+			keyName = "beat3Tick10Opacity",
+			name = "Tick 10 Opacity",
+			description = "How transparent tick 10's overlay is (0 = invisible, 100 = solid)",
+			section = beat3Visuals,
+			position = 20
+	)
+	default int beat3Tick10Opacity() { return 10; }
 }
