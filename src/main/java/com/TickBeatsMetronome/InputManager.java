@@ -92,8 +92,10 @@ public class InputManager implements net.runelite.client.input.KeyListener
         switch (plugin.beatNumber) {
             case 1: maxTicks = config.beat1TickCount(); break;
             case 2: maxTicks = config.beat2TickCount(); break;
+            case 3: maxTicks = config.beat3TickCount(); break;
             default: maxTicks = config.beat1TickCount(); break;
         }
+        //calculate the plugin tick count using modulo while staying 1 based (not 0 based)
         plugin.tickCount = ((plugin.tickCount - 1 + delta + maxTicks) % maxTicks) + 1;
     }
 

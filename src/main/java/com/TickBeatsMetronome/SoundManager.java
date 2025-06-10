@@ -36,12 +36,13 @@ public class SoundManager {
         {
             case 1: playBeat1(tickCount); break;
             case 2: playBeat2(tickCount); break;
+            case 3: playBeat3(tickCount); break;
             default: playBeat1(tickCount); break;
         }
     }
 
     /**
-     * Plays the configured sound for the given tick (1–8) using the DEFAULT set
+     * Plays the configured sound for the given tick (1–10) using the DEFAULT set
      */
     private void playBeat1(int tickCount)
     {
@@ -57,6 +58,8 @@ public class SoundManager {
             case 6: soundOption = config.beat1Tick6Sound(); break;
             case 7: soundOption = config.beat1Tick7Sound(); break;
             case 8: soundOption = config.beat1Tick8Sound(); break;
+            case 9: soundOption = config.beat1Tick9Sound(); break;
+            case 10: soundOption = config.beat1Tick10Sound(); break;
             default: soundOption = TickSoundOption.OFF; break;
         }
 
@@ -67,7 +70,7 @@ public class SoundManager {
     }
 
     /**
-     * Plays the configured sound for the given tick (1–8) using the ALTERNATE set
+     * Plays the configured sound for the given tick (1–10) using the ALTERNATE set
      */
     private void playBeat2(int tickCount)
     {
@@ -83,6 +86,36 @@ public class SoundManager {
             case 6: soundOption = config.beat2Tick6Sound(); break;
             case 7: soundOption = config.beat2Tick7Sound(); break;
             case 8: soundOption = config.beat2Tick8Sound(); break;
+            case 9: soundOption = config.beat2Tick9Sound(); break;
+            case 10: soundOption = config.beat2Tick10Sound(); break;
+            default: soundOption = TickSoundOption.OFF; break;
+        }
+
+        if (soundOption != TickSoundOption.OFF)
+        {
+            play(soundOption.getFileName());
+        }
+    }
+
+    /**
+     * Plays the configured sound for the given tick (1–10) using the third set
+     */
+    private void playBeat3(int tickCount)
+    {
+        TickSoundOption soundOption;
+
+        switch (tickCount)
+        {
+            case 1: soundOption = config.beat3Tick1Sound(); break;
+            case 2: soundOption = config.beat3Tick2Sound(); break;
+            case 3: soundOption = config.beat3Tick3Sound(); break;
+            case 4: soundOption = config.beat3Tick4Sound(); break;
+            case 5: soundOption = config.beat3Tick5Sound(); break;
+            case 6: soundOption = config.beat3Tick6Sound(); break;
+            case 7: soundOption = config.beat3Tick7Sound(); break;
+            case 8: soundOption = config.beat3Tick8Sound(); break;
+            case 9: soundOption = config.beat3Tick9Sound(); break;
+            case 10: soundOption = config.beat3Tick10Sound(); break;
             default: soundOption = TickSoundOption.OFF; break;
         }
 

@@ -1,9 +1,9 @@
 package com.TickBeatsMetronome;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
+
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.events.GameTick;
-import net.runelite.client.eventbus.Subscribe;
 
 import javax.inject.Singleton;
 import java.util.concurrent.*;
@@ -23,11 +23,15 @@ public class LocalTickManager
     private static final long MAX_ADJUSTMENT_MS = 3;      // Maximum per-tick interval correction in milliseconds
 
     // Tick counters
+    @Getter
     private int gameTickCount = 0;   // Increments each time onGameTick fires
+    @Getter
     private int localTickCount = 0;  // Increments each time local tick fires
 
     // Time tracking
+    @Getter
     private long lastLocalTickTime = 0;         // Timestamp of the last local tick
+    @Getter
     private long lastGameTickTime = 0;         // Timestamp of the last game tick
     private long nextTickInterval = BASE_TICK_INTERVAL_MS;
 
@@ -45,11 +49,9 @@ public class LocalTickManager
     }
 
     /**
-     * Receives the real game tick from RuneLite.
      * We use this to make sure our local metronome is relatively in sync with game ticks.
      */
-    @Subscribe
-    public void onGameTick(GameTick event)
+    public void updateLocalTick()
     {
 
         lastGameTickTime = System.currentTimeMillis();
@@ -93,7 +95,7 @@ public class LocalTickManager
         if(gameTickCount > localTickCount)
         {
             //if game tick is before local tick
-            //calculate when the next local tick is set to fire
+            //calculate when the next local tick is set to fire using the same logic as the local tick scheduler
             long nextLocalTickTime = lastLocalTickTime + nextTickInterval;
 
             //get the time difference of how far off the local tick is from this game tick

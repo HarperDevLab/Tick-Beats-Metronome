@@ -3,6 +3,7 @@ package com.TickBeatsMetronome;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 
+
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
@@ -56,11 +57,12 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private UserSoundManager userSoundManager;
 
     @Inject
+    private TickLogWriter tickLogWriter;
+
+    @Inject
     private EventBus eventBus;
 
     private LocalTickManager localTickManager;
-
-
 
 
     //Holds the tick count//
@@ -68,6 +70,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
     //Holds the Beat Number of which beat to play/
     public int beatNumber = 1;
+
+    //Holds the max number of ticks for the current beat
+    private int maxTicks = 0;
 
 
     protected void startUp()
@@ -133,10 +138,26 @@ public class TickBeatsMetronomePlugin extends Plugin {
     @Subscribe
     public void onGameTick(GameTick tick)
     {
+        //nudge our local tick towards the game tick to be a near perfect average
+        localTickManager.updateLocalTick();
+
         if(!config.enableTickSmoothing()){
             onTick();
         }
 
+        //send info to the tick logger
+        tickLogWriter.logTick(
+                localTickManager.getGameTickCount(),
+                localTickManager.getLocalTickCount(),
+                localTickManager.getLastGameTickTime(),
+                localTickManager.getLastLocalTickTime(),
+                beatNumber,
+                tickCount,
+                maxTicks,
+                config.enableTickSmoothing(),
+                inputManager.resetKeyIsHeld,
+                config.startTick()
+        );
     }
 
     /*
@@ -157,11 +178,11 @@ public class TickBeatsMetronomePlugin extends Plugin {
             return;
         }
 
-        // Get the max tick count based on current beat
-        int maxTicks;
+        // Update maxTicks count based on current beat
         switch (beatNumber) {
             case 1: maxTicks = config.beat1TickCount(); break;
             case 2: maxTicks = config.beat2TickCount(); break;
+            case 3: maxTicks = config.beat3TickCount(); break;
             default: maxTicks = config.beat1TickCount(); break;
         }
 
@@ -176,15 +197,11 @@ public class TickBeatsMetronomePlugin extends Plugin {
     }
 
 
-
     // I believe this is Required by RuneLite to provide config interface.
     @Provides
     TickBeatsMetronomeConfig provideConfig(ConfigManager configManager)
     {
         return configManager.getConfig(TickBeatsMetronomeConfig.class);
     }
-
-
-
 
 }
