@@ -153,7 +153,7 @@ public class SoundManager {
             }
             catch (Exception e)
             {
-                log.info("Failed to play user sound '{}': {}", normalizedKey, e.getMessage());
+                log.debug("Failed to play user sound '{}': {}", normalizedKey, e.getMessage());
             }
             return;
         }

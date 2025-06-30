@@ -46,7 +46,7 @@ public class UserSoundManager
             boolean created = SOUND_DIRECTORY.mkdirs();
             if (!created)
             {
-                log.info("Could not create user sound directory: {}", SOUND_DIRECTORY.getAbsolutePath());
+                log.debug("Could not create user sound directory: {}", SOUND_DIRECTORY.getAbsolutePath());
                 return;
             }
         }
@@ -55,7 +55,7 @@ public class UserSoundManager
         File[] files = SOUND_DIRECTORY.listFiles();
         if (files == null)
         {
-            log.info("Could not read sound directory contents.");
+            log.debug("Could not read sound directory contents.");
             return;
         }
 
@@ -65,14 +65,14 @@ public class UserSoundManager
             if (file.isFile() && file.getName().toLowerCase().endsWith(".wav"))
             {
                 userFiles.add(file);
-                log.info("Discovered user sound file: {}", file.getName());
+                log.debug("Discovered user sound file: {}", file.getName());
             }
         }
 
         //sort the files by filename
         userFiles.sort(Comparator.comparing(File::getName));
 
-        log.info("Total user sound files loaded: {}", userFiles.size());
+        log.debug("Total user sound files loaded: {}", userFiles.size());
 
         //create the userSoundMap attaching an id to each sound file for access
         int i = 0;
@@ -81,7 +81,7 @@ public class UserSoundManager
             i++;
             String fileId = String.valueOf(i);
             userSoundMap.put(fileId, file);
-            log.info("Registered user sound [{}]: {}", fileId, file.getName());
+            log.debug("Registered user sound [{}]: {}", fileId, file.getName());
         }
     }
 

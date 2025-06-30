@@ -77,7 +77,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
     protected void startUp()
     {
-        log.info("Metronome started");
+        log.debug("Metronome started");
 
         tickCount = config.startTick();
 
@@ -102,7 +102,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     @Override
     protected void shutDown()
     {
-        log.info("Tick Beats Advanced Metronome Plugin stopped");
+        log.debug("Tick Beats Advanced Metronome Plugin stopped");
         overlayManager.remove(overlay);
         overlayManager.remove(colorOverlay);
         keyManager.unregisterKeyListener(inputManager);
@@ -123,7 +123,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
         if (state == GameState.LOGIN_SCREEN || state == GameState.HOPPING)
         {
-            log.info("Player logged out or world hopping — resetting local tick manager.");
+            log.debug("Player logged out or world hopping — resetting local tick manager.");
             if (localTickManager != null)
             {
                 localTickManager.reset();

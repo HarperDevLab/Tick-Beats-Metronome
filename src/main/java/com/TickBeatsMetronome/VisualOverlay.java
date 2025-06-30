@@ -48,7 +48,7 @@ public class VisualOverlay extends Overlay
         Player player = client.getLocalPlayer(); // Get your own character
         if (player == null)
         {
-            log.info("Player");
+            log.debug("Player");
             return null; // Game might still be loading
         }
 
@@ -60,7 +60,7 @@ public class VisualOverlay extends Overlay
         Point textLocation = player.getCanvasTextLocation(graphics, tickText, zOffset);
         if (textLocation == null)
         {
-            log.info("couldn't calculate text location");
+            log.debug("couldn't calculate text location");
             return null; // Couldn't calculate a position
         }
 

@@ -86,7 +86,7 @@ public class LocalTickManager
         int tickDifference = gameTickCount - localTickCount;
         if (tickDifference > 1 || tickDifference < 0){
             localTickCount = gameTickCount;
-            log.info("Correcting out of sync ticks");
+            log.debug("Correcting out of sync ticks");
         }
 
         long timeDifference;
@@ -129,7 +129,7 @@ public class LocalTickManager
         }
 
         /*
-        log.info("GameTick: {}, LocalTick: {}, Tick Difference: {}, Adjusted Interval: {}, Time Difference: {}",
+        log.debug("GameTick: {}, LocalTick: {}, Tick Difference: {}, Adjusted Interval: {}, Time Difference: {}",
                 gameTickCount, localTickCount, tickDifference, nextTickInterval, timeDifference);
 
          */
@@ -147,7 +147,7 @@ public class LocalTickManager
             return;
         }
 
-        log.info("Starting local tick loop.");
+        log.debug("Starting local tick loop.");
         lastLocalTickTime = System.currentTimeMillis();
         scheduleNextTick();
     }
@@ -203,7 +203,7 @@ public class LocalTickManager
      */
     public void shutdown()
     {
-        log.info("Shutting down local tick manager.");
+        log.debug("Shutting down local tick manager.");
         reset();
         executor.shutdownNow();
     }
