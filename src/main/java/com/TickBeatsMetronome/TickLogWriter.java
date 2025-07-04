@@ -1,6 +1,8 @@
 package com.TickBeatsMetronome;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Player;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.RuneLite;
 
 import javax.inject.Singleton;
@@ -12,6 +14,8 @@ import java.nio.file.*;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Writes a tick data log for external programs to read.
@@ -43,13 +47,16 @@ public class TickLogWriter
 
 
     private static final File LOG_FILE = new File(RuneLite.RUNELITE_DIR, "tick-beats/log");
-    private static final int MAX_LOG_ENTRIES = 50;
+    private static final int MAX_LOG_ENTRIES = 10;
 
     // Circular buffer for the number of max log lines
-    private final Deque<String> logEntries = new ArrayDeque<>();
+    //private final Deque<String> logEntries = new ArrayDeque<>();
 
-    public void logTick(int gameTickCount, int localTickCount, long gameTick, long localTick, int beatNumber, int tickCount, int maxTicks, boolean tickSmoothing, boolean resetKey, int startTick)
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    public void logTick(Player localPlayer, int gameTickCount, int localTickCount, long gameTick, long localTick, int beatNumber, int tickCount, int maxTicks, boolean tickSmoothing, boolean resetKey, int startTick)
     {
+
 
 
         //if local tick hasn't happened yet it'll be a tick behind, predict when it will happen (by adding 600ms) and
@@ -61,9 +68,26 @@ public class TickLogWriter
             localTickCount = localTickCount + 1;
         }
 
+
+        //location info could be helpful for an auto mode where different music in played in different regions
+        WorldPoint location = localPlayer.getWorldLocation();
+
+        int locationX = location.getX();
+        int locationY = location.getY();
+        int locationPlane = location.getPlane(); // 0 = ground, 1 = upstairs, etc.
+        String locationXYZ = locationX + "," + locationY + "," + locationPlane;
+
+        int regionId = location.getRegionID();
+        int regionX = location.getRegionX();
+        int regionY = location.getRegionY();
+
+        String regionXY = regionX + "," + regionY;
+
+
+
         // Format the line to add
         String entry = String.format(
-                "timestamp=%d gameTick=%d localTick=%d gameTickTime=%d localTickTime=%d beatNumber=%d tickCount=%d maxTicks=%d tickSmoothing=%b resetKeyHeld=%b startTick=%d" ,
+                "timestamp=%d gameTick=%d localTick=%d gameTickTime=%d localTickTime=%d beatNumber=%d tickCount=%d maxTicks=%d tickSmoothing=%b resetKeyHeld=%b startTick=%d locationXYZ=%s regionId=%d regionXY=%s",
                 System.currentTimeMillis(), //current time timestamp
                 gameTickCount, //game tick count pulled from localTickManager
                 localTickCount,//local tick count pulled from localTickManager and modified to line up with gameTickCount
@@ -74,30 +98,26 @@ public class TickLogWriter
                 maxTicks,      //how many ticks there are in the current beat
                 tickSmoothing, //if the user has tick smoothing enabled
                 resetKey,      //checks if the reset key is being held which halts the metronome
-                startTick      //the tick that's active while the user holds the reset key
+                startTick,     //the tick that's active while the user holds the reset key
+                locationXYZ,   //the player's X Y and plane location
+                regionId,      //the region Id of where the player is
+                regionXY       //the region X and Y of where the player is
 
         );
 
 
-
-        // Maintain fixed buffer size
-        if (logEntries.size() >= MAX_LOG_ENTRIES)
-        {
-            logEntries.removeFirst();
-        }
-        logEntries.addLast(entry);
-
         // Write the entire buffer to file
-        writeToFile();
+        executor.submit(() -> writeToFile(entry));
     }
 
 
 
-    private void writeToFile()
+    private void writeToFile(String entry)
     {
+
         try
         {
-            // Ensure parent dir exists
+            // Ensure parent directory exists
             File parentDir = LOG_FILE.getParentFile();
             if (!parentDir.exists() && !parentDir.mkdirs())
             {
@@ -105,7 +125,29 @@ public class TickLogWriter
                 return;
             }
 
-            // Write all entries as a block
+            Deque<String> logEntries = new ArrayDeque<>();
+
+            // Load existing entries (if any)
+            if (LOG_FILE.exists())
+            {
+                try
+                {
+                    logEntries.addAll(Files.readAllLines(LOG_FILE.toPath(), StandardCharsets.UTF_8));
+                }
+                catch (IOException e)
+                {
+                    log.warn("Failed to read existing tick log entries", e);
+                }
+            }
+
+            // Maintain buffer size
+            if (logEntries.size() >= MAX_LOG_ENTRIES)
+            {
+                logEntries.removeFirst();
+            }
+            logEntries.addLast(entry);
+
+            // Write back to file
             Files.write(LOG_FILE.toPath(), logEntries, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         }
@@ -113,5 +155,10 @@ public class TickLogWriter
         {
             log.warn("Failed to write tick log", e);
         }
+    }
+
+    public void shutdown()
+    {
+        executor.shutdownNow();
     }
 }

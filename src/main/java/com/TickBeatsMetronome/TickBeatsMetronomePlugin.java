@@ -114,6 +114,11 @@ public class TickBeatsMetronomePlugin extends Plugin {
             eventBus.unregister(localTickManager);
             localTickManager = null;
         }
+
+        if (tickLogWriter != null)
+        {
+            tickLogWriter.shutdown();
+        }
     }
 
     @Subscribe
@@ -147,6 +152,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
         //send info to the tick logger
         tickLogWriter.logTick(
+                client.getLocalPlayer(),
                 localTickManager.getGameTickCount(),
                 localTickManager.getLocalTickCount(),
                 localTickManager.getLastGameTickTime(),
