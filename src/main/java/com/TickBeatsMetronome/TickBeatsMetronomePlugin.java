@@ -97,6 +97,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
         //load the user sound files
         userSoundManager.loadUserSounds();
 
+        //startup the log writer
+        tickLogWriter.start();
+
     }
 
     @Override

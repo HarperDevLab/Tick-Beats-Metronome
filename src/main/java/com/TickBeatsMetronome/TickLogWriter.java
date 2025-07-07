@@ -52,10 +52,25 @@ public class TickLogWriter
     // Circular buffer for the number of max log lines
     //private final Deque<String> logEntries = new ArrayDeque<>();
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    //private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ExecutorService executor;
+
+    public void start()
+    {
+        if (executor == null || executor.isShutdown() || executor.isTerminated())
+        {
+            executor = Executors.newSingleThreadExecutor();
+        }
+    }
 
     public void logTick(Player localPlayer, int gameTickCount, int localTickCount, long gameTick, long localTick, int beatNumber, int tickCount, int maxTicks, boolean tickSmoothing, boolean resetKey, int startTick)
     {
+
+        if (executor.isShutdown() || executor.isTerminated())
+        {
+            log.warn("Skipping log tick: executor is shut down");
+            return;
+        }
 
 
 
