@@ -42,7 +42,7 @@ public class SoundManager {
     }
 
     /**
-     * Plays the configured sound for the given tick (1–10) using the DEFAULT set
+     * Plays the configured sound for the given tick using the DEFAULT set
      */
     private void playBeat1(int tickCount)
     {
@@ -59,7 +59,6 @@ public class SoundManager {
             case 7: soundOption = config.beat1Tick7Sound(); break;
             case 8: soundOption = config.beat1Tick8Sound(); break;
             case 9: soundOption = config.beat1Tick9Sound(); break;
-            case 10: soundOption = config.beat1Tick10Sound(); break;
             default: soundOption = TickSoundOption.OFF; break;
         }
 
@@ -87,7 +86,6 @@ public class SoundManager {
             case 7: soundOption = config.beat2Tick7Sound(); break;
             case 8: soundOption = config.beat2Tick8Sound(); break;
             case 9: soundOption = config.beat2Tick9Sound(); break;
-            case 10: soundOption = config.beat2Tick10Sound(); break;
             default: soundOption = TickSoundOption.OFF; break;
         }
 
@@ -115,7 +113,6 @@ public class SoundManager {
             case 7: soundOption = config.beat3Tick7Sound(); break;
             case 8: soundOption = config.beat3Tick8Sound(); break;
             case 9: soundOption = config.beat3Tick9Sound(); break;
-            case 10: soundOption = config.beat3Tick10Sound(); break;
             default: soundOption = TickSoundOption.OFF; break;
         }
 
@@ -143,7 +140,7 @@ public class SoundManager {
 
         Map<String, File> userSoundMap = userSoundManager.getUserSoundMap();
 
-        // Check UserSoundFiles Map to make sure our key doesn't match a user added sound first
+        // Check UserSoundFiles Map to see if our Key matches a user added sound first
         File userFile = userSoundMap.get(normalizedKey);
         if (userFile != null)
         {
@@ -166,7 +163,7 @@ public class SoundManager {
         }
         catch (Exception e)
         {
-            log.error("Failed to play built-in sound '{}': {}", normalizedKey, e.getMessage());
+            log.error("Failed to play sound '{}': {}", normalizedKey, e.getMessage());
         }
     }
 

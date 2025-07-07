@@ -46,8 +46,7 @@ public class ColorOverlay extends Overlay {
                 case 7: tickColor = config.beat1Tick7Color(); opacity = config.beat1Tick7Opacity() / 100f; break;
                 case 8: tickColor = config.beat1Tick8Color(); opacity = config.beat1Tick8Opacity() / 100f; break;
                 case 9: tickColor = config.beat1Tick9Color(); opacity = config.beat1Tick9Opacity() / 100f; break;
-                case 10: tickColor = config.beat1Tick10Color(); opacity = config.beat1Tick10Opacity() / 100f; break;
-                default: tickColor = Color.YELLOW; opacity = 0.2f; break;
+                default: tickColor = Color.WHITE; opacity = 0f; break;
             }
         } else if (plugin.beatNumber == 2) {
             switch (plugin.tickCount) {
@@ -60,8 +59,7 @@ public class ColorOverlay extends Overlay {
                 case 7: tickColor = config.beat2Tick7Color(); opacity = config.beat2Tick7Opacity() / 100f; break;
                 case 8: tickColor = config.beat2Tick8Color(); opacity = config.beat2Tick8Opacity() / 100f; break;
                 case 9: tickColor = config.beat2Tick9Color(); opacity = config.beat2Tick9Opacity() / 100f; break;
-                case 10: tickColor = config.beat2Tick10Color(); opacity = config.beat2Tick10Opacity() / 100f; break;
-                default: tickColor = Color.YELLOW; opacity = 0.2f; break;
+                default: tickColor = Color.WHITE; opacity = 0f; break;
             }
         } else {
             switch (plugin.tickCount) {
@@ -74,8 +72,7 @@ public class ColorOverlay extends Overlay {
                 case 7: tickColor = config.beat3Tick7Color(); opacity = config.beat3Tick7Opacity() / 100f; break;
                 case 8: tickColor = config.beat3Tick8Color(); opacity = config.beat3Tick8Opacity() / 100f; break;
                 case 9: tickColor = config.beat3Tick9Color(); opacity = config.beat3Tick9Opacity() / 100f; break;
-                case 10: tickColor = config.beat3Tick10Color(); opacity = config.beat3Tick10Opacity() / 100f; break;
-                default: tickColor = Color.YELLOW; opacity = 0.2f; break;
+                default: tickColor = Color.WHITE; opacity = 0f; break;
             }
         }
 

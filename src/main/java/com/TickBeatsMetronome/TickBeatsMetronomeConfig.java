@@ -15,17 +15,25 @@ public interface TickBeatsMetronomeConfig extends Config
 
 	@ConfigItem(
 			keyName = "enableAudioMetronome",
-			name = "Enable Audio",
+			name = "Enable Beats",
 			description = "Toggles tick sounds",
 			position = 1
 	)
 	default boolean enableAudioMetronome() { return true; }
 
 	@ConfigItem(
-			keyName = "enableTextMetronome",
-			name = "Enable Text",
-			description = "Toggles the tick number above the player",
+			keyName = "enableMusic",
+			name = "Enable Music",
+			description = "Toggles Music On or Off",
 			position = 2
+	)
+	default boolean enableMusic() { return true; }
+
+	@ConfigItem(
+			keyName = "enableTextMetronome",
+			name = "Enable Overhead Count",
+			description = "Toggles the tick number above the player",
+			position = 3
 	)
 	default boolean enableTextMetronome() { return true; }
 
@@ -33,7 +41,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "enableColorOverlay",
 			name = "Enable Color Overlay",
 			description = "Toggles the full screen color overlay that changes with ticks",
-			position = 3
+			position = 4
 	)
 	default boolean enableColorOverlay() { return false; }
 
@@ -41,27 +49,58 @@ public interface TickBeatsMetronomeConfig extends Config
 			keyName = "enableTickSmoothing",
 			name = "Enable Tick Smoothing",
 			description = "More consistent but less accurate ticks",
-			position = 4
+			position = 5
 	)
-	default boolean enableTickSmoothing() { return false; }
+	default boolean enableTickSmoothing() { return true; }
 
 	@Range(min = 1, max = 3)
 	@ConfigItem(
 			keyName = "enabledBeats",
 			name = "Enabled Beats",
 			description = "Which beats are enabled for rotating through",
-			position = 5
+			position = 6
 	)
 	default int enabledBeats() { return 2; }
 
-	@Range(max = 10)
+	@Range(max = 8)
 	@ConfigItem(
 			keyName = "startTick",
 			name = "Start Tick",
-			description = "The tick the metronome starts on (0 to 10)",
-			position = 6
+			description = "The tick the metronome starts on (0 to 8)",
+			position = 7
 	)
 	default int startTick() { return 0; }
+
+	////////////////////////////////////////////////
+	/////////////////  Music Settings  /////////////
+	////////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Music Settings",
+			description = "Music Settings",
+			position = 8
+	)
+	String musicSettings = "musicSettings";
+
+
+	@ConfigItem(
+			keyName = "musicTrack",
+			name = "Music Track",
+			description = "Select which music track to play",
+			section = musicSettings,
+			position = 1
+	)
+	default MusicTrackOption musicTrack() { return MusicTrackOption.SEA_SHANTY_2; }
+
+	@ConfigItem(
+			keyName = "musicVolume",
+			name = "Music Volume",
+			description = "Controls the volume of music playback (Normal:100%, Boosted:150%)",
+			position = 2,
+			section = musicSettings
+	)
+	@Range(min = 0, max = 150)
+	default int musicVolume() { return 100; }
 
 	////////////////////////////////////////////////
 	//////////////  Hotkey Settings  ///////////////
@@ -70,54 +109,55 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Hotkey Settings",
 			description = "Hotkey Settings",
-			position = 7
+			position = 9
 	)
 	String hotkeys = "hotkeys";
+
 
 	@ConfigItem(
 			name = "Reset to Start Tick",
 			keyName = "resetHotkey",
-			description = "The keybind to manually reset the metronome tick",
+			description = "The keybind to manually reset the metronome tick (Works with modifiers ex. CTRL+A)",
 			section = hotkeys,
-			position = 1
+			position = 2
 	)
-	default Keybind resetHotkey() { return Keybind.SHIFT; }
+	default Keybind resetHotkey() { return new Keybind(KeyEvent.VK_SHIFT, 0); }
 
 	@ConfigItem(
 			name = "Next Beat",
 			keyName = "nextBeatHotkey",
-			description = "Keybind to go to the next beat",
+			description = "Keybind to go to the next beat (Works with modifiers ex. CTRL+A)",
 			section = hotkeys,
-			position = 2
+			position = 3
 	)
 	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_RIGHT, 0); }
 
 	@ConfigItem(
 			name = "Previous Beat",
 			keyName = "previousBeatHotkey",
-			description = "Keybind to go to the previous beat",
+			description = "Keybind to go to the previous beat (Works with modifiers ex. CTRL+A)",
 			section = hotkeys,
-			position = 3
+			position = 4
 	)
 	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_LEFT, 0); }
 
 	@ConfigItem(
 			name = "Next Tick",
 			keyName = "nextTickHotkey",
-			description = "Keybind to manually advance the metronome a tick",
+			description = "Keybind to manually advance the metronome a tick (Works with modifiers ex. CTRL+A)",
 			section = hotkeys,
-			position = 4
+			position = 5
 	)
-	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_DOWN, 0); }
+	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_UP, 0); }
 
 	@ConfigItem(
 			name = "Previous Tick",
 			keyName = "previousTickHotkey",
-			description = "Keybind to manually go back a tick",
+			description = "Keybind to manually go back a tick (Works with modifiers ex. CTRL+A)",
 			section = hotkeys,
-			position = 5
+			position = 6
 	)
-	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_UP, 0); }
+	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_DOWN, 0); }
 
 	////////////////////////////////////////////////
 	///////////////  Text Settings  ////////////////
@@ -126,7 +166,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Text Settings",
 			description = "Configure text appearance and colors",
-			position = 8
+			position = 9
 	)
 	String textSettings = "textSettings";
 
@@ -155,15 +195,15 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1",
 			description = "The Default Beat",
-			position = 9
+			position = 10
 	)
 	String Beat1 = "Beat1";
 
-	@Range(min = 1, max = 10)
+	@Range(min = 1, max = 9)
 	@ConfigItem(
 			keyName = "beat1TickCount",
 			name = "Beat 1 Tick Count",
-			description = "Number of ticks in Beat 1's loop (1 to 10)",
+			description = "Number of ticks in Beat 1's loop (1 to 9)",
 			section = Beat1,
 			position = 1
 	)
@@ -176,7 +216,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1 Sound Options",
 			description = "Configure sounds for Beat 1",
-			position = 10,
+			position = 11,
 			closedByDefault = true
 	)
 	String beat1Sounds = "beat1Sounds";
@@ -188,7 +228,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 1
 	)
-	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.KICK_SNAPBACK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick2Sound",
@@ -206,7 +246,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 3
 	)
-	default TickSoundOption beat1Tick3Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick3Sound() { return TickSoundOption.CLAP_TAPE; }
 
 	@ConfigItem(
 			keyName = "beat1Tick4Sound",
@@ -262,14 +302,6 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default TickSoundOption beat1Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
 
-	@ConfigItem(
-			keyName = "beat1Tick10Sound",
-			name = "Tick 10 Sound",
-			description = "Sound to play on Beat 1 Tick 10",
-			section = beat1Sounds,
-			position = 10
-	)
-	default TickSoundOption beat1Tick10Sound() { return TickSoundOption.TICK_HIHAT; }
 
 	////////////////////////////////////////////////
 	////////////  Beat 1 Visual Options  ///////////
@@ -278,7 +310,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1 Visual Options",
 			description = "Configure colors and opacity for Beat 1",
-			position = 11,
+			position = 12,
 			closedByDefault = true
 	)
 	String beat1Visuals = "beat1Visuals";
@@ -454,24 +486,6 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int beat1Tick9Opacity() { return 10; }
 
-	@ConfigItem(
-			keyName = "beat1Tick10Color",
-			name = "Tick 10 Color",
-			description = "Color for Beat 1 Tick 10 (applies to both text and overlay)",
-			section = beat1Visuals,
-			position = 19
-	)
-	default Color beat1Tick10Color() { return Color.WHITE; }
-
-	@Range(min = 0, max = 100)
-	@ConfigItem(
-			keyName = "beat1Tick10Opacity",
-			name = "Tick 10 Opacity",
-			description = "How transparent tick 10's overlay is (0 = invisible, 100 = solid)",
-			section = beat1Visuals,
-			position = 20
-	)
-	default int beat1Tick10Opacity() { return 10; }
 
 	////////////////////////////////////////////////
 	//////////////////  Beat 2  ////////////////////
@@ -480,15 +494,15 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 (Activate With Next Beat Hotkey)",
 			description = "Another beat to use, activate with next beat hotkey",
-			position = 12
+			position = 13
 	)
 	String Beat2 = "Beat2";
 
-	@Range(min = 1, max = 10)
+	@Range(min = 1, max = 9)
 	@ConfigItem(
 			keyName = "beat2TickCount",
 			name = "Beat 2 Tick Count",
-			description = "Number of ticks in Beat 2's loop (1 to 10)",
+			description = "Number of ticks in Beat 2's loop (1 to 9)",
 			section = Beat2,
 			position = 30
 	)
@@ -501,7 +515,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 Sound Options",
 			description = "Configure sounds for Beat 2",
-			position = 13,
+			position = 14,
 			closedByDefault = true
 	)
 	String beat2Sounds = "beat2Sounds";
@@ -587,14 +601,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
 
-	@ConfigItem(
-			keyName = "beat2Tick10Sound",
-			name = "Tick 10 Sound",
-			description = "Sound to play on Beat 2 Tick 10",
-			section = beat2Sounds,
-			position = 10
-	)
-	default TickSoundOption beat2Tick10Sound() { return TickSoundOption.TICK_HIHAT; }
+
 
 	////////////////////////////////////////////////
 	////////////  Beat 2 Visual Options  ///////////
@@ -603,7 +610,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 Visual Options",
 			description = "Configure colors and opacity for Beat 2",
-			position = 14,
+			position = 15,
 			closedByDefault = true
 	)
 	String beat2Visuals = "beat2Visuals";
@@ -779,24 +786,6 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int beat2Tick9Opacity() { return 10; }
 
-	@ConfigItem(
-			keyName = "beat2Tick10Color",
-			name = "Tick 10 Color",
-			description = "Color for Beat 2 Tick 10 (applies to both text and overlay)",
-			section = beat2Visuals,
-			position = 19
-	)
-	default Color beat2Tick10Color() { return Color.WHITE; }
-
-	@Range(min = 0, max = 100)
-	@ConfigItem(
-			keyName = "beat2Tick10Opacity",
-			name = "Tick 10 Opacity",
-			description = "How transparent tick 10's overlay is (0 = invisible, 100 = solid)",
-			section = beat2Visuals,
-			position = 20
-	)
-	default int beat2Tick10Opacity() { return 10; }
 
 	////////////////////////////////////////////////
 	//////////////////  Beat 3  ////////////////////
@@ -805,15 +794,15 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 3 (Activate With Next Beat Hotkey)",
 			description = "Another beat to use, activate with next beat hotkey",
-			position = 15
+			position = 16
 	)
 	String Beat3 = "Beat3";
 
-	@Range(min = 1, max = 10)
+	@Range(min = 1, max = 9)
 	@ConfigItem(
 			keyName = "beat3TickCount",
 			name = "Beat 3 Tick Count",
-			description = "Number of ticks in Beat 3's loop (1 to 10)",
+			description = "Number of ticks in Beat 3's loop (1 to 9)",
 			section = Beat3,
 			position = 1
 	)
@@ -826,7 +815,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 3 Sound Options",
 			description = "Configure sounds for Beat 3",
-			position = 16,
+			position = 17,
 			closedByDefault = true
 	)
 	String beat3Sounds = "beat3Sounds";
@@ -912,14 +901,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default TickSoundOption beat3Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
 
-	@ConfigItem(
-			keyName = "beat3Tick10Sound",
-			name = "Tick 10 Sound",
-			description = "Sound to play on Beat 3 Tick 10",
-			section = beat3Sounds,
-			position = 10
-	)
-	default TickSoundOption beat3Tick10Sound() { return TickSoundOption.TICK_HIHAT; }
+
 
 	////////////////////////////////////////////////
 	////////////  Beat 3 Visual Options  ///////////
@@ -928,7 +910,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 3 Visual Options",
 			description = "Configure colors and opacity for Beat 3",
-			position = 17,
+			position = 18,
 			closedByDefault = true
 	)
 	String beat3Visuals = "beat3Visuals";
@@ -1104,22 +1086,4 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int beat3Tick9Opacity() { return 10; }
 
-	@ConfigItem(
-			keyName = "beat3Tick10Color",
-			name = "Tick 10 Color",
-			description = "Color for Beat 3 Tick 10 (applies to both text and overlay)",
-			section = beat3Visuals,
-			position = 19
-	)
-	default Color beat3Tick10Color() { return Color.WHITE; }
-
-	@Range(min = 0, max = 100)
-	@ConfigItem(
-			keyName = "beat3Tick10Opacity",
-			name = "Tick 10 Opacity",
-			description = "How transparent tick 10's overlay is (0 = invisible, 100 = solid)",
-			section = beat3Visuals,
-			position = 20
-	)
-	default int beat3Tick10Opacity() { return 10; }
 }

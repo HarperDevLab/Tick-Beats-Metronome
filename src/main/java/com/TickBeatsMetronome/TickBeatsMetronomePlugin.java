@@ -11,6 +11,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -57,10 +58,16 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private UserSoundManager userSoundManager;
 
     @Inject
+    private UserMusicManager userMusicManager;
+
+    @Inject
     private TickLogWriter tickLogWriter;
 
     @Inject
     private EventBus eventBus;
+
+    @Inject
+    private MusicManager musicManager;
 
     private LocalTickManager localTickManager;
 
@@ -72,7 +79,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     public int beatNumber = 1;
 
     //Holds the max number of ticks for the current beat
-    private int maxTicks = 0;
+    private int maxTicks = 1;
 
 
     protected void startUp()
@@ -96,6 +103,18 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
         //load the user sound files
         userSoundManager.loadUserSounds();
+
+        //load list of user music files
+        userMusicManager.loadUserMusic();
+
+        //startup the log writer
+        tickLogWriter.start();
+
+
+        //get a music track ready to go
+        musicManager.loadTrack(config.musicTrack().getFileName());
+
+
 
     }
 
@@ -161,7 +180,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
                 tickCount,
                 maxTicks,
                 config.enableTickSmoothing(),
-                inputManager.resetKeyIsHeld,
+                inputManager.resetActive,
                 config.startTick()
         );
     }
@@ -174,12 +193,13 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if(config.enableTickSmoothing()){
             onTick();
         }
+
     }
 
     
     private void onTick(){
         //if the reset key is being held, don't do anything on the game tick
-        if(inputManager.resetKeyIsHeld)
+        if(inputManager.resetActive)
         {
             return;
         }
@@ -200,8 +220,63 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if(config.enableAudioMetronome()){
             soundManager.playSound(beatNumber, tickCount);
         }
+
+        // If Music is checked
+        if(config.enableMusic()) {
+
+            //if music isn't playing, and we're at tick 1 start playing music
+            if (!musicManager.isPlaying() && tickCount == 1) {
+                musicManager.start();
+            }
+
+
+            //Play the music clips
+            musicManager.onTick(maxTicks, tickCount, config.musicVolume());
+        }else{
+            //if Enable Music isn't checked, stop the music clips from playing
+            musicManager.stop();
+        }
+
+
     }
 
+
+    @Subscribe
+    public void onConfigChanged(ConfigChanged event)
+    {
+
+        //make sure the event is coming from this plugin's config group
+        if (!event.getGroup().equals("advancedMetronome"))
+        {
+            return;
+        }
+
+        //if event is coming from the music track dropdown
+        if (event.getKey().equals("musicTrack"))
+        {
+            log.debug("Music track changed.");
+            handleMusicTrackChange();
+        }
+    }
+
+    private void handleMusicTrackChange()
+    {
+        MusicTrackOption selected = config.musicTrack();
+
+        // Stop current playback
+        musicManager.stop();
+
+        // Load if a file is defined
+        if (selected.getFileName() != null)
+        {
+            musicManager.loadTrack(selected.getFileName());
+            log.debug("Switched music track to: {}", selected);
+        }
+        else
+        {
+            log.debug("No music track selected.");
+        }
+    }
 
     // I believe this is Required by RuneLite to provide config interface.
     @Provides

@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
  * One original goal of this plugin was to have the functionality to play tick beats in sync over the top of 100BPM Music
  *
  * Given the capabilities of some older plugins, like music replacer for example, I thought I'd have the ability to do so.
- * For I believe security reasons, Runelite has limited the capabilities of audio to their net.runelite.client.audio.AudioPlayer
+ * Due to memory leaking issues, Runelite has limited the capabilities of audio to their net.runelite.client.audio.AudioPlayer
  * for new plugins, which is currently limited to playing .wav files from start to finish continuing even on logout.
  *
  * Runelite's AudioPlayer is great for a beat playing metronome with the audio clips being so short, but for longer
@@ -52,10 +52,25 @@ public class TickLogWriter
     // Circular buffer for the number of max log lines
     //private final Deque<String> logEntries = new ArrayDeque<>();
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    //private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ExecutorService executor;
+
+    public void start()
+    {
+        if (executor == null || executor.isShutdown() || executor.isTerminated())
+        {
+            executor = Executors.newSingleThreadExecutor();
+        }
+    }
 
     public void logTick(Player localPlayer, int gameTickCount, int localTickCount, long gameTick, long localTick, int beatNumber, int tickCount, int maxTicks, boolean tickSmoothing, boolean resetKey, int startTick)
     {
+
+        if (executor.isShutdown() || executor.isTerminated())
+        {
+            log.warn("Skipping log tick: executor is shut down");
+            return;
+        }
 
 
 

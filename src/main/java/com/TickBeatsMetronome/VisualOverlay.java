@@ -97,8 +97,7 @@ public class VisualOverlay extends Overlay
                 case 7: textColor = config.beat1Tick7Color(); break;
                 case 8: textColor = config.beat1Tick8Color(); break;
                 case 9: textColor = config.beat1Tick9Color(); break;
-                case 10: textColor = config.beat1Tick10Color(); break;
-                default: textColor = Color.YELLOW; break;
+                default: textColor = Color.WHITE; break;
             }
         } else if (plugin.beatNumber == 2) {
             switch (plugin.tickCount) {
@@ -111,8 +110,7 @@ public class VisualOverlay extends Overlay
                 case 7: textColor = config.beat2Tick7Color(); break;
                 case 8: textColor = config.beat2Tick8Color(); break;
                 case 9: textColor = config.beat2Tick9Color(); break;
-                case 10: textColor = config.beat2Tick10Color(); break;
-                default: textColor = Color.YELLOW; break;
+                default: textColor = Color.WHITE; break;
             }
         } else {
             switch (plugin.tickCount) {
@@ -125,8 +123,7 @@ public class VisualOverlay extends Overlay
                 case 7: textColor = config.beat3Tick7Color(); break;
                 case 8: textColor = config.beat3Tick8Color(); break;
                 case 9: textColor = config.beat3Tick9Color(); break;
-                case 10: textColor = config.beat3Tick10Color(); break;
-                default: textColor = Color.YELLOW; break;
+                default: textColor = Color.WHITE; break;
             }
         }
 

@@ -20,7 +20,7 @@ public class LocalTickManager
 {
     // Base values
     private static final long BASE_TICK_INTERVAL_MS = 600; // Standard tick duration
-    private static final long MAX_ADJUSTMENT_MS = 3;      // Maximum per-tick interval correction in milliseconds
+    private static final long MAX_ADJUSTMENT_MS = 5;      // Maximum per-tick interval correction in milliseconds
 
     // Tick counters
     @Getter
