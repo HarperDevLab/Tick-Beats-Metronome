@@ -3,10 +3,11 @@ package com.TickBeatsMetronome;
 import net.runelite.client.config.*;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 //ConfigGroup internally makes this @Singleton, so it's not required
-@ConfigGroup("advancedMetronome")
+@ConfigGroup("tickBeats")
 public interface TickBeatsMetronomeConfig extends Config
 {
 	////////////////////////////////////////////////
@@ -121,7 +122,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 2
 	)
-	default Keybind resetHotkey() { return new Keybind(KeyEvent.VK_SHIFT, 0); }
+	default Keybind resetHotkey() { return new Keybind(KeyEvent.VK_TAB, 0); }
 
 	@ConfigItem(
 			name = "Next Beat",
@@ -130,7 +131,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 3
 	)
-	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_RIGHT, 0); }
+	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_UP, InputEvent.CTRL_DOWN_MASK); }
 
 	@ConfigItem(
 			name = "Previous Beat",
@@ -139,7 +140,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 4
 	)
-	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_LEFT, 0); }
+	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_DOWN, InputEvent.CTRL_DOWN_MASK); }
 
 	@ConfigItem(
 			name = "Next Tick",
@@ -148,7 +149,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 5
 	)
-	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_UP, 0); }
+	default Keybind nextTickHotkey() { return new Keybind(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK); }
 
 	@ConfigItem(
 			name = "Previous Tick",
@@ -157,7 +158,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = hotkeys,
 			position = 6
 	)
-	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_DOWN, 0); }
+	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK); }
 
 	////////////////////////////////////////////////
 	///////////////  Text Settings  ////////////////

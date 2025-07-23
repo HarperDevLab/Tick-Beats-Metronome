@@ -20,9 +20,9 @@ import net.runelite.client.ui.overlay.OverlayManager;
 
 @Slf4j
 @PluginDescriptor(
-        name = "Tick Beats Metronome",
-        description = "Metronome with advanced audio and visual configurations",
-        tags = {"tick", "beat", "visual", "helper", "metronome", "sound","audio","skilling","skill","cycle"}
+        name = "Tick Beats",
+        description = "Music player and metronome with advanced audio and visual configurations",
+        tags = {"tick", "beat", "visual", "helper", "metronome", "music", "sound", "audio", "skilling", "skill", "cycle"}
 )
 //suppressing unused warning in IDE at class level as there are a lot of them with RL Plugins
 @SuppressWarnings("unused") //comment or remove this line out if you want to see unused warnings
@@ -61,9 +61,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private UserMusicManager userMusicManager;
 
     @Inject
-    private TickLogWriter tickLogWriter;
-
-    @Inject
     private EventBus eventBus;
 
     @Inject
@@ -84,7 +81,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
     protected void startUp()
     {
-        log.debug("Metronome started");
+        log.debug("Tick Beats Plugin started");
 
         tickCount = config.startTick();
 
@@ -107,9 +104,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
         //load list of user music files
         userMusicManager.loadUserMusic();
 
-        //startup the log writer
-        tickLogWriter.start();
-
 
         //get a music track ready to go
         musicManager.loadTrack(config.musicTrack().getFileName());
@@ -121,7 +115,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     @Override
     protected void shutDown()
     {
-        log.debug("Tick Beats Advanced Metronome Plugin stopped");
+        log.debug("Tick Beats Plugin stopped");
         overlayManager.remove(overlay);
         overlayManager.remove(colorOverlay);
         keyManager.unregisterKeyListener(inputManager);
@@ -134,10 +128,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
             localTickManager = null;
         }
 
-        if (tickLogWriter != null)
-        {
-            tickLogWriter.shutdown();
-        }
     }
 
     @Subscribe
@@ -169,20 +159,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
             onTick();
         }
 
-        //send info to the tick logger
-        tickLogWriter.logTick(
-                client.getLocalPlayer(),
-                localTickManager.getGameTickCount(),
-                localTickManager.getLocalTickCount(),
-                localTickManager.getLastGameTickTime(),
-                localTickManager.getLastLocalTickTime(),
-                beatNumber,
-                tickCount,
-                maxTicks,
-                config.enableTickSmoothing(),
-                inputManager.resetActive,
-                config.startTick()
-        );
     }
 
     /*
@@ -246,7 +222,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     {
 
         //make sure the event is coming from this plugin's config group
-        if (!event.getGroup().equals("advancedMetronome"))
+        if (!event.getGroup().equals("tickBeats"))
         {
             return;
         }
