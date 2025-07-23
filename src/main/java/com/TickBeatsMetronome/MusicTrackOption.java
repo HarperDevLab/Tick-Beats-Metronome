@@ -1,6 +1,7 @@
 package com.TickBeatsMetronome;
 
 public enum MusicTrackOption {
+    /*
     ALLS_FAIRY_IN_LOVE_AND_WAR("Alls Fairy In Love And War", "alls_fairy_in_love_and_war.wav"),
     AUTUMN_VOYAGE("Autumn Voyage", "autumn_voyage.wav"),
     FIRE_IN_THE_DEEP("Fire In The Deep", "fire_in_the_deep.wav"),
@@ -8,6 +9,8 @@ public enum MusicTrackOption {
     INFERNO("Inferno", "inferno.wav"),
     MOR_UL_REK("Mor Ul Rek !", "mor_ul_rek.wav"),
     SEA_SHANTY_2("Sea Shanty 2", "sea_shanty_2.wav"),
+
+     */
 
     // User Music
     // The Music files are given IDs based on their alphabetical order.

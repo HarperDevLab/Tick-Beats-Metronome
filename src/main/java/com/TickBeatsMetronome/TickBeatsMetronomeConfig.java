@@ -28,7 +28,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			description = "Toggles Music On or Off",
 			position = 2
 	)
-	default boolean enableMusic() { return true; }
+	default boolean enableMusic() { return false; }
 
 	@ConfigItem(
 			keyName = "enableTextMetronome",
@@ -91,7 +91,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = musicSettings,
 			position = 1
 	)
-	default MusicTrackOption musicTrack() { return MusicTrackOption.SEA_SHANTY_2; }
+	default MusicTrackOption musicTrack() { return MusicTrackOption.USER_MUSIC_1; }
 
 	@ConfigItem(
 			keyName = "musicVolume",
