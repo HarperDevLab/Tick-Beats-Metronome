@@ -156,7 +156,7 @@ public class SoundManager {
         }
 
         // Otherwise, try to play a built-in resource
-        String resourcePath = "/com/TickBeatsMetronome/" + normalizedKey;
+        String resourcePath = "/com/TickBeatsMetronome/Sounds/" + normalizedKey;
         try
         {
             audioPlayer.play(getClass(), resourcePath, 1.0f);
