@@ -85,19 +85,29 @@ public interface TickBeatsMetronomeConfig extends Config
 
 
 	@ConfigItem(
+			keyName = "useHighQualityMusic",
+			name = "Use High Quality Music",
+			description = "If checked, this plugin will download much larger CD quality tracks to use",
+			section = musicSettings,
+			position = 1
+	)
+	default boolean useHighQualityMusic() {return false;}
+
+
+	@ConfigItem(
 			keyName = "musicTrack",
 			name = "Music Track",
 			description = "Select which music track to play",
 			section = musicSettings,
-			position = 1
+			position = 2
 	)
-	default MusicTrackOption musicTrack() { return MusicTrackOption.USER_MUSIC_1; }
+	default MusicTrackOption musicTrack() { return MusicTrackOption.SEA_SHANTY_2; }
 
 	@ConfigItem(
 			keyName = "musicVolume",
 			name = "Music Volume",
 			description = "Controls the volume of music playback (Normal:100%, Boosted:150%)",
-			position = 2,
+			position = 3,
 			section = musicSettings
 	)
 	@Range(min = 0, max = 150)

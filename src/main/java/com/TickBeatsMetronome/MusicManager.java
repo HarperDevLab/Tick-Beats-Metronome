@@ -10,9 +10,15 @@ import javax.sound.sampled.*;
 @Singleton
 public class MusicManager
 {
+
+    @Inject
+    private TickBeatsMetronomeConfig config;
+
     @Inject
     private MusicTrackLoader musicTrackLoader;
     private MusicTrack currentTrack = null;
+
+
 
     private int volume = 100;
     private int currentBar = 1;
@@ -22,7 +28,7 @@ public class MusicManager
     private int tickBeat = 1;
     private boolean isPlaying = false;
 
-    //this is used to play the last beat/notes of the 4/4 songs when using odd time signatures like 3/4
+    //this is used to play the last beat/notes of the 4/4 songs when using odd time signatures like 3/4 when doing 3 tick
     private boolean playFinalFourthBeatNext = false;
 
     private int lastTickCount = 0;
@@ -31,13 +37,64 @@ public class MusicManager
 
 
     /**
+     * preps the currently selected track to start being played on tick 1 when start is called()
+     */
+    public void prepMusicTrack()
+    {
+        // Stop current playback to wait for start() to be called on tick 1 so start of song starts on tick 1
+        stop();
+
+        String currentTrackFileName = "";
+        if(currentTrack != null){
+            currentTrackFileName = currentTrack.getFileName();
+        }
+
+        String selectedTrackFileName = "";
+        if(config.musicTrack() != null){
+            selectedTrackFileName = config.musicTrack().getFileName();
+        }
+
+        // Load track if a track has been selected, and it's not the track that's already playing
+        if (!selectedTrackFileName.isEmpty() && !selectedTrackFileName.equals(currentTrackFileName))
+        {
+            loadTrack(selectedTrackFileName);
+        }
+
+    }
+
+    /**
+     * resets the track and sets isPlaying to true
+     * note: the current setup causes this to run every time a track ends
+     */
+    public void start()
+    {
+        //run prep the track every time we run start this will make it so if an error track was being played before
+        // it'll check again for the proper track every restart
+        prepMusicTrack();
+        //if current track is null for some reason abort the start (start should try to run again on tick 1)
+        if(currentTrack == null){
+            return;
+        }
+        //set isPlaying to true at the start, if loadTrack can't find the track it'll set it to false
+        isPlaying = true;
+
+        //reset our bar, beat and tick numbers to 1
+        reset();
+
+    }
+
+
+    /**
      * Get a track based on the track name and get it ready to play
      * @param trackName the tracks filename for local files or number if it's a user track
      */
-    public void loadTrack(String trackName)
+    private void loadTrack(String trackName)
     {
         // Clear reference to old track, might help gc clean up the old track
         currentTrack = null;
+
+        //when we load up a new track make reset, probobly not necessary to reset again but doesn't hurt
+        reset();
 
         //get the music track based on its track name
         currentTrack = musicTrackLoader.loadFromResource(trackName);
@@ -47,18 +104,10 @@ public class MusicManager
             stop();
         }
 
-        //after we load up a new track make sure we're on bar 1 beat 1
-        reset();
+
     }
 
-    /**
-     * resets the track and sets isPlaying to true
-     */
-    public void start()
-    {
-        reset();
-        isPlaying = true;
-    }
+
 
     /**
      * resets the track and sets isPlaying to false
@@ -77,7 +126,6 @@ public class MusicManager
         currentBar = 1;
         barBeat = 1;
         tickBeat = 1;
-
     }
 
 
@@ -89,6 +137,11 @@ public class MusicManager
      */
     public void onTick(int tickCount, int currentTick, int musicVolume) {
 
+        //if for any reason the current track is null, don't do anything
+        if(currentTrack == null){
+            stop();
+            return;
+        }
         //set the volume field on every tick
         volume = musicVolume;
 
@@ -103,11 +156,13 @@ public class MusicManager
         //songs can feel unfinished without the last note
         if (playFinalFourthBeatNext)
         {
+
             playBeat(currentTrack.getNumberBarsInTrack(), 4);
+
             playFinalFourthBeatNext = false;
         }
 
-        // If track has ended or playback is stopped
+        // If track has ended or playback is stopped, this should be after play fourth beat check so we don't return before that
         if (!isPlaying || currentTrack.getBeat(currentBar, barBeat) == null)
         {
             stop();
@@ -347,7 +402,6 @@ public class MusicManager
     /**
      * Plays a 600ms audio clip for a specific bar and beat.
      * Uses Java's AudioSystem to load a new Clip and play it.
-     *
      * Ensures that Clips are always cleaned up to prevent memory leaks or mixer clutter,
      * even in the case of playback failure.
      *
@@ -399,13 +453,12 @@ public class MusicManager
         }
         catch (Exception e)
         {
-            log.warn("Failed to play beat at bar {} beat {}: {}", bar, beat, e.getMessage(), e);
+            log.debug("Failed to play beat at bar {} beat {}: {}", bar, beat, e.getMessage(), e);
         }
     }
 
     /**
      * Converts the plugin's volume percentage to decibels and sets it on the given audio clip
-     *
      * The volume percentage is stored in the `volume` field (0–150),
      * where 100 is standard volume and 150 is boosted.
      *

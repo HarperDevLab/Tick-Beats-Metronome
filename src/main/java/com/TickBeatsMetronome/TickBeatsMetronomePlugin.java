@@ -66,6 +66,10 @@ public class TickBeatsMetronomePlugin extends Plugin {
     @Inject
     private MusicManager musicManager;
 
+    @Inject
+    private DownloadManager downloadManager;
+
+    //need to pass in local tick callback so don't inject this one
     private LocalTickManager localTickManager;
 
 
@@ -104,10 +108,12 @@ public class TickBeatsMetronomePlugin extends Plugin {
         //load list of user music files
         userMusicManager.loadUserMusic();
 
+        //check to see if all files that need to be downloaded are downloaded
+        downloadManager.initializeDownloads();
 
-        //get a music track ready to go
-        musicManager.loadTrack(config.musicTrack().getFileName());
 
+        //get a music track ready to go on tick 1
+        //musicManager.prepMusicTrack();
 
 
     }
@@ -126,6 +132,11 @@ public class TickBeatsMetronomePlugin extends Plugin {
             localTickManager.shutdown();
             eventBus.unregister(localTickManager);
             localTickManager = null;
+        }
+
+        if (downloadManager != null)
+        {
+            downloadManager.shutdown();
         }
 
     }
@@ -197,7 +208,8 @@ public class TickBeatsMetronomePlugin extends Plugin {
             soundManager.playSound(beatNumber, tickCount);
         }
 
-        // If Music is checked
+
+        // If Enable Music is checked
         if(config.enableMusic()) {
 
             //if music isn't playing, and we're at tick 1 start playing music
@@ -231,28 +243,17 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if (event.getKey().equals("musicTrack"))
         {
             log.debug("Music track changed.");
-            handleMusicTrackChange();
+            musicManager.prepMusicTrack();
+        }
+
+        //if event is high quality music button run initialize downloads to see if we need to download music tracks
+        if (event.getKey().equals("useHighQualityMusic"))
+        {
+            downloadManager.initializeDownloads();
         }
     }
 
-    private void handleMusicTrackChange()
-    {
-        MusicTrackOption selected = config.musicTrack();
 
-        // Stop current playback
-        musicManager.stop();
-
-        // Load if a file is defined
-        if (selected.getFileName() != null)
-        {
-            musicManager.loadTrack(selected.getFileName());
-            log.debug("Switched music track to: {}", selected);
-        }
-        else
-        {
-            log.debug("No music track selected.");
-        }
-    }
 
     // I believe this is Required by RuneLite to provide config interface.
     @Provides

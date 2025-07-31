@@ -11,7 +11,7 @@ import java.util.List;
 public class MusicTrack
 {
     // Name of the track
-    private final String name;
+    private final String fileName;
 
     // Flat list of MusicBeat objects that make up the full track
     private final List<MusicBeat> beats;
@@ -25,19 +25,19 @@ public class MusicTrack
     /**
      * Constructs a new MusicTrack object from the parsed beat list and audio format.
      *
-     * @param name   The name for the track
+     * @param fileName  The fileName for the track
      * @param beats  A list of MusicBeat segments extracted from the audio
      * @param format The shared audio format for all beats in the track
      */
-    public MusicTrack(String name, List<MusicBeat> beats, AudioFormat format)
+    public MusicTrack(String fileName, List<MusicBeat> beats, AudioFormat format)
     {
-        this.name = name;
+        this.fileName = fileName;
         this.beats = beats;
         this.format = format;
     }
 
-    /** @return The name or label of the track */
-    public String getName() { return name; }
+    /** @return The file location of the track */
+    public String getFileName() { return fileName; }
 
     /** @return The list of all beats in the track */
     public List<MusicBeat> getBeats() { return beats; }

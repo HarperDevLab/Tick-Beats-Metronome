@@ -163,7 +163,7 @@ public class SoundManager {
         }
         catch (Exception e)
         {
-            log.error("Failed to play sound '{}': {}", normalizedKey, e.getMessage());
+            log.debug("Failed to play sound '{}': {}", normalizedKey, e.getMessage());
         }
     }
 

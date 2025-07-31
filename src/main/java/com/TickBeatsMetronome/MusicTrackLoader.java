@@ -1,12 +1,16 @@
 package com.TickBeatsMetronome;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.RuneLite;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,8 @@ public class MusicTrackLoader
 
     private static final float BEAT_DURATION_SECONDS = 0.6f;
 
+    private String musicFileName = "";
+
     /**
      * Loads a music track either from embedded plugin resources or from user-supplied files.
      * The track is split into 600ms segments.
@@ -30,7 +36,7 @@ public class MusicTrackLoader
      */
     public MusicTrack loadFromResource(String trackName)
     {
-        // Try to get an AudioInputStream for either a user track or embedded resource
+        // Try to get an AudioInputStream for either a user track or downloaded track
         try (AudioInputStream stream = getAudioStream(trackName))
         {
             // If the track couldn't be loaded (not found, unreadable, etc.), skip loading.
@@ -77,8 +83,9 @@ public class MusicTrackLoader
             // Remove any leftover partial bar at the end (e.g., trailing silence)
             beatList = trimIncompleteBar(beatList);
 
+
             // Package everything into a MusicTrack object
-            return new MusicTrack(trackName, beatList, format);
+            return new MusicTrack(musicFileName, beatList, format);
         }
         catch (Exception e)
         {
@@ -92,42 +99,70 @@ public class MusicTrackLoader
      * Gets an AudioInputStream from user music directory or embedded resource.
      * determines if the track is an embedded resource or a user file, then gets its audioInputStream
      * @param trackName used to determine which track to create the audio stream for,
-     *                  will be a file name for embedded tracks and a string int for user tracks
+     *                  - For built-in tracks, this is the WAV filename (e.g., "sea_shanty_2.wav").
+     *                  - For user music, this is a stringified number key (e.g., "1", "2", "3", etc.).
      * @return returns the AudioInputStream for the track
      */
     public AudioInputStream getAudioStream(String trackName)
     {
-        //attempt to get a user file based on the track name (might be better to just check if the track name is an int string)
-        File userFile = userMusicManager.getUserMusicMap().get(trackName);
         try
         {
-            //if it's a user file that's been selected by the user return  the audioInputStream for that
-            if (userFile != null && userFile.exists())
+            // Check if this is a user track (pure digit string like "1", "2", etc.)
+            if (trackName.matches("\\d+"))
             {
-                return AudioSystem.getAudioInputStream(userFile);
+                //not really needed but make the variable name more accurate
+                String trackNumber = trackName;
+                //get the user file based on its track id number
+                File userFile = userMusicManager.getUserMusicMap().get(trackNumber);
+                if (userFile != null && userFile.exists())
+                {
+                    musicFileName = trackNumber;
+                    return AudioSystem.getAudioInputStream(userFile);
+                }
+            }
+            else
+            {
+                // Not a user track — check high-quality folder
+                Path hiPath = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "downloads", "hi", trackName);
+                if (Files.exists(hiPath))
+                {
+                    musicFileName = trackName;
+                    return AudioSystem.getAudioInputStream(hiPath.toFile());
+                }
+
+                // Check low-quality folder
+                Path loPath = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "downloads", "lo", trackName);
+                if (Files.exists(loPath))
+                {
+                    musicFileName = trackName;
+                    return AudioSystem.getAudioInputStream(loPath.toFile());
+                }
+
+                //if the file isn't found in either folder, play the download not ready audio
+                InputStream dlNotReadyStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/download_not_ready.wav");
+                if (dlNotReadyStream != null)
+                {
+                    musicFileName = "download_not_ready.wav";
+                    return AudioSystem.getAudioInputStream(dlNotReadyStream);
+                }
+
             }
 
-
-            //if it's an already built in song, return that
-            InputStream resourceStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/Music/" + trackName);
-            if (resourceStream != null)
+            // If all else fails, use the built-in error message
+            InputStream errorStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/music_error_message.wav");
+            if (errorStream != null)
             {
-                return AudioSystem.getAudioInputStream(resourceStream);
+                musicFileName = "music_error_message.wav";
+                return AudioSystem.getAudioInputStream(errorStream);
             }
 
-
-            //if the track is neither a user track nor an audio track, it's likely that the user selected
-            //a user track that doesn't exist, let's output audio that tells them how to properly add
-            //their own music tracks
-            resourceStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/music_error_message.wav");
-
-            return AudioSystem.getAudioInputStream(resourceStream);
-
-
+            // If even the error stream is missing, log and return null
+            log.debug("Unable to find track '{}' or fallback error message.", trackName);
+            return null;
         }
         catch (Exception e)
         {
-            log.error("Failed to load audio stream for '{}': {}", trackName, e.getMessage());
+            log.debug("Failed to load audio stream for '{}': {}", trackName, e.getMessage());
             return null;
         }
     }
