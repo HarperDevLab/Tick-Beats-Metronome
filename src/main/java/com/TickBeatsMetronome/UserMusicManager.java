@@ -55,7 +55,7 @@ public class UserMusicManager
 
         for (File file : files)
         {
-            // Only accept regular files that end in .wav (case-insensitive)
+            // Only accept regular files that end in .wav
             if (file.isFile() && file.getName().toLowerCase().endsWith(".wav"))
             {
                 userFiles.add(file);

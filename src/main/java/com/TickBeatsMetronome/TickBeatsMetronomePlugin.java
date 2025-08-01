@@ -22,7 +22,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
         name = "Tick Beats",
         description = "Music player and metronome with advanced audio and visual configurations",
-        tags = {"tick", "beat", "visual", "helper", "metronome", "music", "sound", "audio", "skilling", "skill", "cycle"}
+        tags = {"tick", "beat", "beats", "visual", "helper", "metronome", "music", "sound", "audio", "skilling", "skill", "cycle"}
 )
 //suppressing unused warning in IDE at class level as there are a lot of them with RL Plugins
 @SuppressWarnings("unused") //comment or remove this line out if you want to see unused warnings
