@@ -113,7 +113,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
 
         //get a music track ready to go on tick 1
-        //musicManager.prepMusicTrack();
+        musicManager.prepMusicTrack();
 
 
     }

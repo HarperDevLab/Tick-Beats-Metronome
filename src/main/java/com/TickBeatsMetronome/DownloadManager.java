@@ -75,16 +75,18 @@ public class DownloadManager
         }
 
 
+        //pull in all the non-user tracks from the music track option enum
         builtinTracks = Arrays.stream(MusicTrackOption.values())
                 .filter(track -> !track.getFileName().matches("\\d+"))
                 .collect(Collectors.toList());
 
-        //note: also check for incomplete or broken downloads
+
 
         checkDownloadState();
 
         if (!allLoDownloaded || (config.useHighQualityMusic() && !allHiDownloaded))
         {
+            log.info("a download is missing, start download scheduler");
 
             //if the default track doesn't exist yet
             if (!Files.exists(LO_LOCAL_PATH.resolve(DEFAULT_TRACK)))

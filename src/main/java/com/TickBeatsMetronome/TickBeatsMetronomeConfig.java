@@ -239,7 +239,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 1
 	)
-	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.KICK_SNAPBACK; }
+	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.KICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick2Sound",
@@ -248,7 +248,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 2
 	)
-	default TickSoundOption beat1Tick2Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick2Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick3Sound",
@@ -257,7 +257,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 3
 	)
-	default TickSoundOption beat1Tick3Sound() { return TickSoundOption.CLAP_TAPE; }
+	default TickSoundOption beat1Tick3Sound() { return TickSoundOption.CLAP; }
 
 	@ConfigItem(
 			keyName = "beat1Tick4Sound",
@@ -266,7 +266,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 4
 	)
-	default TickSoundOption beat1Tick4Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick4Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick5Sound",
@@ -275,7 +275,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 5
 	)
-	default TickSoundOption beat1Tick5Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick5Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick6Sound",
@@ -284,7 +284,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 6
 	)
-	default TickSoundOption beat1Tick6Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick6Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick7Sound",
@@ -293,7 +293,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 7
 	)
-	default TickSoundOption beat1Tick7Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick7Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick8Sound",
@@ -302,7 +302,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 8
 	)
-	default TickSoundOption beat1Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick8Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat1Tick9Sound",
@@ -311,7 +311,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 9
 	)
-	default TickSoundOption beat1Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat1Tick9Sound() { return TickSoundOption.TICK; }
 
 
 	////////////////////////////////////////////////
@@ -538,7 +538,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 1
 	)
-	default TickSoundOption beat2Tick1Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick1Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick2Sound",
@@ -547,7 +547,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 2
 	)
-	default TickSoundOption beat2Tick2Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick2Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick3Sound",
@@ -556,7 +556,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 3
 	)
-	default TickSoundOption beat2Tick3Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick3Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick4Sound",
@@ -565,7 +565,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 4
 	)
-	default TickSoundOption beat2Tick4Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick4Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick5Sound",
@@ -574,7 +574,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 5
 	)
-	default TickSoundOption beat2Tick5Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick5Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick6Sound",
@@ -583,7 +583,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 6
 	)
-	default TickSoundOption beat2Tick6Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick6Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick7Sound",
@@ -592,7 +592,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 7
 	)
-	default TickSoundOption beat2Tick7Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick7Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick8Sound",
@@ -601,7 +601,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 8
 	)
-	default TickSoundOption beat2Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick8Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat2Tick9Sound",
@@ -610,7 +610,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 9
 	)
-	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.TICK; }
 
 
 
@@ -838,7 +838,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 1
 	)
-	default TickSoundOption beat3Tick1Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick1Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick2Sound",
@@ -847,7 +847,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 2
 	)
-	default TickSoundOption beat3Tick2Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick2Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick3Sound",
@@ -856,7 +856,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 3
 	)
-	default TickSoundOption beat3Tick3Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick3Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick4Sound",
@@ -865,7 +865,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 4
 	)
-	default TickSoundOption beat3Tick4Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick4Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick5Sound",
@@ -874,7 +874,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 5
 	)
-	default TickSoundOption beat3Tick5Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick5Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick6Sound",
@@ -883,7 +883,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 6
 	)
-	default TickSoundOption beat3Tick6Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick6Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick7Sound",
@@ -892,7 +892,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 7
 	)
-	default TickSoundOption beat3Tick7Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick7Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick8Sound",
@@ -901,7 +901,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 8
 	)
-	default TickSoundOption beat3Tick8Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick8Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
 			keyName = "beat3Tick9Sound",
@@ -910,7 +910,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat3Sounds,
 			position = 9
 	)
-	default TickSoundOption beat3Tick9Sound() { return TickSoundOption.TICK_HIHAT; }
+	default TickSoundOption beat3Tick9Sound() { return TickSoundOption.TICK; }
 
 
 

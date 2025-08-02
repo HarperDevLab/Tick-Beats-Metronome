@@ -21,6 +21,9 @@ public class MusicTrackLoader
     @Inject
     UserMusicManager userMusicManager;
 
+    @Inject
+    private TickBeatsMetronomeConfig config;
+
     private static final float BEAT_DURATION_SECONDS = 0.6f;
 
     private String musicFileName = "";
@@ -96,10 +99,10 @@ public class MusicTrackLoader
 
 
     /**
-     * Gets an AudioInputStream from user music directory or embedded resource.
-     * determines if the track is an embedded resource or a user file, then gets its audioInputStream
+     * Gets an AudioInputStream from user music directory or downloaded resource.
+     * determines if the track is a downloaded track or a user file, then gets its audioInputStream
      * @param trackName used to determine which track to create the audio stream for,
-     *                  - For built-in tracks, this is the WAV filename (e.g., "sea_shanty_2.wav").
+     *                  - For downloaded tracks, this is the WAV filename (e.g., "sea_shanty_2.wav").
      *                  - For user music, this is a stringified number key (e.g., "1", "2", "3", etc.).
      * @return returns the AudioInputStream for the track
      */
@@ -107,33 +110,36 @@ public class MusicTrackLoader
     {
         try
         {
-            // Check if this is a user track (pure digit string like "1", "2", etc.)
+            // Check if this is a user track (digit string like "1", "2", etc.)
             if (trackName.matches("\\d+"))
             {
-                //not really needed but make the variable name more accurate
+                //Not really needed, but make the variable name more accurate
                 String trackNumber = trackName;
                 //get the user file based on its track id number
                 File userFile = userMusicManager.getUserMusicMap().get(trackNumber);
                 if (userFile != null && userFile.exists())
                 {
+                    //Store music file name to be used when we create the music track object
                     musicFileName = trackNumber;
                     return AudioSystem.getAudioInputStream(userFile);
                 }
             }
             else
             {
-                // Not a user track — check high-quality folder
+                // If it's not a user track, first check high-quality folder if the user has use high quality music checked
                 Path hiPath = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "downloads", "hi", trackName);
-                if (Files.exists(hiPath))
+                if (Files.exists(hiPath) && config.useHighQualityMusic())
                 {
+                    //Store music file name to be used when we create the music track object
                     musicFileName = trackName;
                     return AudioSystem.getAudioInputStream(hiPath.toFile());
                 }
 
-                // Check low-quality folder
+                // now check low-quality folder
                 Path loPath = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "downloads", "lo", trackName);
                 if (Files.exists(loPath))
                 {
+                    //Store music file name to be used when we create the music track object
                     musicFileName = trackName;
                     return AudioSystem.getAudioInputStream(loPath.toFile());
                 }
@@ -142,6 +148,8 @@ public class MusicTrackLoader
                 InputStream dlNotReadyStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/download_not_ready.wav");
                 if (dlNotReadyStream != null)
                 {
+
+                    //Store music file name to be used when we create the music track object
                     musicFileName = "download_not_ready.wav";
                     return AudioSystem.getAudioInputStream(dlNotReadyStream);
                 }
@@ -152,12 +160,13 @@ public class MusicTrackLoader
             InputStream errorStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/music_error_message.wav");
             if (errorStream != null)
             {
+                //Store music file name to be used when we create the music track object
                 musicFileName = "music_error_message.wav";
                 return AudioSystem.getAudioInputStream(errorStream);
             }
 
             // If even the error stream is missing, log and return null
-            log.debug("Unable to find track '{}' or fallback error message.", trackName);
+            log.debug("Unable to find track '{}' or fallback music error message audio.", trackName);
             return null;
         }
         catch (Exception e)
