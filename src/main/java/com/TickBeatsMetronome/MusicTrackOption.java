@@ -3,18 +3,29 @@ package com.TickBeatsMetronome;
 public enum MusicTrackOption {
 
     ALLS_FAIRY_IN_LOVE_AND_WAR("Alls Fairy In Love And War", "alls_fairy_in_love_and_war.wav"),
-    AUTUMN_VOYAGE("Autumn Voyage", "autumn_voyage.wav"),
     AMASCUTS_PROMISE("Amascut's Promise", "amascuts_promise.wav"),
+    ANGELS_FURY("Angels Fury", "angels_fury.wav"),
+    AUTUMN_VOYAGE("Autumn Voyage", "autumn_voyage.wav"),
+    BOOK_OF_SPELLS("Book Of Spells", "book_of_spells.wav"),
     FIRE_IN_THE_DEEP("Fire In The Deep", "fire_in_the_deep.wav"),
     FIRE_IN_THE_HOLE("Fire In The Hole !", "fire_in_the_hole.wav"),
+    FLUTE_SALAD("Flute Salad", "flute_salad.wav"),
     GAUNTLET("Gauntlet", "gauntlet.wav"),
+    HOME_SWEET_HOME("Home Sweet Home", "home_sweet_home.wav"),
+    HORIZON("Horizon", "horizon.wav"),
     INFERNO("Inferno", "inferno.wav"),
     INTO_THE_TOMBS("Into The Tombs", "into_the_tombs.wav"),
-    MOR_UL_REK("Mor Ul Rek !", "mor_ul_rek.wav"),
+    ISLE_OF_SERENITY("Isle Of Serenity", "isle_of_serenity.wav"),
+    MOR_UL_REK("Mor Ul Rek", "mor_ul_rek.wav"),
+    POWER_OF_THE_SHADOW_REALM("Power Of The Shadow Realm", "power_of_the_shadow_realm.wav"),
+    PREDATOR_XARPUS("Predator Xarpus", "predator_xarpus.wav"),
     PROSPERING_FORTUNE("Prospering Fortune", "prospering_fortune.wav"),
     SCAPE_SOFT("Scape Soft", "scape_soft.wav"),
     SEA_SHANTY_2("Sea Shanty 2", "sea_shanty_2.wav"),
+    TRADE_PARADE("Trade Parade", "trade_parade.wav"),
     WALK_IN_THE_WOODS("Walk In The Woods", "walk_in_the_woods.wav"),
+    WATCH_YOUR_STEP("Watch Your Step", "watch_your_step.wav"),
+    WELCOME_TO_THE_THEATRE("Welcome To The Theatre", "welcome_to_the_theatre.wav"),
 
 
     // User Music
