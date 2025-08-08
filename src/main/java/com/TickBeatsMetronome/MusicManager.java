@@ -18,8 +18,6 @@ public class MusicManager
     private MusicTrackLoader musicTrackLoader;
     private MusicTrack currentTrack = null;
 
-
-
     private int volume = 100;
     private int currentBar = 1;
     //bar beat should always be 1 - 4 referencing a beat in the bar
@@ -28,7 +26,7 @@ public class MusicManager
     private int tickBeat = 1;
     private boolean isPlaying = false;
 
-    //this is used to play the last beat/notes of the 4/4 songs when using odd time signatures like 3/4 when doing 3 tick
+    //this is used to play the last beat/notes of the 4 beat per bar songs when doing 3 beats per bar for 3 tick
     private boolean playFinalFourthBeatNext = false;
 
     private int lastTickCount = 0;
@@ -132,10 +130,10 @@ public class MusicManager
     /**
      * Called on every tick (local or game tick depends on plugin settings). Handles advancing music playback.
      * @param tickCount How many ticks per beat the user has configured
-     * @param currentTick Which tick this is within the current beat (1-based)
+     * @param pluginTick Which tick this is within the current beat (1-based)
      * @param musicVolume How loud to play music clips, 100 is full, goes up to 150 for boosted audio
      */
-    public void onTick(int tickCount, int currentTick, int musicVolume) {
+    public void onTick(int tickCount, int pluginTick, int musicVolume) {
 
         //if for any reason the current track is null, don't do anything
         if(currentTrack == null){
@@ -146,19 +144,14 @@ public class MusicManager
         volume = musicVolume;
 
         //if the tick from our plugin doesn't match the music manager tick we're using to determine bar beat
-        //update the internal tick beat this happens when the user adjust which beat they're on
-        if(currentTick != tickBeat){
-            tickBeat = currentTick;
-        }
-
+        //update the Music Manager tick beat, this happens when the user adjust which tick they're on
+        correctMusicManagerTick(tickCount, pluginTick);
 
         //if play final 4th beat is true (play the last beat/audio clip of the song)
         //songs can feel unfinished without the last note
         if (playFinalFourthBeatNext)
         {
-
             playBeat(currentTrack.getNumberBarsInTrack(), 4);
-
             playFinalFourthBeatNext = false;
         }
 
@@ -169,11 +162,6 @@ public class MusicManager
             return;
         }
 
-        // If user changes their tickCount, keep music beat in sync with tick
-        if (lastTickCount != tickCount){
-            tickBeat = currentTick;
-        }
-        lastTickCount = tickCount;
 
 
 
@@ -192,8 +180,56 @@ public class MusicManager
         }
     }
 
+
+    /**
+     * If the tick from our plugin doesn't match the MusicManager tickBeat Update the Music Manager Tick Beat
+     * this happens when the user adjust which beat they're on or makes other plugin adjustments while music is playing
+     * @param tickCount How many ticks per beat the user has configured
+     * @param pluginTick the current tick as far as the plugin is concerned
+     */
+    private void correctMusicManagerTick(int tickCount, int pluginTick){
+        //tick counts 1 and 2 need special treatment because the plugin tick will only go up to 1 or 2,
+        //but we want to play notes 3 and 4 of the bar so tickBeat needs to be able to go up to 3 and 4 without "correcting"
+
+        //if the user has Tick Count set to 1, the Plugin Tick will always be 1, so we don't correct for that just play the music
+        if (tickCount == 1){
+            return;
+        }
+
+        //if Tick Count is set to 2 tick,
+        //we want to make sure if plugin tick is 1, our Music Manager tickBeat is 1 or 3
+        //and if our plugin tick is 2 our Music Manager tickBeat is set to 2 or 4 to play those parts of the bar
+        if (tickCount == 2){
+
+            //if the plugin tick is 1 but the tick beat is 2 or 4, we're out of sync
+            if (pluginTick == 1){
+                if (tickBeat == 2 || tickBeat == 4) {
+                    //set the music manager tick to match the plugin's tick
+                    tickBeat = pluginTick;
+                }
+            }
+
+            //if the plugin tick is 2 but the Music Manager tick beat is 1 or 3, we're out of sync
+            if (pluginTick == 2){
+                if (tickBeat == 1 || tickBeat == 3) {
+                    //set the music manager tick to match the plugin's tick
+                    tickBeat = pluginTick;
+                }
+            }
+
+            return;
+        }
+
+        //In all other scenarios the music manager Tick Beat and the Plugin Tick should match
+        if(pluginTick != tickBeat){
+            tickBeat = pluginTick;
+        }
+
+    }
+
     // -- Tick Handlers --
 
+    //1 tick plays 4 beat per bar music as is
     private void handle1Tick()
     {
         barBeat = tickBeat;
@@ -201,12 +237,14 @@ public class MusicManager
         playBeat(currentBar, barBeat);
 
         tickBeat++;
+
         if (tickBeat >= 5) {
             tickBeat = 1;
             currentBar++;
         }
     }
 
+    //2 tick plays 4 beat per bar music as is
     private void handle2Tick()
     {
         barBeat = tickBeat;
@@ -219,7 +257,7 @@ public class MusicManager
         }
     }
 
-    /// 3 tick will play the music with a 3/4 time signature by removing the last beat from each bar
+    /// 3 tick will play the music with a 3/4 time signature / 3 beats per bar by removing the last beat from each bar
     private void handle3Tick()
     {
         barBeat = tickBeat;
@@ -242,6 +280,7 @@ public class MusicManager
         }
     }
 
+    //Songs are currently required to have a 4/4 time signature so they work very well with 4 tick
     private void handle4Tick()
     {
         barBeat = tickBeat;
@@ -255,18 +294,18 @@ public class MusicManager
     }
 
 
-    //5 tick won't play music on tick 5 only metronome beat will play
+    //5 tick replays the last note of the bar (not ideal but sounds ok most of the time)
     private void handle5Tick()
     {
         barBeat = tickBeat;
 
-        //keep beat 5 silent for now, not sure how to make it sound good yet
-        if (tickBeat != 5){
-            playBeat(currentBar, barBeat);
-        }else{
-            //we don't want to set a barBeat that doesn't exist (5), so set it to 1 even though we're not playing sound
-            barBeat = 1;
+
+        //replay the last note of the bar on beat 5
+        if (tickBeat == 5){
+            barBeat = 4;
         }
+
+        playBeat(currentBar, barBeat);
 
         tickBeat++;
 
@@ -276,7 +315,7 @@ public class MusicManager
         }
     }
 
-    //6 tick will play 2 3/4 bars, removing the last note from each bar
+    //6 tick will play 2 3 beat bars, removing the last note from each bar
     private void handle6Tick()
     {
         barBeat = tickBeat;
@@ -309,7 +348,7 @@ public class MusicManager
         }
     }
 
-    //7 tick will remove the last beat on every other bar so will play alternating 4/4 and 3/4 bars
+    //7 tick will remove the last beat on every other bar so will play alternating 4 beat bars and 3 beat bars
     private void handle7Tick()
     {
         barBeat = tickBeat;
@@ -320,7 +359,7 @@ public class MusicManager
             barBeat = tickBeat - 4;
         }
 
-        // If we're on the final bar, and only if tick beat is set to 7 que up the 4th note
+        // If we're on the final bar, and only if tick beat is set to 7 queue up the 4th note
         // we only want to queue up the 4th note if we're on the 3/4 second bar
         if (currentTrack.getNumberBarsInTrack() == currentBar && tickBeat == 7)
         {
@@ -341,6 +380,7 @@ public class MusicManager
         }
     }
 
+    //8 tick will play 2 regular 4 beat bars
     private void handle8Tick()
     {
         barBeat = tickBeat;
@@ -366,28 +406,33 @@ public class MusicManager
         }
     }
 
-    //9 tick will play 2 4/4 bars and a silent note after the last bar
-    //wasn't going to include 9 ticks as it sounds pretty bad, but I think there are some scenarios where a user may want 9
+    //9 tick will play 3 3 beat bars, removing the last beat from every bar of music
     private void handle9Tick()
     {
         barBeat = tickBeat;
 
-        //if the tick beat is 5 or greater it means we're on the next bar so remove 4 to get the beat in the bar
-        if(tickBeat >= 5){
-            barBeat = barBeat - 4;
+        //if the tick beat is 4 or greater it means we're on the next 3/4 bar so remove 3 to get the beat in the bar
+        if(tickBeat >= 4){
+            barBeat = barBeat - 3;
         }
 
-        //keep beat 9 silent for now, not sure how to make it sound good yet
-        if (tickBeat != 9){
-            playBeat(currentBar, barBeat);
-        }else{
-            //we don't want to set to a beat in the bar that doesn't exist (9-4 = 5 which doesn't exist), so set it to 1 even though we're not playing sound
-            barBeat = 1;
+        //if the tick beat is 7 or greater it means we're 2 3/4 bars in, so remove another 3 to get the beat in the bar
+        if(tickBeat >= 7){
+            barBeat = barBeat - 3;
         }
+
+        // If we're on the final note of the final bar queue up the final note of the song to play on the next bar
+        if (currentTrack.getNumberBarsInTrack() == currentBar && barBeat == 3)
+        {
+            playFinalFourthBeatNext = true;
+        }
+
+        playBeat(currentBar, barBeat);
+
         tickBeat++;
 
-        //if after playing and incrementing the beat we're on beat 5, move on to the next bar
-        if(tickBeat == 5){
+        //if after playing and incrementing the beat we're on beat 4 or 7 , move on to the next bar
+        if(tickBeat == 4 || tickBeat == 7){
             currentBar++;
         }
 
@@ -402,7 +447,7 @@ public class MusicManager
     /**
      * Plays a 600ms audio clip for a specific bar and beat.
      * Uses Java's AudioSystem to load a new Clip and play it.
-     * Ensures that Clips are always cleaned up to prevent memory leaks or mixer clutter,
+     * Ensures that Clips are always cleaned up to prevent memory leaks,
      * even in the case of playback failure.
      *
      * @param bar  the bar number in the track (1-based)

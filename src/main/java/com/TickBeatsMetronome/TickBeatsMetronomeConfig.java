@@ -54,21 +54,29 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default boolean enableTickSmoothing() { return true; }
 
+	@ConfigItem(
+			keyName = "showInfoBox",
+			name = "Show Info Box",
+			description = "Display the Tick Info Overlay Box",
+			position = 6
+	)
+	default boolean showInfoBox() { return true; }
+
 	@Range(min = 1, max = 3)
 	@ConfigItem(
 			keyName = "enabledBeats",
 			name = "Enabled Beats",
-			description = "Which beats are enabled for rotating through",
-			position = 6
+			description = "Which beat settings are enabled for rotating through with hotkey",
+			position = 7
 	)
-	default int enabledBeats() { return 2; }
+	default int enabledBeats() { return 3; }
 
-	@Range(max = 8)
+	@Range(max = 9)
 	@ConfigItem(
 			keyName = "startTick",
 			name = "Start Tick",
-			description = "The tick the metronome starts on (0 to 8)",
-			position = 7
+			description = "The tick the metronome starts on (0 to 9)",
+			position = 8
 	)
 	default int startTick() { return 0; }
 
@@ -239,7 +247,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 1
 	)
-	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.KICK; }
+	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
 			keyName = "beat1Tick2Sound",
@@ -275,7 +283,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 5
 	)
-	default TickSoundOption beat1Tick5Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat1Tick5Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
 			keyName = "beat1Tick6Sound",
@@ -293,7 +301,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat1Sounds,
 			position = 7
 	)
-	default TickSoundOption beat1Tick7Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat1Tick7Sound() { return TickSoundOption.CLAP; }
 
 	@ConfigItem(
 			keyName = "beat1Tick8Sound",
@@ -517,7 +525,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = Beat2,
 			position = 30
 	)
-	default int beat2TickCount() { return 4; }
+	default int beat2TickCount() { return 3; }
 
 	////////////////////////////////////////////////
 	//////////////  Beat 2 Sounds  /////////////////
@@ -538,7 +546,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 1
 	)
-	default TickSoundOption beat2Tick1Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat2Tick1Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
 			keyName = "beat2Tick2Sound",
@@ -556,7 +564,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 3
 	)
-	default TickSoundOption beat2Tick3Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat2Tick3Sound() { return TickSoundOption.CLAP; }
 
 	@ConfigItem(
 			keyName = "beat2Tick4Sound",
@@ -565,7 +573,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 4
 	)
-	default TickSoundOption beat2Tick4Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat2Tick4Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
 			keyName = "beat2Tick5Sound",
@@ -583,7 +591,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 6
 	)
-	default TickSoundOption beat2Tick6Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat2Tick6Sound() { return TickSoundOption.CLAP; }
 
 	@ConfigItem(
 			keyName = "beat2Tick7Sound",
@@ -592,7 +600,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 7
 	)
-	default TickSoundOption beat2Tick7Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat2Tick7Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
 			keyName = "beat2Tick8Sound",
@@ -610,7 +618,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			section = beat2Sounds,
 			position = 9
 	)
-	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.TICK; }
+	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.CLAP; }
 
 
 

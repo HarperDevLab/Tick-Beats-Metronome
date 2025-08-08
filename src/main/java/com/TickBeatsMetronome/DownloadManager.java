@@ -86,7 +86,7 @@ public class DownloadManager
 
         if (!allLoDownloaded || (config.useHighQualityMusic() && !allHiDownloaded))
         {
-            log.info("a download is missing, start download scheduler");
+            log.debug("a download is missing, start download scheduler");
 
             //if the default track doesn't exist yet
             if (!Files.exists(LO_LOCAL_PATH.resolve(DEFAULT_TRACK)))

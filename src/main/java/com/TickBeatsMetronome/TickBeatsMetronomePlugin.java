@@ -37,10 +37,13 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private TickBeatsMetronomeConfig config;
 
     @Inject
-    private VisualOverlay overlay;
+    private OverlayOverheadNumber overlayOverheadNumber;
 
     @Inject
-    private ColorOverlay colorOverlay;
+    private OverlayColor overlayColor;
+
+    @Inject
+    private OverlayBeatBox overlayBeatBox;
 
     @Inject
     private OverlayManager overlayManager;
@@ -80,7 +83,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     public int beatNumber = 1;
 
     //Holds the max number of ticks for the current beat
-    private int maxTicks = 1;
+    public int maxTicks = 1;
 
 
     protected void startUp()
@@ -90,8 +93,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
         tickCount = config.startTick();
 
         // Attach the overlays
-        overlayManager.add(overlay);
-        overlayManager.add(colorOverlay);
+        overlayManager.add(overlayOverheadNumber);
+        overlayManager.add(overlayColor);
+        overlayManager.add(overlayBeatBox);
 
         // Register the key input listener
         keyManager.registerKeyListener(inputManager);
@@ -122,8 +126,10 @@ public class TickBeatsMetronomePlugin extends Plugin {
     protected void shutDown()
     {
         log.debug("Tick Beats Plugin stopped");
-        overlayManager.remove(overlay);
-        overlayManager.remove(colorOverlay);
+        overlayManager.remove(overlayOverheadNumber);
+        overlayManager.remove(overlayColor);
+        overlayManager.remove(overlayBeatBox);
+
         keyManager.unregisterKeyListener(inputManager);
 
         // Shutdown local tick loop and unregister events

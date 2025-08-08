@@ -22,6 +22,7 @@ public enum MusicTrackOption {
     PROSPERING_FORTUNE("Prospering Fortune", "prospering_fortune.wav"),
     SCAPE_SOFT("Scape Soft", "scape_soft.wav"),
     SEA_SHANTY_2("Sea Shanty 2", "sea_shanty_2.wav"),
+    SPIRIT("Spirit", "spirit.wav"),
     TRADE_PARADE("Trade Parade", "trade_parade.wav"),
     WALK_IN_THE_WOODS("Walk In The Woods", "walk_in_the_woods.wav"),
     WATCH_YOUR_STEP("Watch Your Step", "watch_your_step.wav"),
