@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Map;
 
+import net.runelite.client.RuneLite;
 import net.runelite.client.audio.AudioPlayer;
 
 
@@ -18,13 +20,18 @@ import net.runelite.client.audio.AudioPlayer;
 public class SoundManager {
 
     @Inject
+    TickBeatsMetronomeConfig config;
+
+    @Inject
     private AudioPlayer audioPlayer;
 
     @Inject
     UserSoundManager userSoundManager;
 
     @Inject
-    TickBeatsMetronomeConfig config;
+    OverlayMessage overlayMessage;
+
+
 
 
     /**
@@ -138,22 +145,44 @@ public class SoundManager {
         //I've changed things a bit since implementing, I'm not certain this is still necessary
         String normalizedKey = fileIdentifier.toLowerCase();
 
-        Map<String, File> userSoundMap = userSoundManager.getUserSoundMap();
 
-        // Check UserSoundFiles Map to see if our Key matches a user added sound first
-        File userFile = userSoundMap.get(normalizedKey);
-        if (userFile != null)
-        {
-            try
-            {
-                audioPlayer.play(userFile, 1.0f);
+        // Check if file identifier is a stringified int, if it is, we're looking for a user supplied sound
+        if (fileIdentifier.matches("\\d+")){
+
+            //get the user sound map
+            Map<String, File> userSoundMap = userSoundManager.getUserSoundMap();
+
+            //if our file identifier is greater than the size of our sound map, then no wav file exists for that sound
+            //display a message and return
+            if(Integer.parseInt(fileIdentifier) > userSoundMap.size()){
+
+                String titleMessage ="No User Sound " + fileIdentifier + ". Save sounds as 16-bit .wav files to:";
+
+                String tickBeatsSoundsFolder = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "sounds").toString();
+                overlayMessage.show(titleMessage, tickBeatsSoundsFolder);
+
+                return;
+
             }
-            catch (Exception e)
-            {
-                log.debug("Failed to play user sound '{}': {}", normalizedKey, e.getMessage());
+
+            File userFile = userSoundMap.get(normalizedKey);
+
+            if (userFile.exists()) {
+                try {
+                    audioPlayer.play(userFile, 1.0f);
+                } catch (Exception e) {
+                    String titleMessage = "Couldn't play: " + userFile.getAbsolutePath();
+                    overlayMessage.show(titleMessage, "Make sure it's a 16-bit PCM .wav file");
+
+                    log.debug("Failed to play user sound '{}': {}", normalizedKey, e.getMessage());
+                }
+                return;
             }
-            return;
+
         }
+
+
+
 
         // Otherwise, try to play a built-in resource
         String resourcePath = "/com/TickBeatsMetronome/Sounds/" + normalizedKey;

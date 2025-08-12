@@ -43,10 +43,13 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private OverlayColor overlayColor;
 
     @Inject
-    private OverlayBeatBox overlayBeatBox;
+    private OverlayInfoBox overlayInfoBox;
 
     @Inject
     private OverlayManager overlayManager;
+
+    @Inject
+    private OverlayMessage overlayMessage;
 
     @Inject
     private KeyManager keyManager;
@@ -95,7 +98,8 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // Attach the overlays
         overlayManager.add(overlayOverheadNumber);
         overlayManager.add(overlayColor);
-        overlayManager.add(overlayBeatBox);
+        overlayManager.add(overlayInfoBox);
+        overlayManager.add(overlayMessage);
 
         // Register the key input listener
         keyManager.registerKeyListener(inputManager);
@@ -128,7 +132,8 @@ public class TickBeatsMetronomePlugin extends Plugin {
         log.debug("Tick Beats Plugin stopped");
         overlayManager.remove(overlayOverheadNumber);
         overlayManager.remove(overlayColor);
-        overlayManager.remove(overlayBeatBox);
+        overlayManager.remove(overlayInfoBox);
+        overlayManager.remove(overlayMessage);
 
         keyManager.unregisterKeyListener(inputManager);
 

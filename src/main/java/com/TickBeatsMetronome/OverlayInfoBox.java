@@ -12,7 +12,7 @@ import java.awt.*;
 
 @Slf4j
 @Singleton
-public class OverlayBeatBox extends Overlay
+public class OverlayInfoBox extends Overlay
 {
     @Inject
     TickBeatsMetronomePlugin plugin;
@@ -20,10 +20,13 @@ public class OverlayBeatBox extends Overlay
     @Inject
     TickBeatsMetronomeConfig config;
 
+    @Inject
+    DownloadManager downloadManager;
+
     private final PanelComponent panel = new PanelComponent();
 
     @Inject
-    public OverlayBeatBox()
+    public OverlayInfoBox()
     {
 
         // Users can drag overlays with these positions.
@@ -55,6 +58,34 @@ public class OverlayBeatBox extends Overlay
                 .left("Tick:")
                 .right(plugin.tickCount + " / " + plugin.maxTicks)
                 .build());
+
+        panel.setPreferredSize(new Dimension(125, 0));
+
+
+        // --- Download progress ---
+        final int totalBuiltinTracksCount = downloadManager.getTotalBuiltinCount();
+
+        //only display download status for low quality tracks if all low downloads aren't done yet
+        if(!downloadManager.isAllLoDownloaded() && totalBuiltinTracksCount > 0){
+
+            panel.setPreferredSize(new Dimension(200, 0));
+
+            panel.getChildren().add(LineComponent.builder()
+                    .left("Downloading Music...")
+                    .right( downloadManager.getDownloadedCountLo() + " / " + totalBuiltinTracksCount)
+                    .build());
+        }
+
+        //if the user wants to use hi quality music and all the high quality music tracks aren't downloaded yet
+        if(config.useHighQualityMusic() && !downloadManager.isAllHiDownloaded() && totalBuiltinTracksCount > 0){
+            panel.setPreferredSize(new Dimension(250, 0));
+            panel.getChildren().add(LineComponent.builder()
+                    .left("Downloading High Quality Music...")
+                    .right(downloadManager.getDownloadedCountHi() + " / " + totalBuiltinTracksCount)
+                    .build());
+        }
+
+
 
         return panel.render(graphics);
     }

@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sound.sampled.*;
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,11 +17,18 @@ import java.util.List;
 @Singleton
 public class MusicTrackLoader
 {
+
+    @Inject
+    private TickBeatsMetronomeConfig config;
+
     @Inject
     UserMusicManager userMusicManager;
 
     @Inject
-    private TickBeatsMetronomeConfig config;
+    OverlayMessage overlayMessage;
+
+
+
 
     private static final float BEAT_DURATION_SECONDS = 0.6f;
 
@@ -51,6 +57,29 @@ public class MusicTrackLoader
 
             // Get audio format info (e.g., sample rate, bit depth, channels)
             AudioFormat format = stream.getFormat();
+
+
+            //make sure .wav file is 16-bit
+            int sampleSize = format.getSampleSizeInBits();
+            if(sampleSize != 16){
+
+                //if the track name is a number it's a user track
+                if (trackName.matches("\\d+"))
+                {
+                    //if it's a user track show the user where the file that is the wrong sample size is located
+                    String trackLocation = userMusicManager.getUserMusicMap().get(trackName).getAbsolutePath();
+                    overlayMessage.show( "User Music Track " + trackName + " is a " + sampleSize + "-bit .wav file but must be 16-bit",
+                            trackLocation);
+
+                }else{
+                    //if the user modifies a downloaded .wav file, this could fire on what's supposed to be a built-in track
+                    overlayMessage.show(  trackName + " isn't 16-bit, Files in the tick-beats/downloads folder aren't meant to be modified",
+                             "Delete: " + trackName + " from the hi and lo folder to redownload");
+                }
+                return null;
+            }
+
+
 
             // Calculate audio segment (beat) size in bytes based on duration and format
             int frameSize = format.getFrameSize();                  // e.g., 4 bytes for 16-bit stereo
@@ -115,6 +144,7 @@ public class MusicTrackLoader
             {
                 //Not really needed, but make the variable name more accurate
                 String trackNumber = trackName;
+
                 //get the user file based on its track id number
                 File userFile = userMusicManager.getUserMusicMap().get(trackNumber);
                 if (userFile != null && userFile.exists())
@@ -123,6 +153,11 @@ public class MusicTrackLoader
                     musicFileName = trackNumber;
                     return AudioSystem.getAudioInputStream(userFile);
                 }
+                String titleMessage ="User Music Track " + trackNumber + " Not Found. Save 16-bit .wav files to:";
+                String tickBeatsMusicFolder = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "music").toString();
+                overlayMessage.show(titleMessage, tickBeatsMusicFolder);
+
+
             }
             else
             {
@@ -144,29 +179,11 @@ public class MusicTrackLoader
                     return AudioSystem.getAudioInputStream(loPath.toFile());
                 }
 
-                //if the file isn't found in either folder, play the download not ready audio
-                InputStream dlNotReadyStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/download_not_ready.wav");
-                if (dlNotReadyStream != null)
-                {
-
-                    //Store music file name to be used when we create the music track object
-                    musicFileName = "download_not_ready.wav";
-                    return AudioSystem.getAudioInputStream(dlNotReadyStream);
-                }
+                //if the file isn't found in either folder, display the track hasn't been downloaded yet message
+                overlayMessage.show("This Track Hasn't Been Downloaded Yet", "Try a track higher up in the list");
 
             }
 
-            // If all else fails, use the built-in error message
-            InputStream errorStream = MusicTrack.class.getResourceAsStream("/com/TickBeatsMetronome/music_error_message.wav");
-            if (errorStream != null)
-            {
-                //Store music file name to be used when we create the music track object
-                musicFileName = "music_error_message.wav";
-                return AudioSystem.getAudioInputStream(errorStream);
-            }
-
-            // If even the error stream is missing, log and return null
-            log.debug("Unable to find track '{}' or fallback music error message audio.", trackName);
             return null;
         }
         catch (Exception e)

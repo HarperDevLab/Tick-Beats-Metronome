@@ -1,5 +1,6 @@
 package com.TickBeatsMetronome;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
 import okhttp3.OkHttpClient;
@@ -27,6 +28,9 @@ import java.util.stream.Collectors;
 @Singleton
 public class DownloadManager
 {
+    @Inject
+    private TickBeatsMetronomeConfig config;
+
     // Base path inside .runelite directory
     private static final Path BASE_LOCAL_PATH = new File(RuneLite.RUNELITE_DIR, "tick-beats/downloads").toPath();
     private static final Path LO_LOCAL_PATH = BASE_LOCAL_PATH.resolve("lo");
@@ -37,30 +41,50 @@ public class DownloadManager
     //the default music track to download first so the user can hear it as soon as possible
     private static final String DEFAULT_TRACK = "sea_shanty_2.wav";
 
-    // minute delay for low quality music files, 6x for high quality files
-    private static final int DELAY_MULTIPLIER = 40000;
+    // delay for low quality music files, 6x for high quality files
+    private static final int DELAY_MULTIPLIER = 30000;
 
     //A list of only built-in tracks (doesn't check user tracks which have numeric file name "1", "2", etc)
     private List<MusicTrackOption> builtinTracks;
 
     private final OkHttpClient httpClient;
-    private final TickBeatsMetronomeConfig config;
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     // Shared booleans between threads
+    @Getter
     private volatile boolean allLoDownloaded = false;
+    @Getter
     private volatile boolean allHiDownloaded = false;
 
-
-    //first download
+    @Getter
+    private volatile int downloadedCountLo = 0;
+    @Getter
+    private volatile int downloadedCountHi = 0;
 
     @Inject
-    public DownloadManager(OkHttpClient httpClient, TickBeatsMetronomeConfig config)
+    public DownloadManager(OkHttpClient httpClient)
     {
         this.httpClient = httpClient;
-        this.config = config;
     }
+
+
+
+    /** Total number of built-in tracks (non-numeric filenames). (returns 0 if built in tracks is null)*/
+    public int getTotalBuiltinCount()
+    {
+        if (builtinTracks == null){
+            return 0;
+        }
+
+        return builtinTracks.size();
+    }
+
+
+
+
+
+
 
     /**
      * Loads the filtered track list, checks file state, and kicks off download scheduling.
@@ -122,16 +146,25 @@ public class DownloadManager
 
 
     /**
-     * Checks whether all lo/hi files exist for built-in tracks.
+     * update our download state variables.
      */
     private void checkDownloadState()
     {
+        downloadedCountLo = countExistingTracks(builtinTracks, LO_LOCAL_PATH);
+        downloadedCountHi = countExistingTracks(builtinTracks, HI_LOCAL_PATH);
+
         allLoDownloaded = allTracksExist(builtinTracks, LO_LOCAL_PATH);
 
+        //if the user has selected to use High Quality music check if all the tracks exist
+        //if they haven't selected to use High Quality music, then it doesn't matter how many tracks are downloaded,
+        // they have all they need so set to true
         if (config.useHighQualityMusic())
         {
             allHiDownloaded = allTracksExist(builtinTracks, HI_LOCAL_PATH);
+        } else{
+            allHiDownloaded = true;
         }
+
     }
 
     /**
@@ -150,10 +183,30 @@ public class DownloadManager
     }
 
     /**
+     * Gets a count for how many of the music tracks exist in the given directory
+     * */
+    private int countExistingTracks(List<MusicTrackOption> tracks, Path dir)
+    {
+        int count = 0;
+        for (MusicTrackOption track : tracks)
+        {
+            if (Files.exists(dir.resolve(track.getFileName())))
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
      * Finds and schedules the next missing download (lo priority first).
      */
     private void scheduleDownloads(boolean includeHi)
     {
+
+        //run this to try to keep allLoDownloaded and allHiDownloaded accurate
+        checkDownloadState();
+
         //first download all the low quality tracks
         for (MusicTrackOption track : builtinTracks)
         {
