@@ -17,7 +17,6 @@ public class MusicBeat
     public int getBeatIndex() { return beatIndex; }
     public byte[] getAudioData() { return audioData; }
 
-    // Optional: for debugging/logging
     @Override
     public String toString()
     {

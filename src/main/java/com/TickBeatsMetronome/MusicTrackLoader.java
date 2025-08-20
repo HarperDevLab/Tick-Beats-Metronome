@@ -6,6 +6,7 @@ import net.runelite.client.RuneLite;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +18,6 @@ import java.util.List;
 @Singleton
 public class MusicTrackLoader
 {
-
     @Inject
     private TickBeatsMetronomeConfig config;
 
@@ -26,9 +26,6 @@ public class MusicTrackLoader
 
     @Inject
     OverlayMessage overlayMessage;
-
-
-
 
     private static final float BEAT_DURATION_SECONDS = 0.6f;
 
@@ -58,15 +55,14 @@ public class MusicTrackLoader
             // Get audio format info (e.g., sample rate, bit depth, channels)
             AudioFormat format = stream.getFormat();
 
-
-            //make sure .wav file is 16-bit
+            // Make sure .wav file is 16-bit
             int sampleSize = format.getSampleSizeInBits();
             if(sampleSize != 16){
 
-                //if the track name is a number it's a user track
+                // If the track name is a number it's a user track
                 if (trackName.matches("\\d+"))
                 {
-                    //if it's a user track show the user where the file that is the wrong sample size is located
+                    // If it's a user track show the user where the file that is the wrong sample size is located
                     String trackLocation = userMusicManager.getUserMusicMap().get(trackName).getAbsolutePath();
                     overlayMessage.show( "User Music Track " + trackName + " is a " + sampleSize + "-bit .wav file but must be 16-bit",
                             trackLocation);
@@ -78,8 +74,6 @@ public class MusicTrackLoader
                 }
                 return null;
             }
-
-
 
             // Calculate audio segment (beat) size in bytes based on duration and format
             int frameSize = format.getFrameSize();                  // e.g., 4 bytes for 16-bit stereo
@@ -126,7 +120,6 @@ public class MusicTrackLoader
         }
     }
 
-
     /**
      * Gets an AudioInputStream from user music directory or downloaded resource.
      * determines if the track is a downloaded track or a user file, then gets its audioInputStream
@@ -142,14 +135,14 @@ public class MusicTrackLoader
             // Check if this is a user track (digit string like "1", "2", etc.)
             if (trackName.matches("\\d+"))
             {
-                //Not really needed, but make the variable name more accurate
+                // Not really needed, but make the variable name more accurate
                 String trackNumber = trackName;
 
-                //get the user file based on its track id number
+                // Get the user file based on its track id number
                 File userFile = userMusicManager.getUserMusicMap().get(trackNumber);
                 if (userFile != null && userFile.exists())
                 {
-                    //Store music file name to be used when we create the music track object
+                    // Store music file name to be used when we create the music track object
                     musicFileName = trackNumber;
                     return AudioSystem.getAudioInputStream(userFile);
                 }
@@ -157,29 +150,27 @@ public class MusicTrackLoader
                 String tickBeatsMusicFolder = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "music").toString();
                 overlayMessage.show(titleMessage, tickBeatsMusicFolder);
 
+            } else {
 
-            }
-            else
-            {
                 // If it's not a user track, first check high-quality folder if the user has use high quality music checked
                 Path hiPath = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "downloads", "hi", trackName);
                 if (Files.exists(hiPath) && config.useHighQualityMusic())
                 {
-                    //Store music file name to be used when we create the music track object
+                    // Store music file name to be used when we create the music track object
                     musicFileName = trackName;
                     return AudioSystem.getAudioInputStream(hiPath.toFile());
                 }
 
-                // now check low-quality folder
+                // Now check low-quality folder
                 Path loPath = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "downloads", "lo", trackName);
                 if (Files.exists(loPath))
                 {
-                    //Store music file name to be used when we create the music track object
+                    // Store music file name to be used when we create the music track object
                     musicFileName = trackName;
                     return AudioSystem.getAudioInputStream(loPath.toFile());
                 }
 
-                //if the file isn't found in either folder, display the track hasn't been downloaded yet message
+                // If the file isn't found in either folder, display the track hasn't been downloaded yet message
                 overlayMessage.show("This Track Hasn't Been Downloaded Yet", "Try a track higher up in the list");
 
             }
@@ -194,18 +185,27 @@ public class MusicTrackLoader
     }
 
     /**
-     * Removes trailing incomplete bar from the beat list if it exists.
+     * Removes any trailing beats that do not form a complete musical bar.
+     *
+     * @param beats
+     *     The full list of MusicBeat objects representing the track’s beats.
+     *     The list may contain extra beats at the end that do not form a full bar.
+     *
+     * @return
+     *     A possibly shortened list with the incomplete final bar removed.
      */
     private List<MusicBeat> trimIncompleteBar(List<MusicBeat> beats)
     {
         int totalBeats = beats.size();
         int remainder = totalBeats % MusicTrack.BEATS_PER_BAR;
 
+        // If total beats is an exact multiple of beats-per-bar, return unchanged
         if (remainder == 0)
         {
             return beats;
         }
 
+        // Remove the leftover beats so that only full bars remain
         for (int i = 0; i < remainder; i++)
         {
             beats.remove(beats.size() - 1);
@@ -213,5 +213,4 @@ public class MusicTrackLoader
 
         return beats;
     }
-
 }

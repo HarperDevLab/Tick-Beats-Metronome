@@ -20,7 +20,7 @@ public interface TickBeatsMetronomeConfig extends Config
 			description = "Toggles tick sounds",
 			position = 1
 	)
-	default boolean enableAudioMetronome() { return true; }
+	default boolean enableAudioMetronome() { return false; }
 
 	@ConfigItem(
 			keyName = "enableMusic",
@@ -87,7 +87,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Music Settings",
 			description = "Music Settings",
-			position = 8
+			position = 10
 	)
 	String musicSettings = "musicSettings";
 
@@ -128,7 +128,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Hotkey Settings",
 			description = "Hotkey Settings",
-			position = 9
+			position = 11
 	)
 	String hotkeys = "hotkeys";
 
@@ -185,7 +185,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Text Settings",
 			description = "Configure text appearance and colors",
-			position = 9
+			position = 12
 	)
 	String textSettings = "textSettings";
 
@@ -214,7 +214,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1",
 			description = "The Default Beat",
-			position = 10
+			position = 13
 	)
 	String Beat1 = "Beat1";
 
@@ -235,7 +235,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1 Sound Options",
 			description = "Configure sounds for Beat 1",
-			position = 11,
+			position = 14,
 			closedByDefault = true
 	)
 	String beat1Sounds = "beat1Sounds";
@@ -329,7 +329,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 1 Visual Options",
 			description = "Configure colors and opacity for Beat 1",
-			position = 12,
+			position = 15,
 			closedByDefault = true
 	)
 	String beat1Visuals = "beat1Visuals";
@@ -513,7 +513,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 (Activate With Next Beat Hotkey)",
 			description = "Another beat to use, activate with next beat hotkey",
-			position = 13
+			position = 16
 	)
 	String Beat2 = "Beat2";
 
@@ -534,7 +534,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 Sound Options",
 			description = "Configure sounds for Beat 2",
-			position = 14,
+			position = 17,
 			closedByDefault = true
 	)
 	String beat2Sounds = "beat2Sounds";
@@ -629,7 +629,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 2 Visual Options",
 			description = "Configure colors and opacity for Beat 2",
-			position = 15,
+			position = 18,
 			closedByDefault = true
 	)
 	String beat2Visuals = "beat2Visuals";
@@ -813,7 +813,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 3 (Activate With Next Beat Hotkey)",
 			description = "Another beat to use, activate with next beat hotkey",
-			position = 16
+			position = 19
 	)
 	String Beat3 = "Beat3";
 
@@ -834,7 +834,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 3 Sound Options",
 			description = "Configure sounds for Beat 3",
-			position = 17,
+			position = 20,
 			closedByDefault = true
 	)
 	String beat3Sounds = "beat3Sounds";
@@ -929,7 +929,7 @@ public interface TickBeatsMetronomeConfig extends Config
 	@ConfigSection(
 			name = "Beat 3 Visual Options",
 			description = "Configure colors and opacity for Beat 3",
-			position = 18,
+			position = 21,
 			closedByDefault = true
 	)
 	String beat3Visuals = "beat3Visuals";

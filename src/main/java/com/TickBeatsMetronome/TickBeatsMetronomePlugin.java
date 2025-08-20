@@ -78,7 +78,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
     //need to pass in local tick callback so don't inject this one
     private LocalTickManager localTickManager;
 
-
     //Holds the tick count//
     public int tickCount = 0;
 
@@ -104,32 +103,31 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // Register the key input listener
         keyManager.registerKeyListener(inputManager);
 
-        // Create the LocalTickManager and pass in your tick callback
+        // Create the LocalTickManager and pass in the tick callback
         localTickManager = new LocalTickManager(this::onLocalTick);
 
         // Register LocalTickManager so it gets onGameTick events
         eventBus.register(localTickManager);
 
-        //load the user sound files
+        // Load the user sound files
         userSoundManager.loadUserSounds();
 
-        //load list of user music files
+        // Load list of user music files
         userMusicManager.loadUserMusic();
 
-        //check to see if all files that need to be downloaded are downloaded
+        // Check to see if all files that need to be downloaded are downloaded
         downloadManager.initializeDownloads();
 
-
-        //get a music track ready to go on tick 1
+        // Get a music track ready to go on tick 1
         musicManager.prepMusicTrack();
-
-
     }
 
     @Override
     protected void shutDown()
     {
         log.debug("Tick Beats Plugin stopped");
+
+        // Remove overlays
         overlayManager.remove(overlayOverheadNumber);
         overlayManager.remove(overlayColor);
         overlayManager.remove(overlayInfoBox);
@@ -149,7 +147,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
         {
             downloadManager.shutdown();
         }
-
     }
 
     @Subscribe
@@ -157,6 +154,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     {
         GameState state = event.getGameState();
 
+        // If the GameState event is login screen or world hopping reset the local tick manager
         if (state == GameState.LOGIN_SCREEN || state == GameState.HOPPING)
         {
             log.debug("Player logged out or world hopping — resetting local tick manager.");
@@ -166,7 +164,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
             }
         }
     }
-
 
     /**
      * Fires on every game tick ~(.6s). Updates the metronome tick count.
@@ -180,10 +177,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if(!config.enableTickSmoothing()){
             onTick();
         }
-
     }
 
-    /*
+    /**
      * Fires on every local tick which is setup in LocalTickManager
      */
     private void onLocalTick()
@@ -191,9 +187,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if(config.enableTickSmoothing()){
             onTick();
         }
-
     }
-
     
     private void onTick(){
         //if the reset key is being held, don't do anything on the game tick
@@ -210,7 +204,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
             default: maxTicks = config.beat1TickCount(); break;
         }
 
-
         // Increment the tick counter and wrap back to 1 if over max
         tickCount = (tickCount % maxTicks) + 1;
 
@@ -218,7 +211,6 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if(config.enableAudioMetronome()){
             soundManager.playSound(beatNumber, tickCount);
         }
-
 
         // If Enable Music is checked
         if(config.enableMusic()) {
@@ -228,22 +220,17 @@ public class TickBeatsMetronomePlugin extends Plugin {
                 musicManager.start();
             }
 
-
             //Play the music clips
             musicManager.onTick(maxTicks, tickCount, config.musicVolume());
         }else{
             //if Enable Music isn't checked, stop the music clips from playing
             musicManager.stop();
         }
-
-
     }
-
 
     @Subscribe
     public void onConfigChanged(ConfigChanged event)
     {
-
         //make sure the event is coming from this plugin's config group
         if (!event.getGroup().equals("tickBeats"))
         {
@@ -264,13 +251,10 @@ public class TickBeatsMetronomePlugin extends Plugin {
         }
     }
 
-
-
     // I believe this is Required by RuneLite to provide config interface.
     @Provides
     TickBeatsMetronomeConfig provideConfig(ConfigManager configManager)
     {
         return configManager.getConfig(TickBeatsMetronomeConfig.class);
     }
-
 }

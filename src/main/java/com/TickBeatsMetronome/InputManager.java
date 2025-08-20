@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-
 /*
  * Listens for hotkey input for adjusting the metronome
  */
@@ -22,63 +21,55 @@ public class InputManager implements net.runelite.client.input.KeyListener
     @Inject
     TickBeatsMetronomeConfig config;
 
-    //stores if reset key is currently being held down
+    // Stores if reset key is currently being held down
     public boolean resetActive = false;
 
-
-
-    /// KeyPressed KeyEvent returns all the modifier keys (CTRL, ALT, SHIFT etc.) pressed merged together.
-    /// if multiple modifier keys are held down including the one you're looking for bitmasks need to be used
-    /// to find the key we're looking for from the combined value.
+    // KeyPressed KeyEvent returns all the modifier keys (CTRL, ALT, SHIFT etc.) pressed merged together.
+    // if multiple modifier keys are held down including the one you're looking for bitmasks need to be used
+    // to find the key we're looking for from the combined value.
     @Override
     public void keyPressed(KeyEvent e)
     {
-        //check if the reset hotkey is being held down
+        // Check if the reset hotkey is being held down
         updateResetKey(e);
     }
 
-
-    /// keyReleased() seems to only return 1 key as opposed to keyPressed() which returns all keys held merged together,
-    /// however .matches(e) doesn't seem to work with modifier and key combos so we use our own custom version
+    // keyReleased() seems to only return 1 key as opposed to keyPressed() which returns all keys held merged together,
+    // however .matches(e) doesn't seem to work with modifier and key combos so we use our own custom version
     @Override
     public void keyReleased(KeyEvent e)
     {
-
-        //canceling reset hotkey on any key release feels a little lazy, but logic was causing missed releases
-        //especially when using key combinations, in practice this behaves better, but will cancel reset hold if any other
-        //keys are released
+        // Canceling reset hotkey on any key release feels a little lazy, but logic was causing missed releases
+        // especially when using key combinations, in practice this behaves better, but will cancel reset hold if any other
+        // keys are released
         resetActive = false;
 
-        //handle hotkey for next beat
+        // Handle hotkey for next beat
         if (strictMatch(config.nextBeatHotkey(), e))
         {
             adjustBeat(1);
             return;
         }
 
-        //handle hotkey for previous beat
+        // Handle hotkey for previous beat
         if (strictMatch(config.previousBeatHotkey(), e))
         {
             adjustBeat(-1);
             return;
         }
 
-
-        //handle add tick hotkey
+        // Handle add tick hotkey
         if(strictMatch(config.nextTickHotkey(), e))
         {
-
             adjustTick(1); // Decrease the metronome tick
             return;
         }
 
-        //handle subtract tick hotkey
+        // Handle subtract tick hotkey
         if (strictMatch(config.previousTickHotkey(), e))
         {
             adjustTick(-1); // Decrease the metronome tick
         }
-
-
     }
 
     @Override
@@ -86,8 +77,6 @@ public class InputManager implements net.runelite.client.input.KeyListener
     {
         // Not used
     }
-
-
 
     private boolean strictMatch(Keybind keybind, KeyEvent e)
     {
@@ -110,10 +99,10 @@ public class InputManager implements net.runelite.client.input.KeyListener
             // If the keyboard event key code belongs to a modifier key continue, else it's not a match
             if (isModifierKeyCode(e.getKeyCode()))
             {
-                //Use our event keycode to figure out what its modifier key number should be (as far as Runelite is concerned)
+                // Use our event keycode to figure out what its modifier key number should be (as far as Runelite is concerned)
                 int eventModifierNumber = getModifierNumberFromKeyCode(e.getKeyCode());
 
-                // if our new events modifier number is a match to the modifier our runelite keybind is looking for, return true
+                // If our new events modifier number is a match to the modifier our runelite keybind is looking for, return true
                 return eventModifierNumber == requiredModifierNumber;
             }
 
@@ -122,16 +111,15 @@ public class InputManager implements net.runelite.client.input.KeyListener
 
         // Case 2: Regular key + optional modifier
         boolean keyMatch = e.getKeyCode() == keybind.getKeyCode();
-        // use a bitmask to check if our modifier key is in the modifier keys in the key event
+
+        // Use a bitmask to check if our modifier key is in the modifier keys in the key event
         boolean modifiersMatch = (e.getModifiersEx() & keybind.getModifiers()) == keybind.getModifiers();
 
-        //if both the keycode and the modifiers match return true
+        // If both the keycode and the modifiers match return true
         return keyMatch && modifiersMatch;
-
     }
 
-
-    ///Check if a keycode is the keycode for a modifier key
+    // Check if a keycode is the keycode for a modifier key
     private boolean isModifierKeyCode(int keyCode)
     {
         return keyCode == KeyEvent.VK_SHIFT ||
@@ -141,7 +129,7 @@ public class InputManager implements net.runelite.client.input.KeyListener
                 keyCode == KeyEvent.VK_ALT_GRAPH;
     }
 
-    //use a keycode number to determine what its modifier number should be (the modifier number Runelite is looking for)
+    // Use a keycode number to determine what its modifier number should be (the modifier number Runelite is looking for)
     private int getModifierNumberFromKeyCode(int keyCode)
     {
         switch (keyCode)
@@ -155,10 +143,10 @@ public class InputManager implements net.runelite.client.input.KeyListener
         }
     }
 
-    //check if the reset hotkey is being held down
+    // Check if the reset hotkey is being held down
     public void updateResetKey(KeyEvent e){
 
-        //This check uses bitmasks to work with modifier keys
+        // This check uses bitmasks to work with modifier keys
         if (strictMatch(config.resetHotkey(), e))
         {
             resetActive = true;
@@ -166,7 +154,6 @@ public class InputManager implements net.runelite.client.input.KeyListener
         } else{
             resetActive = false;
         }
-
     }
 
     /**
@@ -184,10 +171,9 @@ public class InputManager implements net.runelite.client.input.KeyListener
             case 3: maxTicks = config.beat3TickCount(); break;
             default: maxTicks = config.beat1TickCount(); break;
         }
-        //calculate the plugin tick count using modulo while staying 1 based (not 0 based)
+        // Calculate the plugin tick count using modulo while staying 1 based (not 0 based)
         plugin.tickCount = ((plugin.tickCount - 1 + delta + maxTicks) % maxTicks) + 1;
     }
-
 
     /**
      * Manually adjust the current beat number (via key listener). Wraps between 1 and the configured max beat count.
@@ -201,5 +187,4 @@ public class InputManager implements net.runelite.client.input.KeyListener
         // Update beatNumber using modulo logic to wrap between 1 and maxBeats
         plugin.beatNumber = ((plugin.beatNumber - 1 + delta + maxBeats) % maxBeats) + 1;
     }
-
 }

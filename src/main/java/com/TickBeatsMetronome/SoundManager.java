@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.awt.*;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -129,9 +130,6 @@ public class SoundManager {
         }
     }
 
-
-
-
     /**
      * Plays a sound using its key (from TickSoundOption or user file ID).
      *
@@ -152,25 +150,28 @@ public class SoundManager {
             //get the user sound map
             Map<String, File> userSoundMap = userSoundManager.getUserSoundMap();
 
-            //if our file identifier is greater than the size of our sound map, then no wav file exists for that sound
-            //display a message and return
+            // If our file identifier is greater than the size of our sound map, then no wav file exists for that sound
+            // display a message and return
             if(Integer.parseInt(fileIdentifier) > userSoundMap.size()){
 
                 String titleMessage ="No User Sound " + fileIdentifier + ". Save sounds as 16-bit .wav files to:";
-
                 String tickBeatsSoundsFolder = Paths.get(RuneLite.RUNELITE_DIR.getAbsolutePath(), "tick-beats", "sounds").toString();
+
                 overlayMessage.show(titleMessage, tickBeatsSoundsFolder);
 
                 return;
 
             }
 
+            // Get the sound file based on it's key
             File userFile = userSoundMap.get(normalizedKey);
 
+            // If the sound file exists try to play it
             if (userFile.exists()) {
                 try {
                     audioPlayer.play(userFile, 1.0f);
                 } catch (Exception e) {
+                    // If the file couldn't play for some reason, display a message to the user
                     String titleMessage = "Couldn't play: " + userFile.getAbsolutePath();
                     overlayMessage.show(titleMessage, "Make sure it's a 16-bit PCM .wav file");
 
@@ -178,11 +179,7 @@ public class SoundManager {
                 }
                 return;
             }
-
         }
-
-
-
 
         // Otherwise, try to play a built-in resource
         String resourcePath = "/com/TickBeatsMetronome/Sounds/" + normalizedKey;
@@ -195,5 +192,4 @@ public class SoundManager {
             log.debug("Failed to play sound '{}': {}", normalizedKey, e.getMessage());
         }
     }
-
 }

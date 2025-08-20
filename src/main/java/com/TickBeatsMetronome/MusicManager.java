@@ -33,7 +33,6 @@ public class MusicManager
 
     public boolean isPlaying() { return isPlaying; }
 
-
     /**
      * preps the currently selected track to start being played on tick 1 when start is called()
      */
@@ -78,9 +77,7 @@ public class MusicManager
 
         //reset our bar, beat and tick numbers to 1
         reset();
-
     }
-
 
     /**
      * Get a track based on the track name and get it ready to play
@@ -101,11 +98,7 @@ public class MusicManager
         if(currentTrack == null){
             stop();
         }
-
-
     }
-
-
 
     /**
      * resets the track and sets isPlaying to false
@@ -125,7 +118,6 @@ public class MusicManager
         barBeat = 1;
         tickBeat = 1;
     }
-
 
     /**
      * Called on every tick (local or game tick depends on plugin settings). Handles advancing music playback.
@@ -162,9 +154,6 @@ public class MusicManager
             return;
         }
 
-
-
-
         // Dispatch logic by tick mode
         switch (tickCount) {
             case 1: handle1Tick(); break;
@@ -179,7 +168,6 @@ public class MusicManager
             default: handle4Tick(); break;
         }
     }
-
 
     /**
      * If the tick from our plugin doesn't match the MusicManager tickBeat Update the Music Manager Tick Beat
@@ -224,11 +212,9 @@ public class MusicManager
         if(pluginTick != tickBeat){
             tickBeat = pluginTick;
         }
-
     }
 
     // -- Tick Handlers --
-
     //1 tick plays 4 beat per bar music as is
     private void handle1Tick()
     {
@@ -293,12 +279,10 @@ public class MusicManager
         }
     }
 
-
     //5 tick replays the last note of the bar (not ideal but sounds ok most of the time)
     private void handle5Tick()
     {
         barBeat = tickBeat;
-
 
         //replay the last note of the bar on beat 5
         if (tickBeat == 5){
@@ -442,7 +426,6 @@ public class MusicManager
             currentBar++;
         }
     }
-
 
     /**
      * Plays a 600ms audio clip for a specific bar and beat.

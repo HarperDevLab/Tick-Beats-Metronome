@@ -19,10 +19,13 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
- * Handles downloading built-in music files for Tick Beats plugin.
- * User music is ignored — only tracks with non-numeric file names are downloaded.
- * Downloads are staggered based on a delay to avoid hitting GitHub rate limits.
- * Files are stored in .runelite/tick-beats/downloads/lo or hi folders.
+ * Handles downloading the built-in music files for the Tick Beats plugin.
+ *
+ * Built-in tracks are defined in MusicTrackOption and filtered to exclude user-supplied tracks
+ * (which are identified by purely numeric file names like "1", "2", etc.).
+ * Downloads are performed in the background and staggered with a delay to reduce the chance of
+ * hitting GitHub rate limits. Files are stored inside the RuneLite settings directory
+ * under .runelite/tick-beats/downloads/lo or  .../hi for low- and high-quality versions.
  */
 @Slf4j
 @Singleton
@@ -38,25 +41,25 @@ public class DownloadManager
 
     private static final String BASE_DOWNLOAD_URL = "https://raw.githubusercontent.com/HarperDevLab/Tick-Beats-Metronome/master/music/";
 
-    //the default music track to download first so the user can hear it as soon as possible
+    // The default music track to download first so the user can hear it as soon as possible
     private static final String DEFAULT_TRACK = "sea_shanty_2.wav";
 
-    // delay for low quality music files, 6x for high quality files
+    // Delay for low-quality music file downloads, multiplied by 6 for high-quality files
     private static final int DELAY_MULTIPLIER = 30000;
 
-    //A list of only built-in tracks (doesn't check user tracks which have numeric file name "1", "2", etc)
+    // A list of only built-in tracks (doesn't include user tracks which have numeric file names)
     private List<MusicTrackOption> builtinTracks;
 
     private final OkHttpClient httpClient;
 
+    // Single-thread scheduler to manage sequential download tasks
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    // Shared booleans between threads
+    // Download status fields, shared between threads
     @Getter
     private volatile boolean allLoDownloaded = false;
     @Getter
     private volatile boolean allHiDownloaded = false;
-
     @Getter
     private volatile int downloadedCountLo = 0;
     @Getter
@@ -68,85 +71,100 @@ public class DownloadManager
         this.httpClient = httpClient;
     }
 
-
-
-    /** Total number of built-in tracks (non-numeric filenames). (returns 0 if built in tracks is null)*/
+    /**
+     * Gets the total number of built-in tracks (non-numeric filenames) for this plugin.
+     *
+     * Returns 0 if builtinTracks has not yet been initialized.
+     *
+     * @return the total number of built-in track entries, or 0 if uninitialized.
+     */
     public int getTotalBuiltinCount()
     {
-        if (builtinTracks == null){
+        if (builtinTracks == null)
+        {
             return 0;
         }
-
         return builtinTracks.size();
     }
 
-
-
-
-
-
-
     /**
-     * Loads the filtered track list, checks file state, and kicks off download scheduling.
+     * Initializes the download manager .
+     *
+     * This method:
+     * <ol>
+     *   <li>Ensures the scheduler is running (restarts it if needed).</li>
+     *   <li>Loads the list of built-in tracks from MusicTrackOption, filtering out numeric (user) tracks.</li>
+     *   <li>Updates internal download state counts and booleans via checkDownloadState().</li>
+     *   <li>If any required files are missing, schedules downloads starting with the DEFAULT_TRACK
+     *       so the user has an immediate playable track, then queues remaining downloads.</li>
+     * </ol>
      */
     public void initializeDownloads()
     {
-        //needed to prevent an error when restarting the plugin in runelite
+        // Ensure scheduler is ready (e.g., after plugin restart)
         if (scheduler == null || scheduler.isShutdown() || scheduler.isTerminated())
         {
             log.debug("Reinitializing DownloadManager scheduler...");
             scheduler = Executors.newSingleThreadScheduledExecutor();
         }
 
-
-        //pull in all the non-user tracks from the music track option enum
+        // Load all non-user tracks from the enum
         builtinTracks = Arrays.stream(MusicTrackOption.values())
                 .filter(track -> !track.getFileName().matches("\\d+"))
                 .collect(Collectors.toList());
 
-
-
+        // Update current download state
         checkDownloadState();
 
+        // If missing files, start scheduler
         if (!allLoDownloaded || (config.useHighQualityMusic() && !allHiDownloaded))
         {
-            log.debug("a download is missing, start download scheduler");
+            log.debug("A download is missing, starting download scheduler");
 
-            //if the default track doesn't exist yet
+            // Download the default track immediately if not present
             if (!Files.exists(LO_LOCAL_PATH.resolve(DEFAULT_TRACK)))
             {
                 downloadDefaultTrack();
             }
 
+            // Schedule the rest
             scheduler.execute(() -> scheduleDownloads(config.useHighQualityMusic()));
-        }else{
-            log.debug("all files downloaded");
+        }
+        else
+        {
+            log.debug("All files downloaded");
         }
     }
 
     /**
-     * Whatever is set to the default track we'll want downloaded immediately so that when the user turns on music,
-     * Ideally it's already downloaded so they'll hear music instead of an info/error message
+     * Queues the default track for immediate download in low-quality format.
+     *
+     * This is done so that when the user first enables music, the plugin
+     * can hopefully start playing music right away
      */
-    private void downloadDefaultTrack(){
+    private void downloadDefaultTrack()
+    {
         scheduler.execute(() ->
         {
             String url = BASE_DOWNLOAD_URL + "lo/" + DEFAULT_TRACK;
 
-            try {
+            try
+            {
                 downloadFile(url, LO_LOCAL_PATH.resolve(DEFAULT_TRACK));
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 log.debug("Failed to download Default Track: {}", e.getMessage());
             }
         });
     }
 
-
-
-
-
     /**
-     * update our download state variables.
+     * Updates the download state fields downloadedCountLo, downloadedCountHi,
+     * allLoDownloaded, and #allHiDownloaded based on the current files present in each quality folder.
+     *
+     * If high-quality music is disabled in config, allHiDownloaded is set to true
+     * so that the rest of the logic treats the set as "complete".
      */
     private void checkDownloadState()
     {
@@ -155,20 +173,28 @@ public class DownloadManager
 
         allLoDownloaded = allTracksExist(builtinTracks, LO_LOCAL_PATH);
 
-        //if the user has selected to use High Quality music check if all the tracks exist
-        //if they haven't selected to use High Quality music, then it doesn't matter how many tracks are downloaded,
-        // they have all they need so set to true
         if (config.useHighQualityMusic())
         {
             allHiDownloaded = allTracksExist(builtinTracks, HI_LOCAL_PATH);
-        } else{
+        }
+        else
+        {
             allHiDownloaded = true;
         }
-
     }
 
     /**
-     * Verifies that all expected files exist in the given directory.
+     * Checks whether every expected music track file exists in a specified directory.
+     *
+     * It is used to confirm that all required built-in music tracks for a given
+     * quality level (low or high) have been successfully downloaded and stored locally.
+     *
+     * @param tracks the list of MusicTrackOption entries to check.
+     *               Each entry provides a file name to look for.
+     * @param dir    the directory Path in which the track files are expected to be found.
+     *               This should point to either the "lo" or "hi" music download folder.
+     * @return true if every track in tracks exists in dir;
+     *         false as soon as a missing file is found.
      */
     private boolean allTracksExist(List<MusicTrackOption> tracks, Path dir)
     {
@@ -183,8 +209,12 @@ public class DownloadManager
     }
 
     /**
-     * Gets a count for how many of the music tracks exist in the given directory
-     * */
+     * Counts how many of the expected track files currently exist in a given directory.
+     *<p>
+     * @param tracks the list of MusicTrackOption entries to check for.
+     * @param dir    the directory Path in which the track files are expected to be found.
+     * @return the number of tracks in tracks that exist in dir.
+     */
     private int countExistingTracks(List<MusicTrackOption> tracks, Path dir)
     {
         int count = 0;
@@ -199,15 +229,20 @@ public class DownloadManager
     }
 
     /**
-     * Finds and schedules the next missing download (lo priority first).
+     * Schedules the next missing download, prioritizing low-quality tracks first.
+     *
+     * If all low-quality tracks are present, and includeHi is true,
+     * this method will then schedule high-quality tracks. Only one track is queued per call,
+     * the method is called again after each download finishes.
+     *
+     * @param includeHi whether to also download high-quality tracks once low-quality is complete.
      */
     private void scheduleDownloads(boolean includeHi)
     {
-
-        //run this to try to keep allLoDownloaded and allHiDownloaded accurate
+        // Keep counts and booleans up-to-date
         checkDownloadState();
 
-        //first download all the low quality tracks
+        // Low-quality first
         for (MusicTrackOption track : builtinTracks)
         {
             Path loPath = LO_LOCAL_PATH.resolve(track.getFileName());
@@ -218,7 +253,7 @@ public class DownloadManager
             }
         }
 
-        //then if we have all the low quality tracks download high quality tracks
+        // Then high-quality
         if (includeHi)
         {
             for (MusicTrackOption track : builtinTracks)
@@ -234,7 +269,15 @@ public class DownloadManager
     }
 
     /**
-     * Schedules a single file download with delay based on quality.
+     * Schedules a single file download for a specific track in either low- or high-quality format.
+     *
+     * The scheduled task will:
+     * Wait the configured delay before starting (longer for high-quality).
+     * Attempt to download the file from BASE_DOWNLOAD_URL.
+     * On completion, call scheduleDownloads to queue the next missing track.
+     *
+     * @param track the MusicTrackOption}to download.
+     * @param hi    true to download the high-quality version; false for low-quality.
      */
     private void queueDownload(MusicTrackOption track, boolean hi)
     {
@@ -269,17 +312,30 @@ public class DownloadManager
                 log.debug("Failed to download {} ({}): {}", track, quality, e.getMessage());
             }
 
+            // Continue with next file
             scheduleDownloads(config.useHighQualityMusic());
 
         }, delayMs, TimeUnit.MILLISECONDS);
     }
 
     /**
-     * Downloads a single file from GitHub and writes to disk.
+     * Downloads a single file from the given URL and writes it to disk.
+     *
+     * This method:
+     * <ul>
+     *   <li>Creates the parent directories if they don't exist.</li>
+     *   <li>Makes an HTTP GET request.</li>
+     *   <li>Writes the response body to the specified output path, replacing any existing file.</li>
+     * </ul>
+     * If the HTTP request fails or the response body is null, no file is written.
+     *
+     * @param url        the full HTTP URL to the file.
+     * @param outputPath the target file path to write to.
+     * @throws IOException if an I/O error occurs during download or file write.
      */
     private void downloadFile(String url, Path outputPath) throws IOException
     {
-        log.debug("Downloading a file, URL: {} OutputPath: {}",  url, outputPath);
+        log.debug("Downloading a file, URL: {} OutputPath: {}", url, outputPath);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -290,7 +346,7 @@ public class DownloadManager
         {
             if (!response.isSuccessful())
             {
-                log.debug("HTTP Request failed: {}",  response.code());
+                log.debug("HTTP Request failed: {}", response.code());
                 return;
             }
 
@@ -309,17 +365,14 @@ public class DownloadManager
         }
     }
 
-
-
-
     /**
-     * Ensures background thread shuts down on plugin unload.
+     * Shuts down the download manager and stops any pending or running download tasks.
+     *
+     * Called when the plugin is unloaded to ensure no background threads remain active.
      */
     public void shutdown()
     {
         log.debug("Shutting down DownloadManager");
-
         scheduler.shutdownNow();
-
     }
 }

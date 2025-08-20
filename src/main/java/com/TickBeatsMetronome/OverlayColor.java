@@ -9,18 +9,20 @@ import javax.inject.Inject;
 import java.awt.*;
 
 public class OverlayColor extends Overlay {
-    private final Client client;
-    private final TickBeatsMetronomePlugin plugin;
-    private final TickBeatsMetronomeConfig config;
 
     @Inject
-    private OverlayColor(Client client, TickBeatsMetronomePlugin plugin, TickBeatsMetronomeConfig config) {
-        this.client = client;
-        this.plugin = plugin;
-        this.config = config;
+    Client client;
+
+    @Inject
+    TickBeatsMetronomePlugin plugin;
+
+    @Inject
+    TickBeatsMetronomeConfig config;
+
+    @Inject
+    private OverlayColor() {
         setPosition(OverlayPosition.DYNAMIC);
         setLayer(OverlayLayer.UNDER_WIDGETS);
-
     }
 
     @Override

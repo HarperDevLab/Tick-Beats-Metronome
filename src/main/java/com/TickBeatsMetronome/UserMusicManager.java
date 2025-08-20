@@ -17,10 +17,8 @@ public class UserMusicManager
     // Stores user sound files keyed by their ID ("1", "2", etc.)
     private final Map<String, File> userMusicMap = new HashMap<>();
 
-    // list of music files
+    // List of music files
     private List<File> userFiles = new ArrayList<>();
-
-
 
     /**
      * Loads all .wav Files from the user's sound directory. for access with "getUserMusicMap()"
@@ -36,7 +34,7 @@ public class UserMusicManager
         // Ensure directory exists
         if (!MUSIC_DIRECTORY.exists())
         {
-            //if the directory doesn't exist, create it
+            // If the directory doesn't exist, create it
             boolean created = MUSIC_DIRECTORY.mkdirs();
             if (!created)
             {
@@ -49,7 +47,7 @@ public class UserMusicManager
         File[] files = MUSIC_DIRECTORY.listFiles();
         if (files == null)
         {
-            log.debug("Could not read music directory contents, or no user music files exist.");
+            log.debug("Could not read music directory contents, or no files exist.");
             return;
         }
 
@@ -63,25 +61,23 @@ public class UserMusicManager
             }
         }
 
-        //sort the files by filename
+        // Sort the files by filename
         userFiles.sort(Comparator.comparing(File::getName));
 
         log.debug("Total user music files loaded: {}", userFiles.size());
 
-        //create the userMusicMap attaching an id to each sound file
-        //this will be used to access user sound files based on a number alone so we don't need to work with file names
+        // Create the userMusicMap attaching an id to each sound file
+        // this will be used to access user sound files based on a number alone so we don't need to work with file names
         int i = 0;
         for (File file : userFiles)
         {
-            //increment first to make the ids 1 based instead of 0 based
+            // Increment first to make the ids 1 based instead of 0 based
             i++;
             String fileId = String.valueOf(i);
             userMusicMap.put(fileId, file);
             log.debug("Registered user music [{}]: {}", fileId, file.getName());
         }
     }
-
-
 
     /**
      * Returns a collection of user sound files.
@@ -92,5 +88,4 @@ public class UserMusicManager
     {
         return userMusicMap;
     }
-
 }
