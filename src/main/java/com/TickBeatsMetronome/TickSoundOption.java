@@ -68,9 +68,14 @@ public enum TickSoundOption
         this.resourceName = resourceName;
     }
 
-    public String getFileName()
+    public String getResourceName()
     {
         return resourceName;
+    }
+
+    public boolean isUserSound()
+    {
+        return resourceName.matches("\\d+");
     }
 
     @Override

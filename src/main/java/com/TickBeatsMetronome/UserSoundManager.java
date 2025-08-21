@@ -31,7 +31,7 @@ public class UserSoundManager
 
 
     /**
-     * Loads all .wav files from the user's sound directory.
+     * Loads all .wav file from the user's sound directory.
      * This should be called once during plugin startup.
      */
     public void loadUserSounds()

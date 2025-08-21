@@ -58,7 +58,10 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private InputManager inputManager;
 
     @Inject
-    private SoundManager soundManager;
+    private TickSoundCache tickSoundCache;
+
+    @Inject
+    private TickSoundManager tickSoundManager;
 
     @Inject
     private UserSoundManager userSoundManager;
@@ -111,6 +114,9 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
         // Load the user sound files
         userSoundManager.loadUserSounds();
+
+        // Load All Tick Sounds Into Memory for quick playback
+        tickSoundCache.cacheTickSounds();
 
         // Load list of user music files
         userMusicManager.loadUserMusic();
@@ -209,7 +215,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
 
         // If Audio Metronome is enabled play the audio for the current tick
         if(config.enableAudioMetronome()){
-            soundManager.playSound(beatNumber, tickCount);
+            tickSoundManager.playSound(beatNumber, tickCount);
         }
 
         // If Enable Music is checked
@@ -248,6 +254,13 @@ public class TickBeatsMetronomePlugin extends Plugin {
         if (event.getKey().equals("useHighQualityMusic"))
         {
             downloadManager.initializeDownloads();
+        }
+
+        // Detect TickSound changes (e.g., beat1Tick1Sound, beat2Tick3Sound, etc.)
+        if (event.getKey().startsWith("beat") && event.getKey().endsWith("Sound"))
+        {
+            //refresh the user sound cache in case the user has made changes to their user sounds folder
+            tickSoundCache.cacheAllUserSounds();
         }
     }
 

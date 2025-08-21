@@ -231,7 +231,6 @@ public interface TickBeatsMetronomeConfig extends Config
 	////////////////////////////////////////////////
 	//////////////  Beat 1 Sounds  /////////////////
 	////////////////////////////////////////////////
-
 	@ConfigSection(
 			name = "Beat 1 Sound Options",
 			description = "Configure sounds for Beat 1",
@@ -250,76 +249,166 @@ public interface TickBeatsMetronomeConfig extends Config
 	default TickSoundOption beat1Tick1Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
+			keyName = "beat1Tick1Volume",
+			name = "Tick 1 Volume",
+			description = "How loud to play Beat 1 Tick 1",
+			section = beat1Sounds,
+			position = 2
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick1Volume() { return 100; }
+
+	@ConfigItem(
 			keyName = "beat1Tick2Sound",
 			name = "Tick 2 Sound",
 			description = "Sound to play on Beat 1 Tick 2",
 			section = beat1Sounds,
-			position = 2
+			position = 3
 	)
 	default TickSoundOption beat1Tick2Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat1Tick2Volume",
+			name = "Tick 2 Volume",
+			description = "How loud to play Beat 1 Tick 2",
+			section = beat1Sounds,
+			position = 4
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick2Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick3Sound",
 			name = "Tick 3 Sound",
 			description = "Sound to play on Beat 1 Tick 3",
 			section = beat1Sounds,
-			position = 3
+			position = 5
 	)
 	default TickSoundOption beat1Tick3Sound() { return TickSoundOption.CLAP; }
+
+	@ConfigItem(
+			keyName = "beat1Tick3Volume",
+			name = "Tick 3 Volume",
+			description = "How loud to play Beat 1 Tick 3",
+			section = beat1Sounds,
+			position = 6
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick3Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick4Sound",
 			name = "Tick 4 Sound",
 			description = "Sound to play on Beat 1 Tick 4",
 			section = beat1Sounds,
-			position = 4
+			position = 7
 	)
 	default TickSoundOption beat1Tick4Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat1Tick4Volume",
+			name = "Tick 4 Volume",
+			description = "How loud to play Beat 1 Tick 4",
+			section = beat1Sounds,
+			position = 8
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick4Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick5Sound",
 			name = "Tick 5 Sound",
 			description = "Sound to play on Beat 1 Tick 5",
 			section = beat1Sounds,
-			position = 5
+			position = 9
 	)
 	default TickSoundOption beat1Tick5Sound() { return TickSoundOption.BASS; }
+
+	@ConfigItem(
+			keyName = "beat1Tick5Volume",
+			name = "Tick 5 Volume",
+			description = "How loud to play Beat 1 Tick 5",
+			section = beat1Sounds,
+			position = 10
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick5Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick6Sound",
 			name = "Tick 6 Sound",
 			description = "Sound to play on Beat 1 Tick 6",
 			section = beat1Sounds,
-			position = 6
+			position = 11
 	)
 	default TickSoundOption beat1Tick6Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat1Tick6Volume",
+			name = "Tick 6 Volume",
+			description = "How loud to play Beat 1 Tick 6",
+			section = beat1Sounds,
+			position = 12
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick6Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick7Sound",
 			name = "Tick 7 Sound",
 			description = "Sound to play on Beat 1 Tick 7",
 			section = beat1Sounds,
-			position = 7
+			position = 13
 	)
 	default TickSoundOption beat1Tick7Sound() { return TickSoundOption.CLAP; }
+
+	@ConfigItem(
+			keyName = "beat1Tick7Volume",
+			name = "Tick 7 Volume",
+			description = "How loud to play Beat 1 Tick 7",
+			section = beat1Sounds,
+			position = 14
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick7Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick8Sound",
 			name = "Tick 8 Sound",
 			description = "Sound to play on Beat 1 Tick 8",
 			section = beat1Sounds,
-			position = 8
+			position = 15
 	)
 	default TickSoundOption beat1Tick8Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat1Tick8Volume",
+			name = "Tick 8 Volume",
+			description = "How loud to play Beat 1 Tick 8",
+			section = beat1Sounds,
+			position = 16
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick8Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat1Tick9Sound",
 			name = "Tick 9 Sound",
 			description = "Sound to play on Beat 1 Tick 9",
 			section = beat1Sounds,
-			position = 9
+			position = 17
 	)
 	default TickSoundOption beat1Tick9Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat1Tick9Volume",
+			name = "Tick 9 Volume",
+			description = "How loud to play Beat 1 Tick 9",
+			section = beat1Sounds,
+			position = 18
+	)
+	@Range(min = 0, max = 150)
+	default int beat1Tick9Volume() { return 100; }
 
 
 	////////////////////////////////////////////////
@@ -549,76 +638,166 @@ public interface TickBeatsMetronomeConfig extends Config
 	default TickSoundOption beat2Tick1Sound() { return TickSoundOption.BASS; }
 
 	@ConfigItem(
+			keyName = "beat2Tick1Volume",
+			name = "Tick 1 Volume",
+			description = "How loud to play Beat 2 Tick 1",
+			section = beat2Sounds,
+			position = 2
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick1Volume() { return 100; }
+
+	@ConfigItem(
 			keyName = "beat2Tick2Sound",
 			name = "Tick 2 Sound",
 			description = "Sound to play on Beat 2 Tick 2",
 			section = beat2Sounds,
-			position = 2
+			position = 3
 	)
 	default TickSoundOption beat2Tick2Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat2Tick2Volume",
+			name = "Tick 2 Volume",
+			description = "How loud to play Beat 2 Tick 2",
+			section = beat2Sounds,
+			position = 4
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick2Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick3Sound",
 			name = "Tick 3 Sound",
 			description = "Sound to play on Beat 2 Tick 3",
 			section = beat2Sounds,
-			position = 3
+			position = 5
 	)
 	default TickSoundOption beat2Tick3Sound() { return TickSoundOption.CLAP; }
+
+	@ConfigItem(
+			keyName = "beat2Tick3Volume",
+			name = "Tick 3 Volume",
+			description = "How loud to play Beat 2 Tick 3",
+			section = beat2Sounds,
+			position = 6
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick3Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick4Sound",
 			name = "Tick 4 Sound",
 			description = "Sound to play on Beat 2 Tick 4",
 			section = beat2Sounds,
-			position = 4
+			position = 7
 	)
 	default TickSoundOption beat2Tick4Sound() { return TickSoundOption.BASS; }
+
+	@ConfigItem(
+			keyName = "beat2Tick4Volume",
+			name = "Tick 4 Volume",
+			description = "How loud to play Beat 2 Tick 4",
+			section = beat2Sounds,
+			position = 8
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick4Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick5Sound",
 			name = "Tick 5 Sound",
 			description = "Sound to play on Beat 2 Tick 5",
 			section = beat2Sounds,
-			position = 5
+			position = 9
 	)
 	default TickSoundOption beat2Tick5Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat2Tick5Volume",
+			name = "Tick 5 Volume",
+			description = "How loud to play Beat 2 Tick 5",
+			section = beat2Sounds,
+			position = 10
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick5Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick6Sound",
 			name = "Tick 6 Sound",
 			description = "Sound to play on Beat 2 Tick 6",
 			section = beat2Sounds,
-			position = 6
+			position = 11
 	)
 	default TickSoundOption beat2Tick6Sound() { return TickSoundOption.CLAP; }
+
+	@ConfigItem(
+			keyName = "beat2Tick6Volume",
+			name = "Tick 6 Volume",
+			description = "How loud to play Beat 2 Tick 6",
+			section = beat2Sounds,
+			position = 12
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick6Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick7Sound",
 			name = "Tick 7 Sound",
 			description = "Sound to play on Beat 2 Tick 7",
 			section = beat2Sounds,
-			position = 7
+			position = 13
 	)
 	default TickSoundOption beat2Tick7Sound() { return TickSoundOption.BASS; }
+
+	@ConfigItem(
+			keyName = "beat2Tick7Volume",
+			name = "Tick 7 Volume",
+			description = "How loud to play Beat 2 Tick 7",
+			section = beat2Sounds,
+			position = 14
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick7Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick8Sound",
 			name = "Tick 8 Sound",
 			description = "Sound to play on Beat 2 Tick 8",
 			section = beat2Sounds,
-			position = 8
+			position = 15
 	)
 	default TickSoundOption beat2Tick8Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat2Tick8Volume",
+			name = "Tick 8 Volume",
+			description = "How loud to play Beat 2 Tick 8",
+			section = beat2Sounds,
+			position = 16
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick8Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat2Tick9Sound",
 			name = "Tick 9 Sound",
 			description = "Sound to play on Beat 2 Tick 9",
 			section = beat2Sounds,
-			position = 9
+			position = 17
 	)
 	default TickSoundOption beat2Tick9Sound() { return TickSoundOption.CLAP; }
+
+	@ConfigItem(
+			keyName = "beat2Tick9Volume",
+			name = "Tick 9 Volume",
+			description = "How loud to play Beat 2 Tick 9",
+			section = beat2Sounds,
+			position = 18
+	)
+	@Range(min = 0, max = 150)
+	default int beat2Tick9Volume() { return 100; }
 
 
 
@@ -849,76 +1028,166 @@ public interface TickBeatsMetronomeConfig extends Config
 	default TickSoundOption beat3Tick1Sound() { return TickSoundOption.TICK; }
 
 	@ConfigItem(
+			keyName = "beat3Tick1Volume",
+			name = "Tick 1 Volume",
+			description = "How loud to play Beat 3 Tick 1",
+			section = beat3Sounds,
+			position = 2
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick1Volume() { return 100; }
+
+	@ConfigItem(
 			keyName = "beat3Tick2Sound",
 			name = "Tick 2 Sound",
 			description = "Sound to play on Beat 3 Tick 2",
 			section = beat3Sounds,
-			position = 2
+			position = 3
 	)
 	default TickSoundOption beat3Tick2Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick2Volume",
+			name = "Tick 2 Volume",
+			description = "How loud to play Beat 3 Tick 2",
+			section = beat3Sounds,
+			position = 4
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick2Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick3Sound",
 			name = "Tick 3 Sound",
 			description = "Sound to play on Beat 3 Tick 3",
 			section = beat3Sounds,
-			position = 3
+			position = 5
 	)
 	default TickSoundOption beat3Tick3Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick3Volume",
+			name = "Tick 3 Volume",
+			description = "How loud to play Beat 3 Tick 3",
+			section = beat3Sounds,
+			position = 6
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick3Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick4Sound",
 			name = "Tick 4 Sound",
 			description = "Sound to play on Beat 3 Tick 4",
 			section = beat3Sounds,
-			position = 4
+			position = 7
 	)
 	default TickSoundOption beat3Tick4Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick4Volume",
+			name = "Tick 4 Volume",
+			description = "How loud to play Beat 3 Tick 4",
+			section = beat3Sounds,
+			position = 8
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick4Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick5Sound",
 			name = "Tick 5 Sound",
 			description = "Sound to play on Beat 3 Tick 5",
 			section = beat3Sounds,
-			position = 5
+			position = 9
 	)
 	default TickSoundOption beat3Tick5Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick5Volume",
+			name = "Tick 5 Volume",
+			description = "How loud to play Beat 3 Tick 5",
+			section = beat3Sounds,
+			position = 10
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick5Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick6Sound",
 			name = "Tick 6 Sound",
 			description = "Sound to play on Beat 3 Tick 6",
 			section = beat3Sounds,
-			position = 6
+			position = 11
 	)
 	default TickSoundOption beat3Tick6Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick6Volume",
+			name = "Tick 6 Volume",
+			description = "How loud to play Beat 3 Tick 6",
+			section = beat3Sounds,
+			position = 12
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick6Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick7Sound",
 			name = "Tick 7 Sound",
 			description = "Sound to play on Beat 3 Tick 7",
 			section = beat3Sounds,
-			position = 7
+			position = 13
 	)
 	default TickSoundOption beat3Tick7Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick7Volume",
+			name = "Tick 7 Volume",
+			description = "How loud to play Beat 3 Tick 7",
+			section = beat3Sounds,
+			position = 14
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick7Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick8Sound",
 			name = "Tick 8 Sound",
 			description = "Sound to play on Beat 3 Tick 8",
 			section = beat3Sounds,
-			position = 8
+			position = 15
 	)
 	default TickSoundOption beat3Tick8Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick8Volume",
+			name = "Tick 8 Volume",
+			description = "How loud to play Beat 3 Tick 8",
+			section = beat3Sounds,
+			position = 16
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick8Volume() { return 100; }
 
 	@ConfigItem(
 			keyName = "beat3Tick9Sound",
 			name = "Tick 9 Sound",
 			description = "Sound to play on Beat 3 Tick 9",
 			section = beat3Sounds,
-			position = 9
+			position = 17
 	)
 	default TickSoundOption beat3Tick9Sound() { return TickSoundOption.TICK; }
+
+	@ConfigItem(
+			keyName = "beat3Tick9Volume",
+			name = "Tick 9 Volume",
+			description = "How loud to play Beat 3 Tick 9",
+			section = beat3Sounds,
+			position = 18
+	)
+	@Range(min = 0, max = 150)
+	default int beat3Tick9Volume() { return 100; }
 
 
 
