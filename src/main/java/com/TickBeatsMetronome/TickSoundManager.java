@@ -229,7 +229,7 @@ public class TickSoundManager {
             overlayMessage.show("Unable to play sound file", soundFilePath);
 
             // Log the full exception message for debugging
-            log.warn("Failed to play sound {}: {}", resourceName, e.getMessage());
+            log.debug("Failed to play sound {}: {}", resourceName, e.getMessage());
         }
     }
 

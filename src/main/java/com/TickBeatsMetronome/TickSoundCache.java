@@ -90,7 +90,7 @@ public class TickSoundCache
         {
             if (inputStream == null)
             {
-                log.warn("Built-in sound not found: {}", resourcePath);
+                log.debug("Built-in sound not found: {}", resourcePath);
                 return;
             }
 
@@ -103,7 +103,7 @@ public class TickSoundCache
         }
         catch (Exception e)
         {
-            log.warn("Failed to cache built-in sound {}: {}", resourceName, e.getMessage());
+            log.debug("Failed to cache built-in sound {}: {}", resourceName, e.getMessage());
         }
     }
 
