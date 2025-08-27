@@ -29,12 +29,15 @@ import net.runelite.client.ui.overlay.OverlayManager;
 //extends Plugin makes this a singleton so @Singleton isn't used here
 public class TickBeatsMetronomePlugin extends Plugin {
 
-    //Needed for Guice Dependency Injection
+    // Needed for Guice Dependency Injection
     @Inject
     private Client client;
 
     @Inject
     private TickBeatsMetronomeConfig config;
+
+    @Inject
+    private EventBus eventBus;
 
     @Inject
     private OverlayOverheadNumber overlayOverheadNumber;
@@ -70,26 +73,25 @@ public class TickBeatsMetronomePlugin extends Plugin {
     private UserMusicManager userMusicManager;
 
     @Inject
-    private EventBus eventBus;
+    private MusicManager musicManager;
 
     @Inject
-    private MusicManager musicManager;
+    private MusicPlaylistManager musicPlaylistManager;
 
     @Inject
     private DownloadManager downloadManager;
 
-    //need to pass in local tick callback so don't inject this one
+    // Need to pass in local tick callback so don't inject this one
     private LocalTickManager localTickManager;
 
-    //Holds the tick count//
+    // Holds the tick count
     public int tickCount = 0;
 
-    //Holds the Beat Number of which beat to play/
+    // Holds the Beat Number of which beat to play
     public int beatNumber = 1;
 
-    //Holds the max number of ticks for the current beat
+    // Holds the max number of ticks for the current beat
     public int maxTicks = 1;
-
 
     protected void startUp()
     {
@@ -124,7 +126,10 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // Check to see if all files that need to be downloaded are downloaded
         downloadManager.initializeDownloads();
 
-        // Get a music track ready to go on tick 1
+        // Make sure Playlists and shuffle order are ready
+        musicPlaylistManager.resetPlaylists();
+
+        // Get a music track ready to go on tick 1 (this should be called near or at the end)
         musicManager.prepMusicTrack();
     }
 
@@ -186,7 +191,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     }
 
     /**
-     * Fires on every local tick which is setup in LocalTickManager
+     * Fires on every local tick which is set up in LocalTickManager
      */
     private void onLocalTick()
     {
@@ -196,7 +201,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
     }
     
     private void onTick(){
-        //if the reset key is being held, don't do anything on the game tick
+        // If the reset key is being held, don't do anything on the game tick
         if(inputManager.resetActive)
         {
             return;
@@ -221,15 +226,15 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // If Enable Music is checked
         if(config.enableMusic()) {
 
-            //if music isn't playing, and we're at tick 1 start playing music
+            // If music isn't playing, and we're at tick 1 start playing music
             if (!musicManager.isPlaying() && tickCount == 1) {
                 musicManager.start();
             }
 
-            //Play the music clips
+            // Play the music clips
             musicManager.onTick(maxTicks, tickCount, config.musicVolume());
         }else{
-            //if Enable Music isn't checked, stop the music clips from playing
+            // If Enable Music isn't checked, stop the music clips from playing
             musicManager.stop();
         }
     }
@@ -237,20 +242,35 @@ public class TickBeatsMetronomePlugin extends Plugin {
     @Subscribe
     public void onConfigChanged(ConfigChanged event)
     {
-        //make sure the event is coming from this plugin's config group
+        // Make sure the event is coming from this plugin's config group
         if (!event.getGroup().equals("tickBeats"))
         {
             return;
         }
 
-        //if event is coming from the music track dropdown
+        // If event is coming from the music track dropdown
         if (event.getKey().equals("musicTrack"))
         {
-            log.debug("Music track changed.");
             musicManager.prepMusicTrack();
         }
 
-        //if event is high quality music button run initialize downloads to see if we need to download music tracks
+        // If event is coming from a playlist change
+        if (event.getKey().startsWith("playlist") || event.getKey().equals("shuffle"))
+        {
+            // Seems to work without the refresh but including anyway just in case
+            musicPlaylistManager.refreshPlaylists();
+            musicManager.prepMusicTrack();
+        }
+
+        // If event is coming from the playback Mode dropdown
+        if (event.getKey().equals("playbackMode"))
+        {
+            // Refresh the playlists and go to song 1
+            musicPlaylistManager.resetPlaylists();
+            musicManager.prepMusicTrack();
+        }
+
+        // If event is high quality music button run initialize downloads to see if we need to download music tracks
         if (event.getKey().equals("useHighQualityMusic"))
         {
             downloadManager.initializeDownloads();
@@ -259,7 +279,7 @@ public class TickBeatsMetronomePlugin extends Plugin {
         // Detect TickSound changes (e.g., beat1Tick1Sound, beat2Tick3Sound, etc.)
         if (event.getKey().startsWith("beat") && event.getKey().endsWith("Sound"))
         {
-            //refresh the user sound cache in case the user has made changes to their user sounds folder
+            // Refresh the user sound cache in case the user has made changes to their user sounds folder
             tickSoundCache.cacheAllUserSounds();
         }
     }

@@ -110,7 +110,7 @@ public class DownloadManager
 
         // Load all non-user tracks from the enum
         builtinTracks = Arrays.stream(MusicTrackOption.values())
-                .filter(track -> !track.getFileName().matches("\\d+"))
+                .filter(track -> !track.getResourceName().matches("\\d+"))
                 .collect(Collectors.toList());
 
         // Update current download state
@@ -200,7 +200,7 @@ public class DownloadManager
     {
         for (MusicTrackOption track : tracks)
         {
-            if (!Files.exists(dir.resolve(track.getFileName())))
+            if (!Files.exists(dir.resolve(track.getResourceName())))
             {
                 return false;
             }
@@ -220,7 +220,7 @@ public class DownloadManager
         int count = 0;
         for (MusicTrackOption track : tracks)
         {
-            if (Files.exists(dir.resolve(track.getFileName())))
+            if (Files.exists(dir.resolve(track.getResourceName())))
             {
                 count++;
             }
@@ -245,7 +245,7 @@ public class DownloadManager
         // Low-quality first
         for (MusicTrackOption track : builtinTracks)
         {
-            Path loPath = LO_LOCAL_PATH.resolve(track.getFileName());
+            Path loPath = LO_LOCAL_PATH.resolve(track.getResourceName());
             if (!Files.exists(loPath))
             {
                 queueDownload(track, false);
@@ -258,7 +258,7 @@ public class DownloadManager
         {
             for (MusicTrackOption track : builtinTracks)
             {
-                Path hiPath = HI_LOCAL_PATH.resolve(track.getFileName());
+                Path hiPath = HI_LOCAL_PATH.resolve(track.getResourceName());
                 if (!Files.exists(hiPath))
                 {
                     queueDownload(track, true);
@@ -276,7 +276,7 @@ public class DownloadManager
      * Attempt to download the file from BASE_DOWNLOAD_URL.
      * On completion, call scheduleDownloads to queue the next missing track.
      *
-     * @param track the MusicTrackOption}to download.
+     * @param track the MusicTrackOption to download.
      * @param hi    true to download the high-quality version; false for low-quality.
      */
     private void queueDownload(MusicTrackOption track, boolean hi)
@@ -288,17 +288,17 @@ public class DownloadManager
         if (hi)
         {
             quality = "hi";
-            targetPath = HI_LOCAL_PATH.resolve(track.getFileName());
+            targetPath = HI_LOCAL_PATH.resolve(track.getResourceName());
             delayMs = 6 * DELAY_MULTIPLIER;
         }
         else
         {
             quality = "lo";
-            targetPath = LO_LOCAL_PATH.resolve(track.getFileName());
+            targetPath = LO_LOCAL_PATH.resolve(track.getResourceName());
             delayMs = DELAY_MULTIPLIER;
         }
 
-        String url = BASE_DOWNLOAD_URL + quality + "/" + track.getFileName();
+        String url = BASE_DOWNLOAD_URL + quality + "/" + track.getResourceName();
 
         scheduler.schedule(() ->
         {

@@ -1,6 +1,7 @@
 package com.TickBeatsMetronome;
 
 public enum MusicTrackOption {
+    NONE("None", ""),
 
     ALLS_FAIRY_IN_LOVE_AND_WAR("Alls Fairy In Love And War", "alls_fairy_in_love_and_war.wav"),
     AMASCUTS_PROMISE("Amascut's Promise", "amascuts_promise.wav"),
@@ -27,7 +28,6 @@ public enum MusicTrackOption {
     WALK_IN_THE_WOODS("Walk In The Woods", "walk_in_the_woods.wav"),
     WATCH_YOUR_STEP("Watch Your Step", "watch_your_step.wav"),
     WELCOME_TO_THE_THEATRE("Welcome To The Theatre", "welcome_to_the_theatre.wav"),
-
 
     // User Music
     // The Music files are given IDs based on their alphabetical order.
@@ -83,18 +83,27 @@ public enum MusicTrackOption {
     USER_MUSIC_50("User Track 50", "50");
 
     private final String displayName;
-    private final String fileName;
+    private final String resourceName;
 
-    MusicTrackOption(String displayName, String fileName) {
+    MusicTrackOption(String displayName, String resourceName) {
         this.displayName = displayName;
-        this.fileName = fileName;
+        this.resourceName = resourceName;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getResourceName() {
+        return resourceName;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
 
+    public boolean isUserMusic()
+    {
+        return resourceName.matches("\\d+");
+    }
+
+    //Make it so that in UI menus we get the nice display name
     @Override
     public String toString() {
         return displayName;

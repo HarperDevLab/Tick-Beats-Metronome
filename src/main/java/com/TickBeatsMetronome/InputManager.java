@@ -21,6 +21,9 @@ public class InputManager implements net.runelite.client.input.KeyListener
     @Inject
     TickBeatsMetronomeConfig config;
 
+    @Inject
+    MusicPlaylistManager musicPlaylistManager;
+
     // Stores if reset key is currently being held down
     public boolean resetActive = false;
 
@@ -44,6 +47,20 @@ public class InputManager implements net.runelite.client.input.KeyListener
         // keys are released
         resetActive = false;
 
+        // Handle hotkey for next song
+        if (strictMatch(config.nextSongHotkey(), e))
+        {
+            musicPlaylistManager.playNextSong();
+            return;
+        }
+
+        // Handle hotkey for previous song
+        if (strictMatch(config.previousSongHotkey(), e))
+        {
+            musicPlaylistManager.playPreviousSong();
+            return;
+        }
+
         // Handle hotkey for next beat
         if (strictMatch(config.nextBeatHotkey(), e))
         {
@@ -61,7 +78,7 @@ public class InputManager implements net.runelite.client.input.KeyListener
         // Handle add tick hotkey
         if(strictMatch(config.nextTickHotkey(), e))
         {
-            adjustTick(1); // Decrease the metronome tick
+            adjustTick(1); // Increase the metronome tick
             return;
         }
 

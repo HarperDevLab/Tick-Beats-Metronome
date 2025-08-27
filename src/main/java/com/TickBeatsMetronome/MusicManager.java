@@ -1,5 +1,6 @@
 package com.TickBeatsMetronome;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -15,7 +16,15 @@ public class MusicManager
     private TickBeatsMetronomeConfig config;
 
     @Inject
+    private OverlayMessage overlayMessage;
+
+    @Inject
     private MusicTrackLoader musicTrackLoader;
+
+    @Inject
+    private  MusicPlaylistManager musicPlaylistManager;
+
+    @Getter
     private MusicTrack currentTrack = null;
 
     private int volume = 100;
@@ -24,78 +33,81 @@ public class MusicManager
     private int barBeat = 1;
     //current beat that matches the game tick number
     private int tickBeat = 1;
+
+    @Getter
     private boolean isPlaying = false;
 
     //this is used to play the last beat/notes of the 4 beat per bar songs when doing 3 beats per bar for 3 tick
     private boolean playFinalFourthBeatNext = false;
 
-    private int lastTickCount = 0;
-
-    public boolean isPlaying() { return isPlaying; }
-
     /**
-     * preps the currently selected track to start being played on tick 1 when start is called()
+     * Preps a track to start being played on tick 1 when start is called()
+     * This will only reset the track if it's a new track, if the track to load is the track that's already playing it won't do anything
      */
     public void prepMusicTrack()
     {
-        // Stop current playback to wait for start() to be called on tick 1 so start of song starts on tick 1
+        MusicTrackOption newMusicTrackOption = null;
+
+        // Manual mode: get track from config
+        if (config.playbackMode() == TickBeatsMetronomeConfig.PlaybackMode.MANUAL) {
+            newMusicTrackOption = config.musicTrack();
+        }
+        // Playlist mode: get track from playlist manager
+        else {
+            newMusicTrackOption = musicPlaylistManager.getCurrentTrack();
+        }
+
+        // If no valid track is selected, stop playback
+        if (newMusicTrackOption == null || newMusicTrackOption == MusicTrackOption.NONE) {
+            currentTrack = null;
+            return;
+        }
+
+        // If we already have this track loaded, don’t reload
+        if (currentTrack != null && currentTrack.getMusicTrackOption() == newMusicTrackOption) {
+            return;
+        }
+
+        // Stop the current song so it can start cleanly on tick 1
         stop();
 
-        String currentTrackFileName = "";
-        if(currentTrack != null){
-            currentTrackFileName = currentTrack.getFileName();
-        }
-
-        String selectedTrackFileName = "";
-        if(config.musicTrack() != null){
-            selectedTrackFileName = config.musicTrack().getFileName();
-        }
-
-        // Load track if a track has been selected, and it's not the track that's already playing
-        if (!selectedTrackFileName.isEmpty() && !selectedTrackFileName.equals(currentTrackFileName))
-        {
-            loadTrack(selectedTrackFileName);
-        }
-
+        // Load the new track
+        loadTrack(newMusicTrackOption);
     }
 
     /**
-     * resets the track and sets isPlaying to true
-     * note: the current setup causes this to run every time a track ends
+     * Resets the track and sets isPlaying to true
+     * Note: the current setup causes this to run every time a track ends and a new one starts up
      */
     public void start()
     {
-        //run prep the track every time we run start this will make it so if an error track was being played before
-        // it'll check again for the proper track every restart
+
+        // Run prep the track every time we run start it'll check again for the proper track every restart
         prepMusicTrack();
-        //if current track is null for some reason abort the start (start should try to run again on tick 1)
+
+        // If current track is null abort the start (start should try to run again on tick 1)
         if(currentTrack == null){
             return;
         }
-        //set isPlaying to true at the start, if loadTrack can't find the track it'll set it to false
+        // Set isPlaying to true at the start, if loadTrack can't find the track it'll set it to false
         isPlaying = true;
 
-        //reset our bar, beat and tick numbers to 1
+        // Reset our bar, beat and tick numbers to 1
         reset();
     }
 
     /**
-     * Get a track based on the track name and get it ready to play
-     * @param trackName the tracks filename for local files or number if it's a user track
+     * Loads a track based on its MusicTrackOption.
      */
-    private void loadTrack(String trackName)
+    private void loadTrack(MusicTrackOption option)
     {
-        // Clear reference to old track, might help gc clean up the old track
+        // Reset state and clear old track
         currentTrack = null;
-
-        //when we load up a new track make reset, probobly not necessary to reset again but doesn't hurt
         reset();
 
-        //get the music track based on its track name
-        currentTrack = musicTrackLoader.loadFromResource(trackName);
+        currentTrack = musicTrackLoader.loadFromResource(option);
 
-        //if no track is found set isPlaying to false
-        if(currentTrack == null){
+        if (currentTrack == null) {
             stop();
         }
     }
@@ -127,8 +139,8 @@ public class MusicManager
      */
     public void onTick(int tickCount, int pluginTick, int musicVolume) {
 
-        //if for any reason the current track is null, don't do anything
-        if(currentTrack == null){
+        //if for any reason the current track is null or is playing is set to false, stop the track and don't do anything
+        if(currentTrack == null || !isPlaying){
             stop();
             return;
         }
@@ -144,11 +156,23 @@ public class MusicManager
         if (playFinalFourthBeatNext)
         {
             playBeat(currentTrack.getNumberBarsInTrack(), 4);
+            currentBar++; // Increment the bar so that end of song triggers properly
             playFinalFourthBeatNext = false;
         }
 
-        // If track has ended or playback is stopped, this should be after play fourth beat check so we don't return before that
-        if (!isPlaying || currentTrack.getBeat(currentBar, barBeat) == null)
+        // If current bar is greater than the number of bars in the song, the song has played to completion
+        if(currentBar > currentTrack.getNumberBarsInTrack()){
+
+            // Tell playlist manager that the song has ended so increment to the next track
+            musicPlaylistManager.incrementTrack();
+
+            // Stop and reset the song
+            stop();
+            return;
+        }
+
+        // If for some reason the beat that will be played is null, stop the song and don't do anything else
+        if (currentTrack.getBeat(currentBar, barBeat) == null)
         {
             stop();
             return;
@@ -170,23 +194,23 @@ public class MusicManager
     }
 
     /**
-     * If the tick from our plugin doesn't match the MusicManager tickBeat Update the Music Manager Tick Beat
+     * If the tick from our main plugin file doesn't match the MusicManager tickBeat, update the Music Manager Tick Beat
      * this happens when the user adjust which beat they're on or makes other plugin adjustments while music is playing
      * @param tickCount How many ticks per beat the user has configured
-     * @param pluginTick the current tick as far as the plugin is concerned
+     * @param pluginTick the current tick as far as the main plugin file is concerned
      */
     private void correctMusicManagerTick(int tickCount, int pluginTick){
-        //tick counts 1 and 2 need special treatment because the plugin tick will only go up to 1 or 2,
-        //but we want to play notes 3 and 4 of the bar so tickBeat needs to be able to go up to 3 and 4 without "correcting"
+        // Tick counts 1 and 2 need special treatment because the plugin tick will only go up to 1 or 2,
+        // but we want to play beats 3 and 4 of the music bar so tickBeat needs to be able to go up to 3 and 4 without "correcting"
 
-        //if the user has Tick Count set to 1, the Plugin Tick will always be 1, so we don't correct for that just play the music
+        // If the user has Tick Count set to 1, the Plugin Tick will always be 1, so we don't correct for that, just play the music
         if (tickCount == 1){
             return;
         }
 
-        //if Tick Count is set to 2 tick,
-        //we want to make sure if plugin tick is 1, our Music Manager tickBeat is 1 or 3
-        //and if our plugin tick is 2 our Music Manager tickBeat is set to 2 or 4 to play those parts of the bar
+        // If Tick Count is set to 2 tick,
+        // We want to make sure if plugin tick is 1, our Music Manager tickBeat is 1 or 3
+        // and if our plugin tick is 2 our Music Manager tickBeat is set to 2 or 4 to play those parts of the bar
         if (tickCount == 2){
 
             //if the plugin tick is 1 but the tick beat is 2 or 4, we're out of sync
@@ -438,7 +462,7 @@ public class MusicManager
      */
     public void playBeat(int bar, int beat)
     {
-        // Defensive check: make sure a track is loaded
+        // Make sure a track is loaded
         if (currentTrack == null)
         {
             log.debug("No track loaded.");

@@ -23,6 +23,9 @@ public class OverlayInfoBox extends Overlay
     @Inject
     DownloadManager downloadManager;
 
+    @Inject
+    MusicManager musicManager;
+
     private final PanelComponent panel = new PanelComponent();
 
     @Inject
@@ -41,11 +44,35 @@ public class OverlayInfoBox extends Overlay
         // Clear out old values
         panel.getChildren().clear();
 
+        // Set the default size
+        panel.setPreferredSize(new Dimension(160, 0));
+
         // Add the title
         panel.getChildren().add(TitleComponent.builder()
                 .text("Tick Beats")
                 .color(Color.green)
                 .build());
+
+        // Add playback mode info
+        // Make Playback Mode string lowercase with space instead of underscore
+        String modeDisplayString = config.playbackMode().toString().toLowerCase().replace('_', ' ');
+        // Then capitalize the first letter
+        modeDisplayString = modeDisplayString.substring(0,1).toUpperCase() + modeDisplayString.substring(1);
+        panel.getChildren().add(TitleComponent.builder()
+                .text(modeDisplayString)
+                .color(Color.cyan)
+                .build());
+
+        // Add Song Name if it exists
+        if(musicManager.getCurrentTrack() != null){
+            // Get the song name to display
+            String songName = musicManager.getCurrentTrack().getDisplayName();
+
+            panel.getChildren().add(TitleComponent.builder()
+                    .text(songName)
+                    .color(Color.cyan)
+                    .build());
+        }
 
         // Add beat number info
         panel.getChildren().add(LineComponent.builder()
@@ -58,9 +85,6 @@ public class OverlayInfoBox extends Overlay
                 .left("Tick:")
                 .right(plugin.tickCount + " / " + plugin.maxTicks)
                 .build());
-
-        // Set the size for when no other information is included
-        panel.setPreferredSize(new Dimension(125, 0));
 
         // --- Download progress ---
         final int totalBuiltinTracksCount = downloadManager.getTotalBuiltinCount();

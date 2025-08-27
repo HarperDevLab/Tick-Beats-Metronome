@@ -68,7 +68,7 @@ public class TickSoundManager {
 
         if (soundOption != TickSoundOption.OFF)
         {
-            playSound(soundOption.getResourceName(), volume);
+            play(soundOption.getResourceName(), volume);
         }
     }
 
@@ -96,7 +96,7 @@ public class TickSoundManager {
 
         if (soundOption != TickSoundOption.OFF)
         {
-            playSound(soundOption.getResourceName(), volume);
+            play(soundOption.getResourceName(), volume);
         }
     }
 
@@ -124,7 +124,7 @@ public class TickSoundManager {
 
         if (soundOption != TickSoundOption.OFF)
         {
-            playSound(soundOption.getResourceName(), volume);
+            play(soundOption.getResourceName(), volume);
         }
     }
 
@@ -138,7 +138,7 @@ public class TickSoundManager {
      * @param resourceName The resource name or key (e.g., "snare.wav" or "1" for user sounds)
      * @param volume Volume to play at (0–150) Over 100 for boosted volume if you want to emphasize a sound
      */
-    public void playSound(String resourceName, int volume) {
+    public void play(String resourceName, int volume) {
         // Attempt to retrieve the sound from the cache
         TickSound sound = tickSoundCache.getSound(resourceName);
 

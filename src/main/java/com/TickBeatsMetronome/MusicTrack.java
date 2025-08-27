@@ -1,5 +1,8 @@
 package com.TickBeatsMetronome;
 
+import lombok.Getter;
+
+import javax.inject.Inject;
 import javax.sound.sampled.AudioFormat;
 import java.util.List;
 
@@ -10,44 +13,42 @@ import java.util.List;
  */
 public class MusicTrack
 {
-    // Name of the track
-    private final String fileName;
+    /** The MusicTrackOption for this music track */
+    @Getter
+    private final MusicTrackOption musicTrackOption;
 
-    // Flat list of MusicBeat objects that make up the full track
+    /** A nice looking display name to use for displaying the track name */
+    @Getter
+    private final String displayName;
+
+    /** Flat list of MusicBeat objects that make up the full track */
+    @Getter
     private final List<MusicBeat> beats;
 
-    // Audio format (e.g., 44.1 kHz, 16-bit PCM, stereo) shared across all beats
+    /** Audio format (e.g., 44.1 kHz, 16-bit PCM, stereo) */
+    @Getter
     private final AudioFormat format;
 
-    // Constant: number of beats in a single bar (e.g., 4 for 4/4 time)
+    /** Constant: number of beats in a single bar (e.g., 4 for 4/4 time) */
     public static final int BEATS_PER_BAR = 4;
 
     /**
      * Constructs a new MusicTrack object from the parsed beat list and audio format.
      *
-     * @param fileName  The fileName for the track
+     * @param musicTrackOption  The MusicTrackOption enum for this track
+     * @param displayName A user-friendly name to use when displaying this tracks name to the user
      * @param beats  A list of MusicBeat segments extracted from the audio
      * @param format The shared audio format for all beats in the track
      */
-    public MusicTrack(String fileName, List<MusicBeat> beats, AudioFormat format)
+    public MusicTrack(MusicTrackOption musicTrackOption, String displayName, List<MusicBeat> beats, AudioFormat format)
     {
-        this.fileName = fileName;
+        this.musicTrackOption = musicTrackOption;
+        this.displayName = displayName;
         this.beats = beats;
         this.format = format;
     }
 
-    /** @return The file location of the track */
-    public String getFileName() { return fileName; }
-
-    /** @return The list of all beats in the track */
-    public List<MusicBeat> getBeats() { return beats; }
-
-    /** @return The audio format of the track */
-    public AudioFormat getFormat() { return format; }
-
-    /**
-     * @return The total number of full bars in the track.
-     */
+    /** @return The total number of full bars in the track. */
     public int getNumberBarsInTrack()
     {
         return (int) Math.floor((double) beats.size() / BEATS_PER_BAR);

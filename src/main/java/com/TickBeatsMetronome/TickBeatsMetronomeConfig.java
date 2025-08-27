@@ -121,6 +121,23 @@ public interface TickBeatsMetronomeConfig extends Config
 	@Range(min = 0, max = 150)
 	default int musicVolume() { return 100; }
 
+	public enum PlaybackMode
+	{
+		MANUAL,
+		PLAYLIST_1,
+		PLAYLIST_2,
+		PLAYLIST_3
+	}
+
+	@ConfigItem(
+			keyName = "playbackMode",
+			name = "Playback Mode",
+			description = "Play a single track (Manual) or use a Playlist",
+			section = musicSettings,
+			position = 4
+	)
+	default PlaybackMode playbackMode() { return PlaybackMode.MANUAL; }
+
 	////////////////////////////////////////////////
 	//////////////  Hotkey Settings  ///////////////
 	////////////////////////////////////////////////
@@ -132,33 +149,33 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	String hotkeys = "hotkeys";
 
+	@ConfigItem(
+			name = "Next Song",
+			keyName = "nextSongHotkey",
+			description = "Keybind to go to the next song (Works with modifiers ex. CTRL+A)",
+			section = hotkeys,
+			position = 2
+	)
+	default Keybind nextSongHotkey() { return new Keybind(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK); }
+
+	@ConfigItem(
+			name = "Previous Song",
+			keyName = "previousSongHotkey",
+			description = "Keybind to go to the previous song (Works with modifiers ex. CTRL+A)",
+			section = hotkeys,
+			position = 3
+	)
+	default Keybind previousSongHotkey() { return new Keybind(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK); }
+
 
 	@ConfigItem(
 			name = "Reset to Start Tick",
 			keyName = "resetHotkey",
 			description = "The keybind to manually reset the metronome tick (Works with modifiers ex. CTRL+A)",
 			section = hotkeys,
-			position = 2
-	)
-	default Keybind resetHotkey() { return new Keybind(KeyEvent.VK_TAB, 0); }
-
-	@ConfigItem(
-			name = "Next Beat",
-			keyName = "nextBeatHotkey",
-			description = "Keybind to go to the next beat (Works with modifiers ex. CTRL+A)",
-			section = hotkeys,
-			position = 3
-	)
-	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_UP, InputEvent.CTRL_DOWN_MASK); }
-
-	@ConfigItem(
-			name = "Previous Beat",
-			keyName = "previousBeatHotkey",
-			description = "Keybind to go to the previous beat (Works with modifiers ex. CTRL+A)",
-			section = hotkeys,
 			position = 4
 	)
-	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_DOWN, InputEvent.CTRL_DOWN_MASK); }
+	default Keybind resetHotkey() { return new Keybind(KeyEvent.VK_TAB, 0); }
 
 	@ConfigItem(
 			name = "Next Tick",
@@ -177,6 +194,24 @@ public interface TickBeatsMetronomeConfig extends Config
 			position = 6
 	)
 	default Keybind previousTickHotkey() { return new Keybind(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK); }
+
+	@ConfigItem(
+			name = "Next Beat",
+			keyName = "nextBeatHotkey",
+			description = "Keybind to go to the next beat (Works with modifiers ex. CTRL+A)",
+			section = hotkeys,
+			position = 7
+	)
+	default Keybind nextBeatHotkey() { return new Keybind(KeyEvent.VK_UP, InputEvent.CTRL_DOWN_MASK); }
+
+	@ConfigItem(
+			name = "Previous Beat",
+			keyName = "previousBeatHotkey",
+			description = "Keybind to go to the previous beat (Works with modifiers ex. CTRL+A)",
+			section = hotkeys,
+			position = 8
+	)
+	default Keybind previousBeatHotkey() { return new Keybind(KeyEvent.VK_DOWN, InputEvent.CTRL_DOWN_MASK); }
 
 	////////////////////////////////////////////////
 	///////////////  Text Settings  ////////////////
@@ -1374,4 +1409,739 @@ public interface TickBeatsMetronomeConfig extends Config
 	)
 	default int beat3Tick9Opacity() { return 10; }
 
+	/////////////////////////////////////////////
+	////////////  Playlist Options  /////////////
+	/////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Playlist Settings",
+			description = "Settings that apply to all playlists",
+			position = 24
+	)
+	String playlistSettings = "playlistSettings";
+
+	@ConfigItem(
+			keyName = "shuffle",
+			name = "Shuffle Playlist",
+			description = "Play songs in random order",
+			section = playlistSettings,
+			position = 5
+	)
+	default boolean shufflePlaylist() { return false; }
+
+	///////////////////////////////////////////////
+	////////////  Playlist 1 Options  /////////////
+	///////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Playlist 1",
+			description = "Customize the songs included in playlist 1, songs set to none are ignored",
+			position = 25,
+			closedByDefault = true
+	)
+	String playlist1Section = "playlist1Section";
+
+	@ConfigItem(
+			keyName = "playlist1Track1",
+			name = "1",
+			description = "Music track 1",
+			position = 1,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track1() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track2",
+			name = "2",
+			description = "Music track 2",
+			position = 2,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track2() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track3",
+			name = "3",
+			description = "Music track 3",
+			position = 3,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track3() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track4",
+			name = "4",
+			description = "Music track 4",
+			position = 4,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track4() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track5",
+			name = "5",
+			description = "Music track 5",
+			position = 5,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track5() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track6",
+			name = "6",
+			description = "Music track 6",
+			position = 6,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track6() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track7",
+			name = "7",
+			description = "Music track 7",
+			position = 7,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track7() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track8",
+			name = "8",
+			description = "Music track 8",
+			position = 8,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track8() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track9",
+			name = "9",
+			description = "Music track 9",
+			position = 9,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track9() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track10",
+			name = "10",
+			description = "Music track 10",
+			position = 10,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track10() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track11",
+			name = "11",
+			description = "Music track 11",
+			position = 11,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track11() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track12",
+			name = "12",
+			description = "Music track 12",
+			position = 12,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track12() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track13",
+			name = "13",
+			description = "Music track 13",
+			position = 13,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track13() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track14",
+			name = "14",
+			description = "Music track 14",
+			position = 14,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track14() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track15",
+			name = "15",
+			description = "Music track 15",
+			position = 15,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track15() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track16",
+			name = "16",
+			description = "Music track 16",
+			position = 16,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track16() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track17",
+			name = "17",
+			description = "Music track 17",
+			position = 17,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track17() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track18",
+			name = "18",
+			description = "Music track 18",
+			position = 18,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track18() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track19",
+			name = "19",
+			description = "Music track 19",
+			position = 19,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track19() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track20",
+			name = "20",
+			description = "Music track 20",
+			position = 20,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track20() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track21",
+			name = "21",
+			description = "Music track 21",
+			position = 21,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track21() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track22",
+			name = "22",
+			description = "Music track 22",
+			position = 22,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track22() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track23",
+			name = "23",
+			description = "Music track 23",
+			position = 23,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track23() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track24",
+			name = "24",
+			description = "Music track 24",
+			position = 24,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track24() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist1Track25",
+			name = "25",
+			description = "Music track 25",
+			position = 25,
+			section = "playlist1Section"
+	)
+	default MusicTrackOption playlist1Track25() { return MusicTrackOption.NONE; }
+
+
+
+	///////////////////////////////////////////////
+	////////////  Playlist 2 Options  /////////////
+	///////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Playlist 2",
+			description = "Customize the songs in playlist 2, songs set to none are ignored",
+			position = 26,
+			closedByDefault = true
+	)
+	String playlist2Section = "playlist2Section";
+
+	@ConfigItem(
+			keyName = "playlist2Track1",
+			name = "1",
+			description = "Music track 1",
+			position = 1,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track1() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track2",
+			name = "2",
+			description = "Music track 2",
+			position = 2,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track2() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track3",
+			name = "3",
+			description = "Music track 3",
+			position = 3,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track3() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track4",
+			name = "4",
+			description = "Music track 4",
+			position = 4,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track4() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track5",
+			name = "5",
+			description = "Music track 5",
+			position = 5,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track5() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track6",
+			name = "6",
+			description = "Music track 6",
+			position = 6,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track6() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track7",
+			name = "7",
+			description = "Music track 7",
+			position = 7,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track7() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track8",
+			name = "8",
+			description = "Music track 8",
+			position = 8,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track8() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track9",
+			name = "9",
+			description = "Music track 9",
+			position = 9,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track9() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track10",
+			name = "10",
+			description = "Music track 10",
+			position = 10,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track10() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track11",
+			name = "11",
+			description = "Music track 11",
+			position = 11,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track11() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track12",
+			name = "12",
+			description = "Music track 12",
+			position = 12,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track12() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track13",
+			name = "13",
+			description = "Music track 13",
+			position = 13,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track13() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track14",
+			name = "14",
+			description = "Music track 14",
+			position = 14,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track14() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track15",
+			name = "15",
+			description = "Music track 15",
+			position = 15,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track15() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track16",
+			name = "16",
+			description = "Music track 16",
+			position = 16,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track16() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track17",
+			name = "17",
+			description = "Music track 17",
+			position = 17,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track17() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track18",
+			name = "18",
+			description = "Music track 18",
+			position = 18,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track18() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track19",
+			name = "19",
+			description = "Music track 19",
+			position = 19,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track19() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track20",
+			name = "20",
+			description = "Music track 20",
+			position = 20,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track20() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track21",
+			name = "21",
+			description = "Music track 21",
+			position = 21,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track21() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track22",
+			name = "22",
+			description = "Music track 22",
+			position = 22,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track22() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track23",
+			name = "23",
+			description = "Music track 23",
+			position = 23,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track23() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track24",
+			name = "24",
+			description = "Music track 24",
+			position = 24,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track24() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist2Track25",
+			name = "25",
+			description = "Music track 25",
+			position = 25,
+			section = "playlist2Section"
+	)
+	default MusicTrackOption playlist2Track25() { return MusicTrackOption.NONE; }
+
+	///////////////////////////////////////////////
+	////////////  Playlist 3 Options  /////////////
+	///////////////////////////////////////////////
+
+	@ConfigSection(
+			name = "Playlist 3",
+			description = "Customize the songs in playlist 3, songs set to none are ignored",
+			position = 27,
+			closedByDefault = true
+	)
+	String playlist3Section = "playlist3Section";
+
+	@ConfigItem(
+			keyName = "playlist3Track1",
+			name = "1",
+			description = "Music track 1",
+			position = 1,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track1() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track2",
+			name = "2",
+			description = "Music track 2",
+			position = 2,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track2() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track3",
+			name = "3",
+			description = "Music track 3",
+			position = 3,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track3() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track4",
+			name = "4",
+			description = "Music track 4",
+			position = 4,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track4() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track5",
+			name = "5",
+			description = "Music track 5",
+			position = 5,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track5() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track6",
+			name = "6",
+			description = "Music track 6",
+			position = 6,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track6() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track7",
+			name = "7",
+			description = "Music track 7",
+			position = 7,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track7() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track8",
+			name = "8",
+			description = "Music track 8",
+			position = 8,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track8() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track9",
+			name = "9",
+			description = "Music track 9",
+			position = 9,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track9() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track10",
+			name = "10",
+			description = "Music track 10",
+			position = 10,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track10() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track11",
+			name = "11",
+			description = "Music track 11",
+			position = 11,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track11() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track12",
+			name = "12",
+			description = "Music track 12",
+			position = 12,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track12() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track13",
+			name = "13",
+			description = "Music track 13",
+			position = 13,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track13() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track14",
+			name = "14",
+			description = "Music track 14",
+			position = 14,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track14() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track15",
+			name = "15",
+			description = "Music track 15",
+			position = 15,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track15() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track16",
+			name = "16",
+			description = "Music track 16",
+			position = 16,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track16() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track17",
+			name = "17",
+			description = "Music track 17",
+			position = 17,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track17() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track18",
+			name = "18",
+			description = "Music track 18",
+			position = 18,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track18() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track19",
+			name = "19",
+			description = "Music track 19",
+			position = 19,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track19() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track20",
+			name = "20",
+			description = "Music track 20",
+			position = 20,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track20() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track21",
+			name = "21",
+			description = "Music track 21",
+			position = 21,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track21() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track22",
+			name = "22",
+			description = "Music track 22",
+			position = 22,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track22() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track23",
+			name = "23",
+			description = "Music track 23",
+			position = 23,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track23() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track24",
+			name = "24",
+			description = "Music track 24",
+			position = 24,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track24() { return MusicTrackOption.NONE; }
+
+	@ConfigItem(
+			keyName = "playlist3Track25",
+			name = "25",
+			description = "Music track 25",
+			position = 25,
+			section = "playlist3Section"
+	)
+	default MusicTrackOption playlist3Track25() { return MusicTrackOption.NONE; }
+
 }
+
+
